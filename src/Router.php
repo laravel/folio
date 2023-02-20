@@ -37,29 +37,27 @@ class Router
                     : null;
         }
 
-        $segments = explode('/', $uri);
-        $segmentCount = count($segments);
-        $data = [];
+        $state = new Pipeline\State(
+            mountPath: $mountPath,
+            segments: explode('/', $uri)
+        );
 
-        for ($i = 0; $i < $segmentCount; $i++) {
-            $currentSegment = $segments[$i];
-            $lastSegment = $i === ($segmentCount - 1);
-            $relativeDirectory = implode('/', array_slice($segments, 0, $i));
-            $absoluteDirectory = $mountPath.'/'.$relativeDirectory;
+        for ($i = 0; $i < $state->segmentCount(); $i++) {
+            $state = $state->forIteration($i);
 
             // Literal directory match...
-            if (is_dir($absoluteDirectory.'/'.$currentSegment)) {
+            if (is_dir($state->absoluteDirectory().'/'.$state->currentSegment())) {
                 // Index view match (must also be last segment)...
-                if ($lastSegment &&
-                    file_exists($indexView = $absoluteDirectory.'/'.$currentSegment.'/index.blade.php')) {
+                if ($state->lastSegment() &&
+                    file_exists($indexView = $state->absoluteDirectory().'/'.$state->currentSegment().'/index.blade.php')) {
                     // Possible directory traversal...
-                    Functions::ensureNoDirectoryTraversal($indexView, $mountPath);
+                    Functions::ensureNoDirectoryTraversal($indexView, $state->mountPath);
 
-                    return View::file($indexView, $data);
+                    return View::file($indexView, $state->data);
                 }
 
                 // Is a directory, but no index view and no further segments available...
-                if ($lastSegment) {
+                if ($state->lastSegment()) {
                     return null;
                 }
 
@@ -68,51 +66,54 @@ class Router
             }
 
             // Literal view match... must also be last segment...
-            if ($lastSegment && file_exists($possibleView = $absoluteDirectory.'/'.$currentSegment.'.blade.php')) {
-                Functions::ensureNoDirectoryTraversal($possibleView, $mountPath);
+            if ($state->lastSegment() && file_exists($possibleView = $state->absoluteDirectory().'/'.$state->currentSegment().'.blade.php')) {
+                Functions::ensureNoDirectoryTraversal($possibleView, $state->mountPath);
 
-                return View::file($possibleView, $data);
+                return View::file($possibleView, $state->data);
             }
 
             // Wildcard, multi-segment view match...
-            $possibleView = Functions::findWildcardMultiSegmentView($absoluteDirectory);
+            $possibleView = Functions::findWildcardMultiSegmentView($state->absoluteDirectory());
 
             if ($possibleView) {
-                $data[
+                $state = $state->withData(
                     Str::of($possibleView)
                         ->before('.blade.php')
-                        ->match('/\[\.\.\.(.*)\]/')->value()
-                ] = array_slice($segments, $i, $segmentCount - 1);
+                        ->match('/\[\.\.\.(.*)\]/')->value(),
+                    array_slice($state->segments, $i, $state->segmentCount() - 1)
+                );
 
-                Functions::ensureNoDirectoryTraversal($absoluteDirectory.'/'.$possibleView, $mountPath);
+                Functions::ensureNoDirectoryTraversal($state->absoluteDirectory().'/'.$possibleView, $state->mountPath);
 
-                return View::file($absoluteDirectory.'/'.$possibleView, $data);
+                return View::file($state->absoluteDirectory().'/'.$possibleView, $state->data);
             }
 
             // Wildcard view match... must also be last segment...
-            if ($lastSegment &&
-                $possibleView = Functions::findWildcardView($absoluteDirectory)) {
-                Functions::ensureNoDirectoryTraversal($absoluteDirectory.'/'.$possibleView, $mountPath);
+            if ($state->lastSegment() &&
+                $possibleView = Functions::findWildcardView($state->absoluteDirectory())) {
+                Functions::ensureNoDirectoryTraversal($state->absoluteDirectory().'/'.$possibleView, $state->mountPath);
 
-                $data[
+                $state = $state->withData(
                     Str::of($possibleView)
                         ->before('.blade.php')
-                        ->match('/\[(.*)\]/')->value()
-                ] = $currentSegment;
+                        ->match('/\[(.*)\]/')->value(),
+                    $state->currentSegment(),
+                );
 
-                return View::file($absoluteDirectory.'/'.$possibleView, $data);
+                return View::file($state->absoluteDirectory().'/'.$possibleView, $state->data);
             }
 
             // Wildcard directory match... (there are further segments and a wildcard directory is present?)
-            if (! $lastSegment &&
-                $possibleDirectory = Functions::findWildcardDirectory($absoluteDirectory)) {
-                $data[
+            if (! $state->lastSegment() &&
+                $possibleDirectory = Functions::findWildcardDirectory($state->absoluteDirectory())) {
+                $state = $state->withData(
                     Str::of($possibleDirectory)
                         ->basename()
-                        ->match('/\[(.*)\]/')->value()
-                ] = $currentSegment;
+                        ->match('/\[(.*)\]/')->value(),
+                    $state->currentSegment(),
+                );
 
-                $segments[$i] = Str::of($possibleDirectory)->basename();
+                $state->segments[$i] = Str::of($possibleDirectory)->basename();
 
                 continue;
             }

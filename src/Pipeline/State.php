@@ -46,7 +46,7 @@ class State
     /**
      * Get the number of URI segments that are present.
      */
-    public function segmentCount(): int
+    public function uriSegmentCount(): int
     {
         return count($this->segments);
     }
@@ -54,7 +54,7 @@ class State
     /**
      * Get the current URI segment for the given iteration.
      */
-    public function currentSegment(): string
+    public function currentUriSegment(): string
     {
         return $this->segments[$this->currentIndex];
     }
@@ -62,7 +62,7 @@ class State
     /**
      * Replace the segment value for the current iteration.
      */
-    public function replaceCurrentSegmentWith(string $value): State
+    public function replaceCurrentUriSegmentWith(string $value): State
     {
         $segments = $this->segments;
 
@@ -80,24 +80,16 @@ class State
     /**
      * Determine if the current iteration is for the last segment.
      */
-    public function lastSegment(): bool
+    public function onLastUriSegment(): bool
     {
-        return $this->currentIndex === ($this->segmentCount() - 1);
+        return $this->currentIndex === ($this->uriSegmentCount() - 1);
     }
 
     /**
      * Get the absolute path to the current directory for the given iteration.
      */
-    public function absoluteDirectory(): string
+    public function currentDirectory(): string
     {
-        return $this->mountPath.'/'.$this->relativeDirectory();
-    }
-
-    /**
-     * Get the current directory for the given iteration relative to the mount path.
-     */
-    public function relativeDirectory(): string
-    {
-        return implode('/', array_slice($this->segments, 0, $this->currentIndex));
+        return $this->mountPath.'/'.implode('/', array_slice($this->segments, 0, $this->currentIndex));
     }
 }

@@ -3,8 +3,9 @@
 namespace Laravel\Folio;
 
 use Illuminate\Pipeline\Pipeline;
-use Illuminate\Support\Facades\View;
-use Illuminate\View\View as ViewInstance;
+use Illuminate\Support\Str;
+use Illuminate\View\View;
+use Laravel\Folio\Exceptions\PossibleDirectoryTraversal;
 use Laravel\Folio\Pipeline\ContinueIterating;
 use Laravel\Folio\Pipeline\ContinueIteratingIfDirectoryWithFurtherSegments;
 use Laravel\Folio\Pipeline\MatchDirectoryIndexViews;
@@ -26,7 +27,7 @@ class Router
     /**
      * Resolve the given URI via page based routing.
      */
-    public function resolve(string $uri): ?ViewInstance
+    public function resolve(string $uri): ?View
     {
         foreach ($this->mountPaths as $mountPath) {
             if ($view = $this->resolveAtPath($mountPath, $uri)) {
@@ -40,7 +41,7 @@ class Router
     /**
      * Resolve the given URI via page based routing at the given mount path.
      */
-    protected function resolveAtPath(string $mountPath, string $uri): ?ViewInstance
+    protected function resolveAtPath(string $mountPath, string $uri): ?View
     {
         $state = new State(
             uri: $uri,
@@ -48,7 +49,7 @@ class Router
             segments: explode('/', $uri)
         );
 
-        for ($i = 0; $i < $state->segmentCount(); $i++) {
+        for ($i = 0; $i < $state->uriSegmentCount(); $i++) {
             $value = (new Pipeline)
                         ->send($state->forIteration($i))
                         ->through([
@@ -62,7 +63,7 @@ class Router
                             new MatchWildcardDirectories,
                         ])->thenReturn(fn () => new StopIterating);
 
-            if ($value instanceof ViewInstance) {
+            if ($value instanceof View) {
                 return $value;
             } elseif ($value instanceof ContinueIterating) {
                 $state = $value->state;
@@ -74,5 +75,15 @@ class Router
         }
 
         return null;
+    }
+
+    /**
+     * Ensure that a possible directory traversal is not happening.
+     */
+    public static function ensureNoDirectoryTraversal(string $path, string $mountPath): void
+    {
+        if (! Str::of(realpath($path))->startsWith($mountPath.'/')) {
+            throw new PossibleDirectoryTraversal;
+        }
     }
 }

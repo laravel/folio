@@ -18,7 +18,7 @@ class MatchLiteralViews
             file_exists($path = $state->currentDirectory().'/'.$state->currentUriSegment().'.blade.php')) {
             Router::ensureNoDirectoryTraversal($path, $state->mountPath);
 
-            return View::file($path, $state->data);
+            return new MatchedView($path, $state->data);
         }
 
         return $next($state);

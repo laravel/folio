@@ -22,7 +22,7 @@ class MatchDirectoryIndexViews
             file_exists($path = $state->currentDirectory().'/'.$state->currentUriSegment().'/index.blade.php')) {
             Router::ensureNoDirectoryTraversal($path, $state->mountPath);
 
-            return View::file($path, $state->data);
+            return new MatchedView($path, $state->data);
         }
 
         return $next($state);

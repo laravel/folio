@@ -5,7 +5,6 @@ namespace Laravel\Folio\Pipeline;
 use Closure;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
-use Laravel\Folio\Functions;
 
 class MatchWildcardDirectories
 {

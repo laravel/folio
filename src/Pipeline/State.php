@@ -10,9 +10,7 @@ class State
         public array $segments,
         public array $data = [],
         public int $currentIndex = 0
-    )
-    {
-
+    ) {
     }
 
     /**

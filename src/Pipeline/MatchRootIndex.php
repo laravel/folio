@@ -3,7 +3,6 @@
 namespace Laravel\Folio\Pipeline;
 
 use Closure;
-use Illuminate\Support\Facades\View;
 
 class MatchRootIndex
 {
@@ -14,7 +13,7 @@ class MatchRootIndex
     {
         if (trim($state->uri) === '/') {
             return file_exists($path = $state->mountPath.'/index.blade.php')
-                    ? View::file($path, $state->data)
+                    ? new MatchedView($path, $state->data)
                     : new StopIterating;
         }
 

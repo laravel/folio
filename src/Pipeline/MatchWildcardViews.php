@@ -3,7 +3,6 @@
 namespace Laravel\Folio\Pipeline;
 
 use Closure;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 use Laravel\Folio\Router;
 
@@ -22,7 +21,7 @@ class MatchWildcardViews
                 $state->currentDirectory().'/'.$path, $state->mountPath
             );
 
-            return View::file($state->currentDirectory().'/'.$path, $state->withData(
+            return new MatchedView($state->currentDirectory().'/'.$path, $state->withData(
                 Str::of($path)
                     ->before('.blade.php')
                     ->match('/\[(.*)\]/')->value(),

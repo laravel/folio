@@ -3,6 +3,7 @@
 namespace Laravel\Folio;
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
 
 class Folio
 {
@@ -12,7 +13,9 @@ class Folio
     public static function mount(string $mountPath): void
     {
         Route::get('/{uri?}', function ($uri = '/') use ($mountPath) {
-            return (new Router([$mountPath]))->resolve($uri) ?? abort(404);
+            $matchedView = (new Router([$mountPath]))->resolve($uri) ?? abort(404);
+
+            return View::file($matchedView->path, $matchedView->data);
         })->where('uri', '.*');
     }
 }

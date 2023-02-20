@@ -4,10 +4,10 @@ namespace Laravel\Folio;
 
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Str;
-use Illuminate\View\View;
 use Laravel\Folio\Exceptions\PossibleDirectoryTraversal;
 use Laravel\Folio\Pipeline\ContinueIterating;
 use Laravel\Folio\Pipeline\MatchDirectoryIndexViews;
+use Laravel\Folio\Pipeline\MatchedView;
 use Laravel\Folio\Pipeline\MatchLiteralDirectories;
 use Laravel\Folio\Pipeline\MatchLiteralViews;
 use Laravel\Folio\Pipeline\MatchRootIndex;
@@ -27,7 +27,7 @@ class Router
     /**
      * Resolve the given URI via page based routing.
      */
-    public function resolve(string $uri): ?View
+    public function resolve(string $uri): ?MatchedView
     {
         foreach ($this->mountPaths as $mountPath) {
             if ($view = $this->resolveAtPath($mountPath, $uri)) {
@@ -41,7 +41,7 @@ class Router
     /**
      * Resolve the given URI via page based routing at the given mount path.
      */
-    protected function resolveAtPath(string $mountPath, string $uri): ?View
+    protected function resolveAtPath(string $mountPath, string $uri): ?MatchedView
     {
         $state = new State(
             uri: $uri,
@@ -63,7 +63,7 @@ class Router
                             new MatchWildcardViews,
                         ])->thenReturn(fn () => new StopIterating);
 
-            if ($value instanceof View) {
+            if ($value instanceof MatchedView) {
                 return $value;
             } elseif ($value instanceof ContinueIterating) {
                 $state = $value->state;

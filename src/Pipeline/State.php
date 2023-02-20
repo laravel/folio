@@ -57,6 +57,23 @@ class State
     }
 
     /**
+     * Replace the segment value for the current iteration.
+     */
+    public function replaceCurrentSegmentWith(string $value): State
+    {
+        $segments = $this->segments;
+
+        $segments[$this->currentIndex] = $value;
+
+        return new static(
+            $this->mountPath,
+            $segments,
+            $this->data,
+            $this->currentIndex,
+        );
+    }
+
+    /**
      * Determine if the current iteration is for the last segment.
      */
     public function lastSegment(): bool

@@ -61,7 +61,7 @@ class Router
                             new MatchWildcardDirectories,
                             new MatchLiteralViews,
                             new MatchWildcardViews,
-                        ])->thenReturn(fn () => new StopIterating);
+                        ])->then(fn () => new StopIterating);
 
             if ($value instanceof MatchedView) {
                 return $value;

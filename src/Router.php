@@ -16,7 +16,6 @@ use Laravel\Folio\Pipeline\MatchWildcardViews;
 use Laravel\Folio\Pipeline\MatchWildcardViewsThatCaptureMultipleSegments;
 use Laravel\Folio\Pipeline\State;
 use Laravel\Folio\Pipeline\StopIterating;
-use Laravel\Folio\Pipeline\StopIteratingIfDirectoryWithoutIndexOrFurtherSegments;
 
 class Router
 {
@@ -55,7 +54,6 @@ class Router
                         ->through([
                             new MatchRootIndex,
                             new MatchDirectoryIndexViews,
-                            // new StopIteratingIfDirectoryWithoutIndexOrFurtherSegments,
                             new MatchWildcardViewsThatCaptureMultipleSegments,
                             new MatchLiteralDirectories,
                             new MatchWildcardDirectories,

@@ -21,6 +21,7 @@
         "illuminate/filesystem": "^10.0",
         "illuminate/pipeline": "^10.0",
         "illuminate/support": "^10.0",
+        "spatie/once": "^3.1",
         "symfony/finder": "^6.0"
     },
     "require-dev": {

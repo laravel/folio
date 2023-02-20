@@ -46,7 +46,7 @@ class State
      */
     public function uriSegmentCount(): int
     {
-        return count($this->segments);
+        return once(fn () => count($this->segments));
     }
 
     /**
@@ -80,7 +80,7 @@ class State
      */
     public function onLastUriSegment(): bool
     {
-        return $this->currentIndex === ($this->uriSegmentCount() - 1);
+        return once(fn () => $this->currentIndex === ($this->uriSegmentCount() - 1));
     }
 
     /**
@@ -88,7 +88,7 @@ class State
      */
     public function currentDirectory(): string
     {
-        return $this->mountPath.'/'.implode('/', array_slice($this->segments, 0, $this->currentIndex));
+        return once(fn () => $this->mountPath.'/'.implode('/', array_slice($this->segments, 0, $this->currentIndex)));
     }
 
     /**
@@ -96,7 +96,7 @@ class State
      */
     public function currentUriSegmentDirectory(): string
     {
-        return $this->currentDirectory().'/'.$this->currentUriSegment();
+        return once(fn () => $this->currentDirectory().'/'.$this->currentUriSegment());
     }
 
     /**
@@ -104,6 +104,6 @@ class State
      */
     public function currentUriSegmentIsDirectory(): bool
     {
-        return is_dir($this->currentUriSegmentDirectory());
+        return once(fn () => is_dir($this->currentUriSegmentDirectory()));
     }
 }

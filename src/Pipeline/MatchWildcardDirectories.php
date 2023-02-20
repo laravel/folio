@@ -15,14 +15,12 @@ class MatchWildcardDirectories
     {
         if (! $state->onLastUriSegment() &&
             $directory = $this->findWildcardDirectory($state->currentDirectory())) {
-            $state = $state->withData(
+            return new ContinueIterating($state->withData(
                 Str::of($directory)
                     ->basename()
                     ->match('/\[(.*)\]/')->value(),
                 $state->currentUriSegment(),
-            );
-
-            return new ContinueIterating($state->replaceCurrentUriSegmentWith(
+            )->replaceCurrentUriSegmentWith(
                 Str::of($directory)->basename()
             ));
         }

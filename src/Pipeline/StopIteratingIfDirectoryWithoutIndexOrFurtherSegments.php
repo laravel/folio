@@ -11,11 +11,7 @@ class StopIteratingIfDirectoryWithoutIndexOrFurtherSegments
      */
     public function __invoke(State $state, Closure $next): mixed
     {
-        if (! $state->currentUriSegmentIsDirectory()) {
-            return $next($state);
-        }
-
-        return $state->onLastUriSegment()
+        return $state->onLastUriSegment() && $state->currentUriSegmentIsDirectory()
                 ? new StopIterating
                 : $next($state);
     }

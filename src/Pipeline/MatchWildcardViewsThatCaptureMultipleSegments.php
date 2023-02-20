@@ -4,7 +4,6 @@ namespace Laravel\Folio\Pipeline;
 
 use Closure;
 use Illuminate\Support\Str;
-use Laravel\Folio\Router;
 
 class MatchWildcardViewsThatCaptureMultipleSegments
 {
@@ -16,10 +15,6 @@ class MatchWildcardViewsThatCaptureMultipleSegments
     public function __invoke(State $state, Closure $next): mixed
     {
         if ($path = $this->findWildcardMultiSegmentView($state->currentDirectory())) {
-            Router::ensureNoDirectoryTraversal(
-                $state->currentDirectory().'/'.$path, $state->mountPath
-            );
-
             return new MatchedView($state->currentDirectory().'/'.$path, $state->withData(
                 Str::of($path)
                     ->before('.blade.php')

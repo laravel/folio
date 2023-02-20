@@ -4,7 +4,6 @@ namespace Laravel\Folio\Pipeline;
 
 use Closure;
 use Illuminate\Support\Str;
-use Laravel\Folio\Router;
 
 class MatchWildcardViews
 {
@@ -17,10 +16,6 @@ class MatchWildcardViews
     {
         if ($state->onLastUriSegment() &&
             $path = $this->findWildcardView($state->currentDirectory())) {
-            Router::ensureNoDirectoryTraversal(
-                $state->currentDirectory().'/'.$path, $state->mountPath
-            );
-
             return new MatchedView($state->currentDirectory().'/'.$path, $state->withData(
                 Str::of($path)
                     ->before('.blade.php')

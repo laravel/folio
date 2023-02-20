@@ -64,6 +64,8 @@ class Router
                         ])->then(fn () => new StopIterating);
 
             if ($value instanceof MatchedView) {
+                static::ensureNoDirectoryTraversal($value->path, $state->mountPath);
+
                 return $value;
             } elseif ($value instanceof ContinueIterating) {
                 $state = $value->state;

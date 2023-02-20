@@ -90,4 +90,20 @@ class State
     {
         return $this->mountPath.'/'.implode('/', array_slice($this->segments, 0, $this->currentIndex));
     }
+
+    /**
+     * Get the absolute path to the current directory (including the current URI segment) for the given iteration.
+     */
+    public function currentUriSegmentDirectory(): string
+    {
+        return $this->currentDirectory().'/'.$this->currentUriSegment();
+    }
+
+    /**
+     * Determine if the path to the current directory (including the current URI segment) is a directory.
+     */
+    public function currentUriSegmentIsDirectory(): bool
+    {
+        return is_dir($this->currentUriSegmentDirectory());
+    }
 }

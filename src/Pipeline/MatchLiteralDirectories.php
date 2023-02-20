@@ -11,7 +11,7 @@ class MatchLiteralDirectories
      */
     public function __invoke(State $state, Closure $next): mixed
     {
-        return ! $state->onLastUriSegment() && is_dir($state->currentDirectory().'/'.$state->currentUriSegment())
+        return ! $state->onLastUriSegment() && $state->currentUriSegmentIsDirectory()
                     ? new ContinueIterating($state)
                     : $next($state);
     }

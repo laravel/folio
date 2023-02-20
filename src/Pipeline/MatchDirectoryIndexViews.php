@@ -13,13 +13,13 @@ class MatchDirectoryIndexViews
      */
     public function __invoke(State $state, Closure $next): mixed
     {
-        if (! is_dir($state->currentDirectory().'/'.$state->currentUriSegment())) {
+        if (! $state->currentUriSegmentIsDirectory()) {
             return $next($state);
         }
 
         // Index view match (must also be last segment)...
         if ($state->onLastUriSegment() &&
-            file_exists($path = $state->currentDirectory().'/'.$state->currentUriSegment().'/index.blade.php')) {
+            file_exists($path = $state->currentUriSegmentDirectory().'/index.blade.php')) {
             Router::ensureNoDirectoryTraversal($path, $state->mountPath);
 
             return new MatchedView($path, $state->data);

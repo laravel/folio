@@ -5,6 +5,7 @@ namespace Laravel\Folio\Pipeline;
 class State
 {
     public function __construct(
+        public string $uri,
         public string $mountPath,
         public array $segments,
         public array $data = [],
@@ -20,6 +21,7 @@ class State
     public function forIteration(int $iteration): State
     {
         return new static(
+            $this->uri,
             $this->mountPath,
             $this->segments,
             $this->data,
@@ -33,6 +35,7 @@ class State
     public function withData(string $key, mixed $value): State
     {
         return new static(
+            $this->uri,
             $this->mountPath,
             $this->segments,
             array_merge($this->data, [$key => $value]),
@@ -66,6 +69,7 @@ class State
         $segments[$this->currentIndex] = $value;
 
         return new static(
+            $this->uri,
             $this->mountPath,
             $segments,
             $this->data,

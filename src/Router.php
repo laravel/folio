@@ -9,6 +9,7 @@ use Laravel\Folio\Pipeline\ContinueIterating;
 use Laravel\Folio\Pipeline\ContinueIteratingIfDirectoryWithFurtherSegments;
 use Laravel\Folio\Pipeline\MatchDirectoryIndexViews;
 use Laravel\Folio\Pipeline\MatchLiteralViews;
+use Laravel\Folio\Pipeline\MatchRootIndex;
 use Laravel\Folio\Pipeline\MatchWildcardDirectories;
 use Laravel\Folio\Pipeline\MatchWildcardViews;
 use Laravel\Folio\Pipeline\MatchWildcardViewsThatCaptureMultipleSegments;
@@ -41,13 +42,8 @@ class Router
      */
     protected function resolveAtPath(string $mountPath, string $uri): ?ViewInstance
     {
-        if (trim($uri) === '/') {
-            return file_exists($indexView = $mountPath.'/index.blade.php')
-                    ? View::file($indexView, $data)
-                    : null;
-        }
-
         $state = new State(
+            uri: $uri,
             mountPath: $mountPath,
             segments: explode('/', $uri)
         );
@@ -56,6 +52,7 @@ class Router
             $value = (new Pipeline)
                         ->send($state->forIteration($i))
                         ->through([
+                            new MatchRootIndex,
                             new MatchDirectoryIndexViews,
                             new StopIteratingIfDirectoryWithoutIndexOrFurtherSegments,
                             new ContinueIteratingIfDirectoryWithFurtherSegments,

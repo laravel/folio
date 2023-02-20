@@ -7,8 +7,8 @@ use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Laravel\Folio\Exceptions\PossibleDirectoryTraversal;
 use Laravel\Folio\Pipeline\ContinueIterating;
-use Laravel\Folio\Pipeline\ContinueIteratingIfDirectoryWithFurtherSegments;
 use Laravel\Folio\Pipeline\MatchDirectoryIndexViews;
+use Laravel\Folio\Pipeline\MatchLiteralDirectories;
 use Laravel\Folio\Pipeline\MatchLiteralViews;
 use Laravel\Folio\Pipeline\MatchRootIndex;
 use Laravel\Folio\Pipeline\MatchWildcardDirectories;
@@ -55,12 +55,12 @@ class Router
                         ->through([
                             new MatchRootIndex,
                             new MatchDirectoryIndexViews,
-                            new StopIteratingIfDirectoryWithoutIndexOrFurtherSegments,
-                            new ContinueIteratingIfDirectoryWithFurtherSegments,
-                            new MatchLiteralViews,
+                            // new StopIteratingIfDirectoryWithoutIndexOrFurtherSegments,
                             new MatchWildcardViewsThatCaptureMultipleSegments,
-                            new MatchWildcardViews,
+                            new MatchLiteralDirectories,
                             new MatchWildcardDirectories,
+                            new MatchLiteralViews,
+                            new MatchWildcardViews,
                         ])->thenReturn(fn () => new StopIterating);
 
             if ($value instanceof View) {

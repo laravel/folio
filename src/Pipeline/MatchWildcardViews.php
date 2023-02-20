@@ -11,6 +11,9 @@ class MatchWildcardViews
 {
     use FindsWildcardViews;
 
+    /**
+     * Invoke the routing pipeline handler.
+     */
     public function __invoke(State $state, Closure $next): mixed
     {
         if ($state->onLastUriSegment() &&

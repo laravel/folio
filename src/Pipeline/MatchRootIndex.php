@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\View;
 
 class MatchRootIndex
 {
+    /**
+     * Invoke the routing pipeline handler.
+     */
     public function __invoke(State $state, Closure $next): mixed
     {
         if (trim($state->uri) === '/') {

@@ -16,9 +16,9 @@ class Folio
     /**
      * Mount the given paths as page based routing targets.
      */
-    public static function mount(string $mountPath): void
+    public static function mount(string $mountPath, ?string $uri = '/'): void
     {
-        Route::get('/{uri?}', function ($uri = '/') use ($mountPath) {
+        Route::get($uri === '/' ? '/{uri?}' : '/'.trim($uri, '/').'/{uri?}', function ($uri = '/') use ($mountPath) {
             return (
                 static::$renderUsing ??= fn ($m) => View::file($m->path, $m->data)
             )((new Router([$mountPath]))->resolve($uri) ?? abort(404));

@@ -13,6 +13,7 @@ class FolioTest extends TestCase
         parent::tearDown();
 
         (new Filesystem)->deleteDirectory(realpath(__DIR__.'/../fixtures/views'), preserve: true);
+        touch(realpath(__DIR__.'/../fixtures/views/.gitkeep'));
     }
 
     public function test_root_index_view_can_be_matched()

@@ -115,10 +115,14 @@ class FolioTest extends TestCase
 
         $router = $this->router();
 
+        $resolved = $router->resolve('/users/1');
+
         $this->assertEquals(
-            $router->resolve('/users/1')->path,
+            $resolved->path,
             realpath(__DIR__.'/../fixtures/views/users/[id].blade.php')
         );
+
+        $this->assertEquals(['id' => 1], $resolved->data);
     }
 
     public function test_multisegment_wildcard_views()
@@ -129,10 +133,14 @@ class FolioTest extends TestCase
 
         $router = $this->router();
 
+        $resolved = $router->resolve('/1/2/3');
+
         $this->assertEquals(
-            $router->resolve('/1/2/3')->path,
+            $resolved->path,
             realpath(__DIR__.'/../fixtures/views/[...id].blade.php')
         );
+
+        $this->assertEquals(['id' => [1, 2, 3]], $resolved->data);
     }
 
     public function test_multisegment_views_take_priority_over_further_directories()
@@ -146,10 +154,62 @@ class FolioTest extends TestCase
 
         $router = $this->router();
 
+        $resolved = $router->resolve('/1/2/3');
+
         $this->assertEquals(
-            $router->resolve('/user/profile')->path,
+            $resolved->path,
             realpath(__DIR__.'/../fixtures/views/[...id].blade.php')
         );
+
+        $this->assertEquals(['id' => [1, 2, 3]], $resolved->data);
+    }
+
+    public function test_wildcard_directories()
+    {
+        $this->views([
+            '/flights' => [
+                '/[id]' => [
+                    '/connections.blade.php',
+                ],
+            ],
+        ]);
+
+        $router = $this->router();
+
+        $resolved = $router->resolve('/flights/1/connections');
+
+        $this->assertEquals(
+            $resolved->path,
+            realpath(__DIR__.'/../fixtures/views/flights/[id]/connections.blade.php')
+        );
+
+        $this->assertEquals(['id' => 1], $resolved->data);
+    }
+
+    public function test_nested_wildcard_directories()
+    {
+        $this->views([
+            '/flights' => [
+                '/[id]' => [
+                    '/connections' => [
+                        '/[connectionId]' => [
+                            '/map.blade.php',
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        $router = $this->router();
+
+        $resolved = $router->resolve('/flights/1/connections/2/map');
+
+        $this->assertEquals(
+            $resolved->path,
+            realpath(__DIR__.'/../fixtures/views/flights/[id]/connections/[connectionId]/map.blade.php')
+        );
+
+        $this->assertEquals(['id' => 1, 'connectionId' => 2], $resolved->data);
     }
 
     protected function router()

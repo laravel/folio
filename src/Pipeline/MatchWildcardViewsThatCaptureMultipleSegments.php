@@ -22,7 +22,7 @@ class MatchWildcardViewsThatCaptureMultipleSegments
                 array_slice(
                     $state->segments,
                     $state->currentIndex,
-                    $state->uriSegmentCount() - 1
+                    $state->uriSegmentCount()
                 )
             )->data);
         }

@@ -28,6 +28,8 @@ class Router
      */
     public function resolve(string $uri): ?MatchedView
     {
+        $uri = strlen($uri) > 1 ? trim($uri, '/') : $uri;
+
         foreach ($this->mountPaths as $mountPath) {
             if ($view = $this->resolveAtPath($mountPath, $uri)) {
                 return $view;

@@ -67,10 +67,14 @@ class FolioTest extends TestCase
 
         $router = $this->router();
 
+        $resolved = $router->resolve('/1');
+
         $this->assertEquals(
-            $router->resolve('/1')->path,
+            $resolved->path,
             realpath(__DIR__.'/../fixtures/views/[id].blade.php')
         );
+
+        $this->assertEquals(['id' => 1], $resolved->data);
     }
 
     public function test_literal_views_take_precendence_over_wildcard_views()
@@ -83,10 +87,16 @@ class FolioTest extends TestCase
 
         $router = $this->router();
 
+        $resolved = $router->resolve('/profile');
+
         $this->assertEquals(
-            $router->resolve('/profile')->path,
+            $resolved->path,
             realpath(__DIR__.'/../fixtures/views/profile.blade.php')
         );
+
+        $this->assertEquals([], $resolved->data);
+
+        $this->assertNull($router->resolve('/profile/missing-view'));
     }
 
     public function test_literal_views_may_be_in_directories()

@@ -16,14 +16,14 @@ class Folio
     /**
      * Mount the given paths as page based routing targets.
      */
-    public static function route(?string $mountPath = null, ?string $uri = '/'): void
+    public static function route(?string $to = null, ?string $uri = '/'): void
     {
-        $mountPath ??= config('view.paths')[0];
+        $to ??= config('view.paths')[0];
 
-        Route::get($uri === '/' ? '/{uri?}' : '/'.trim($uri, '/').'/{uri?}', function ($uri = '/') use ($mountPath) {
+        Route::get($uri === '/' ? '/{uri?}' : '/'.trim($uri, '/').'/{uri?}', function ($uri = '/') use ($to) {
             return (
                 static::$renderUsing ??= fn ($m) => View::file($m->path, $m->data)
-            )((new Router([$mountPath]))->resolve($uri) ?? abort(404));
+            )((new Router([$to]))->resolve($uri) ?? abort(404));
         })->where('uri', '.*');
     }
 

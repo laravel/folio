@@ -1,245 +1,171 @@
 <?php
 
-namespace Tests\Feature;
-
 use Illuminate\Filesystem\Filesystem;
-use Laravel\Folio\Router;
-use Tests\TestCase;
 
-class FolioTest extends TestCase
-{
-    public function tearDown(): void
-    {
-        parent::tearDown();
+afterEach(function () {
+    (new Filesystem)->deleteDirectory(realpath(__DIR__.'/../fixtures/views'), preserve: true);
 
-        (new Filesystem)->deleteDirectory(realpath(__DIR__.'/../fixtures/views'), preserve: true);
-        touch(__DIR__.'/../fixtures/views/.gitkeep');
-    }
+    touch(__DIR__.'/../fixtures/views/.gitkeep');
+});
 
-    public function test_root_index_view_can_be_matched()
-    {
-        $this->views([
+test('root index view can be matched', function () {
+    $this->views([
+        '/index.blade.php',
+    ]);
+
+    $router = $this->router();
+
+    expect(realpath(__DIR__.'/../fixtures/views/index.blade.php'))->toEqual($router->resolve('/')->path)
+        ->and($router->resolve('/missing-view'))->toBeNull();
+});
+
+test('directory index views can be matched', function () {
+    $this->views([
+        '/users' => [
             '/index.blade.php',
-        ]);
+        ],
+    ]);
 
-        $router = $this->router();
+    $router = $this->router();
 
-        $this->assertEquals($router->resolve('/')->path, realpath(__DIR__.'/../fixtures/views/index.blade.php'));
-        $this->assertNull($router->resolve('/missing-view'));
-    }
+    expect(realpath(__DIR__.'/../fixtures/views/users/index.blade.php'))->toEqual($router->resolve('/users')->path);
+});
 
-    public function test_directory_index_views_can_be_matched()
-    {
-        $this->views([
-            '/users' => [
-                '/index.blade.php',
-            ],
-        ]);
+test('literal view can be matched', function () {
+    $this->views([
+        '/index.blade.php',
+        '/profile.blade.php',
+    ]);
 
-        $router = $this->router();
+    $router = $this->router();
 
-        $this->assertEquals(
-            $router->resolve('/users')->path,
-            realpath(__DIR__.'/../fixtures/views/users/index.blade.php')
-        );
-    }
+    expect(realpath(__DIR__.'/../fixtures/views/profile.blade.php'))->toEqual($router->resolve('/profile')->path);
+});
 
-    public function test_literal_view_can_be_matched()
-    {
-        $this->views([
-            '/index.blade.php',
+test('wildcard view can be matched', function () {
+    $this->views([
+        '/index.blade.php',
+        '/[id].blade.php',
+    ]);
+
+    $router = $this->router();
+
+    $resolved = $router->resolve('/1');
+
+    expect(realpath(__DIR__.'/../fixtures/views/[id].blade.php'))->toEqual($resolved->path)
+        ->and($resolved->data)->toEqual(['id' => 1]);
+});
+
+test('literal views take precendence over wildcard views', function () {
+    $this->views([
+        '/index.blade.php',
+        '/[id].blade.php',
+        '/profile.blade.php',
+    ]);
+
+    $router = $this->router();
+
+    $resolved = $router->resolve('/profile');
+
+    expect(realpath(__DIR__.'/../fixtures/views/profile.blade.php'))->toEqual($resolved->path)
+        ->and($resolved->data)->toEqual([])
+        ->and($router->resolve('/profile/missing-view'))->toBeNull();
+});
+
+test('literal views may be in directories', function () {
+    $this->views([
+        '/users' => [
             '/profile.blade.php',
-        ]);
+        ],
+    ]);
 
-        $router = $this->router();
+    $router = $this->router();
 
-        $this->assertEquals(
-            $router->resolve('/profile')->path,
-            realpath(__DIR__.'/../fixtures/views/profile.blade.php')
-        );
-    }
+    expect(realpath(__DIR__.'/../fixtures/views/users/profile.blade.php'))->toEqual($router->resolve('/users/profile')->path);
+});
 
-    public function test_wildcard_view_can_be_matched()
-    {
-        $this->views([
-            '/index.blade.php',
+test('wildcard views may be in directories', function () {
+    $this->views([
+        '/users' => [
             '/[id].blade.php',
-        ]);
+        ],
+    ]);
 
-        $router = $this->router();
+    $router = $this->router();
 
-        $resolved = $router->resolve('/1');
+    $resolved = $router->resolve('/users/1');
 
-        $this->assertEquals(
-            $resolved->path,
-            realpath(__DIR__.'/../fixtures/views/[id].blade.php')
-        );
+    expect(realpath(__DIR__.'/../fixtures/views/users/[id].blade.php'))->toEqual($resolved->path);
 
-        $this->assertEquals(['id' => 1], $resolved->data);
-    }
+    expect($resolved->data)->toEqual(['id' => 1]);
+});
 
-    public function test_literal_views_take_precendence_over_wildcard_views()
-    {
-        $this->views([
-            '/index.blade.php',
-            '/[id].blade.php',
+test('multisegment wildcard views', function () {
+    $this->views([
+        '/[...id].blade.php',
+    ]);
+
+    $router = $this->router();
+
+    $resolved = $router->resolve('/1/2/3');
+
+    expect(realpath(__DIR__.'/../fixtures/views/[...id].blade.php'))->toEqual($resolved->path);
+
+    expect($resolved->data)->toEqual(['id' => [1, 2, 3]]);
+});
+
+test('multisegment views take priority over further directories', function () {
+    $this->views([
+        '/[...id].blade.php',
+        '/users' => [
             '/profile.blade.php',
-        ]);
+        ],
+    ]);
 
-        $router = $this->router();
+    $router = $this->router();
 
-        $resolved = $router->resolve('/profile');
+    $resolved = $router->resolve('/1/2/3');
 
-        $this->assertEquals(
-            $resolved->path,
-            realpath(__DIR__.'/../fixtures/views/profile.blade.php')
-        );
+    expect(realpath(__DIR__.'/../fixtures/views/[...id].blade.php'))->toEqual($resolved->path);
 
-        $this->assertEquals([], $resolved->data);
+    expect($resolved->data)->toEqual(['id' => [1, 2, 3]]);
+});
 
-        $this->assertNull($router->resolve('/profile/missing-view'));
-    }
-
-    public function test_literal_views_may_be_in_directories()
-    {
-        $this->views([
-            '/users' => [
-                '/profile.blade.php',
+test('wildcard directories', function () {
+    $this->views([
+        '/flights' => [
+            '/[id]' => [
+                '/connections.blade.php',
             ],
-        ]);
+        ],
+    ]);
 
-        $router = $this->router();
+    $router = $this->router();
 
-        $this->assertEquals(
-            $router->resolve('/users/profile')->path,
-            realpath(__DIR__.'/../fixtures/views/users/profile.blade.php')
-        );
-    }
+    $resolved = $router->resolve('/flights/1/connections');
 
-    public function test_wildcard_views_may_be_in_directories()
-    {
-        $this->views([
-            '/users' => [
-                '/[id].blade.php',
-            ],
-        ]);
+    expect(realpath(__DIR__.'/../fixtures/views/flights/[id]/connections.blade.php'))->toEqual($resolved->path);
 
-        $router = $this->router();
+    expect($resolved->data)->toEqual(['id' => 1]);
+});
 
-        $resolved = $router->resolve('/users/1');
-
-        $this->assertEquals(
-            $resolved->path,
-            realpath(__DIR__.'/../fixtures/views/users/[id].blade.php')
-        );
-
-        $this->assertEquals(['id' => 1], $resolved->data);
-    }
-
-    public function test_multisegment_wildcard_views()
-    {
-        $this->views([
-            '/[...id].blade.php',
-        ]);
-
-        $router = $this->router();
-
-        $resolved = $router->resolve('/1/2/3');
-
-        $this->assertEquals(
-            $resolved->path,
-            realpath(__DIR__.'/../fixtures/views/[...id].blade.php')
-        );
-
-        $this->assertEquals(['id' => [1, 2, 3]], $resolved->data);
-    }
-
-    public function test_multisegment_views_take_priority_over_further_directories()
-    {
-        $this->views([
-            '/[...id].blade.php',
-            '/users' => [
-                '/profile.blade.php',
-            ],
-        ]);
-
-        $router = $this->router();
-
-        $resolved = $router->resolve('/1/2/3');
-
-        $this->assertEquals(
-            $resolved->path,
-            realpath(__DIR__.'/../fixtures/views/[...id].blade.php')
-        );
-
-        $this->assertEquals(['id' => [1, 2, 3]], $resolved->data);
-    }
-
-    public function test_wildcard_directories()
-    {
-        $this->views([
-            '/flights' => [
-                '/[id]' => [
-                    '/connections.blade.php',
-                ],
-            ],
-        ]);
-
-        $router = $this->router();
-
-        $resolved = $router->resolve('/flights/1/connections');
-
-        $this->assertEquals(
-            $resolved->path,
-            realpath(__DIR__.'/../fixtures/views/flights/[id]/connections.blade.php')
-        );
-
-        $this->assertEquals(['id' => 1], $resolved->data);
-    }
-
-    public function test_nested_wildcard_directories()
-    {
-        $this->views([
-            '/flights' => [
-                '/[id]' => [
-                    '/connections' => [
-                        '/[connectionId]' => [
-                            '/map.blade.php',
-                        ],
+test('nested wildcard directories', function () {
+    $this->views([
+        '/flights' => [
+            '/[id]' => [
+                '/connections' => [
+                    '/[connectionId]' => [
+                        '/map.blade.php',
                     ],
                 ],
             ],
-        ]);
+        ],
+    ]);
 
-        $router = $this->router();
+    $router = $this->router();
 
-        $resolved = $router->resolve('/flights/1/connections/2/map');
+    $resolved = $router->resolve('/flights/1/connections/2/map');
 
-        $this->assertEquals(
-            $resolved->path,
-            realpath(__DIR__.'/../fixtures/views/flights/[id]/connections/[connectionId]/map.blade.php')
-        );
-
-        $this->assertEquals(['id' => 1, 'connectionId' => 2], $resolved->data);
-    }
-
-    protected function router()
-    {
-        return new Router([realpath(__DIR__.'/../fixtures/views')]);
-    }
-
-    protected function views(array $views, $directory = null)
-    {
-        $directory ??= __DIR__.'/../fixtures/views';
-
-        foreach ($views as $key => $value) {
-            if (is_array($value)) {
-                (new Filesystem)->makeDirectory($directory.$key);
-
-                $this->views($value, $directory.$key);
-            } else {
-                touch($directory.$value);
-            }
-        }
-    }
-}
+    expect(realpath(__DIR__.'/../fixtures/views/flights/[id]/connections/[connectionId]/map.blade.php'))->toEqual($resolved->path)
+        ->and($resolved->data)->toEqual(['id' => 1, 'connectionId' => 2]);
+});

@@ -66,7 +66,7 @@ class Router
             if ($value instanceof MatchedView) {
                 static::ensureNoDirectoryTraversal($value->path, $state->mountPath);
 
-                return $value;
+                return static::transformModelBindings($value, $state);
             } elseif ($value instanceof ContinueIterating) {
                 $state = $value->state;
 
@@ -77,6 +77,14 @@ class Router
         }
 
         return null;
+    }
+
+    /**
+     * Transform the model bindings for the matched view.
+     */
+    protected static function transformModelBindings(MatchedView $view, State $state): MatchedView
+    {
+        return $view;
     }
 
     /**

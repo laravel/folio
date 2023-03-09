@@ -85,6 +85,7 @@ test('model binding can receive a custom binding field and custom binding variab
     );
 })->with([
     ['-slug-$foo', 'slug', 'foo'],
+    [':slug|foo', 'slug', 'foo'],
 ]);
 
 test('model binding can be resolved by explicit binding callback', function () {

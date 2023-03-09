@@ -29,6 +29,7 @@ test('variable parsing', function (string $segment, string $variable) {
 })->with([
     ['[User|theUser]', 'theUser'],
     ['[User:slug|theUser]', 'theUser'],
+    ['[User:slug|$theUser]', 'theUser'],
     ['[User-$theUser]', 'theUser'],
     ['[User-slug-$theUser]', 'theUser'],
 ]);

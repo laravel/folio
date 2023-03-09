@@ -155,7 +155,7 @@ class PotentiallyBindablePathSegment
     public function variable(): string
     {
         if (str_contains($this->value, '|')) {
-            return Str::of($this->trimmed())->afterLast('|')->value();
+            return Str::of($this->trimmed())->afterLast('|')->trim('$')->value();
         } elseif (str_contains($this->value, '$')) {
             return Str::of($this->trimmed())->afterLast('$')->value();
         }

@@ -8,6 +8,12 @@ test('test model directory is assumed for classes that are not fully qualified a
     $this->assertEquals('App\\Models\\User', $segment->class());
 });
 
+test('variable name is pluralized if the segment captures multiple segments and no other explicit variable name is given', function () {
+    $segment = new PotentiallyBindablePathSegment('[...User]');
+
+    $this->assertEquals('users', $segment->variable());
+});
+
 test('field parsing', function (string $segment, string $field) {
     $segment = new PotentiallyBindablePathSegment($segment);
 
@@ -27,6 +33,7 @@ test('variable parsing', function (string $segment, string $variable) {
 
     $this->assertEquals($variable, $segment->variable());
 })->with([
+    ['[User]', 'user'],
     ['[User|theUser]', 'theUser'],
     ['[User:slug|theUser]', 'theUser'],
     ['[User:slug|$theUser]', 'theUser'],

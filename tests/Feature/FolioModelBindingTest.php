@@ -68,6 +68,24 @@ test('model binding can be resolved by explicit binding callback', function () {
     );
 });
 
+test('model binding can span across multiple segments', function () {
+    $this->views([
+        '/index.blade.php',
+        '/users' => [
+            '/[....FolioModelBindingTestClass].blade.php',
+        ],
+    ]);
+
+    $router = $this->router();
+
+    $view = $router->resolve('/users/1/2/3');
+
+    $this->assertTrue(is_array($view->data['folioModelBindingTestClass']));
+    $this->assertEquals('1', $view->data['folioModelBindingTestClass'][0]->value);
+    $this->assertEquals('2', $view->data['folioModelBindingTestClass'][1]->value);
+    $this->assertEquals('3', $view->data['folioModelBindingTestClass'][2]->value);
+});
+
 class FolioModelBindingTestClass implements UrlRoutable
 {
     public function __construct(public mixed $value = null, public mixed $field = null)

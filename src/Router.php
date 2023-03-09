@@ -2,7 +2,6 @@
 
 namespace Laravel\Folio;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Str;
 use Laravel\Folio\Exceptions\PossibleDirectoryTraversal;
@@ -103,7 +102,13 @@ class Router
             }
 
             if ($segment->capturesMultipleSegments()) {
-                //
+                return $view->replace(
+                    $segment->trimmed(),
+                    $segment->classVariable(),
+                    collect(array_slice($uriSegments, $index))
+                        ->map(fn ($value) => $segment->resolveOrFail($value))
+                        ->all(),
+                );
             }
 
             // TODO: Multi-segments...

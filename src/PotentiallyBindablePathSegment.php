@@ -135,10 +135,10 @@ class PotentiallyBindablePathSegment
     }
 
     /**
-     * Get the segment value with the "[" and "]" characters trimmed.
+     * Get the segment value with the "[" and "]" and "..." characters trimmed.
      */
     public function trimmed(): string
     {
-        return trim($this->value, '[]');
+        return Str::of($this->value)->trim('[]')->after('...')->value();
     }
 }

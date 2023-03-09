@@ -29,6 +29,8 @@ test('basic implicit model binding', function () {
         $view->data['folioModelBindingTestClass'] instanceof
         FolioModelBindingTestClass
     );
+
+    $this->assertEquals(1, count($view->data));
 });
 
 test('basic implicit model bindings with more than one binding in path', function () {
@@ -56,6 +58,11 @@ test('basic implicit model bindings with more than one binding in path', functio
         $view->data['second'] instanceof
         FolioModelBindingTestClass
     );
+
+    $this->assertEquals('1', $view->data['first']->value);
+    $this->assertEquals('2', $view->data['second']->value);
+
+    $this->assertEquals(2, count($view->data));
 });
 
 test('model binding can receive a custom binding field', function (string $pathString) {
@@ -74,6 +81,8 @@ test('model binding can receive a custom binding field', function (string $pathS
         'slug',
         $view->data['folioModelBindingTestClass']->field
     );
+
+    $this->assertEquals(1, count($view->data));
 })->with(['-slug', ':slug']);
 
 test('model binding can receive a custom binding variable', function (string $pathString, string $variable) {
@@ -92,6 +101,8 @@ test('model binding can receive a custom binding variable', function (string $pa
         '1',
         $view->data[$variable]->value
     );
+
+    $this->assertEquals(1, count($view->data));
 })->with([
     ['-$foo', 'foo'],
     ['|foo', 'foo'],
@@ -113,6 +124,8 @@ test('model binding can receive a custom binding field and custom binding variab
         $field,
         $view->data[$variable]->field
     );
+
+    $this->assertEquals(1, count($view->data));
 })->with([
     ['-slug-$foo', 'slug', 'foo'],
     [':slug|foo', 'slug', 'foo'],
@@ -156,6 +169,8 @@ test('model binding can span across multiple segments', function () {
     $this->assertEquals('1', $view->data['folioModelBindingTestClasses'][0]->value);
     $this->assertEquals('2', $view->data['folioModelBindingTestClasses'][1]->value);
     $this->assertEquals('3', $view->data['folioModelBindingTestClasses'][2]->value);
+
+    $this->assertEquals(1, count($view->data));
 });
 
 test('model binding can span across multiple segments with custom fields and variables', function (string $pathString, string $field, string $variable) {

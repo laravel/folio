@@ -89,7 +89,8 @@ class Router
             ->beforeLast('.blade.php')
             ->trim('/');
 
-        [$uriSegments, $pathSegments] = [
+        [$parent, $uriSegments, $pathSegments] = [
+            null,
             explode('/', $state->uri),
             explode('/', $path),
         ];
@@ -106,17 +107,19 @@ class Router
                     $segment->trimmed(),
                     $segment->variable(),
                     collect(array_slice($uriSegments, $index))
-                        ->map(fn ($value) => $segment->resolveOrFail($value))
+                        ->map(fn ($value) => $segment->resolveOrFail($value, $parent))
                         ->all(),
                 );
             }
 
             // TODO: Child bindings...
 
+            $parent = $segment;
+
             $view = $view->replace(
                 $segment->trimmed(),
                 $segment->variable(),
-                $segment->resolveOrFail($uriSegments[$index]),
+                $segment->resolveOrFail($uriSegments[$index], $parent),
             );
         }
 

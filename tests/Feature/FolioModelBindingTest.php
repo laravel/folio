@@ -223,7 +223,7 @@ test('basic child model bindings are scoped to the parent', function () {
     $this->assertEquals('2', $view->data['second']->value);
 
     $this->assertEquals(2, count($view->data));
-})->skip();
+});
 
 class FolioModelBindingTestClass implements UrlRoutable
 {

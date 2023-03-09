@@ -38,9 +38,9 @@ class PotentiallyBindablePathSegment
     /**
      * Resolve the binding or throw a ModelNotFoundException.
      */
-    public function resolveOrFail(mixed $value): UrlRoutable
+    public function resolveOrFail(mixed $value, ?PotentiallyBindablePathSegment $parent = null): UrlRoutable
     {
-        if (is_null($resolved = $this->resolve($value))) {
+        if (is_null($resolved = $this->resolve($value, $parent))) {
             throw (new ModelNotFoundException)
                     ->setModel(get_class($this->newClassInstance()), [$value]);
         }
@@ -51,16 +51,37 @@ class PotentiallyBindablePathSegment
     /**
      * Attempt to resolve the binding.
      */
-    public function resolve(mixed $value): ?UrlRoutable
+    public function resolve(mixed $value, ?PotentiallyBindablePathSegment $parent = null): ?UrlRoutable
     {
-        $classInstance = $this->newClassInstance();
-
         if ($explicitBindingCallback = Route::getBindingCallback($this->variable())) {
             return $explicitBindingCallback($value);
         }
 
+        if ($parent && $this->field()) {
+            return $this->resolveViaParent($value, $parent);
+        }
+
+        $classInstance = $this->newClassInstance();
+
         return $classInstance->resolveRouteBinding(
             $value, $this->field() ?: $classInstance->getRouteKeyName()
+        );
+    }
+
+    /**
+     * Attempt to resolve the binding via the given parent.
+     */
+    protected function resolveViaParent(mixed $value, PotentiallyBindablePathSegment $parent): ?UrlRoutable
+    {
+        [$parentInstance, $childInstance] = [
+            $parent->newClassInstance(),
+            $this->newClassInstance(),
+        ];
+
+        return $parentInstance->resolveChildRouteBinding(
+            get_class($this->newClassInstance()),
+            $value,
+            $this->field() ?: $childInstance->getRouteKeyName()
         );
     }
 

@@ -102,19 +102,17 @@ class Router
                 continue;
             }
 
-            // TODO: Explicit bindings...
+            if ($segment->capturesMultipleSegments()) {
+                //
+            }
+
             // TODO: Multi-segments...
             // TODO: Child bindings...
-
-            if (is_null($resolved = $segment->resolve($uriSegments[$index]))) {
-                throw (new ModelNotFoundException)
-                        ->setModel(get_class($classInstance), [$uriSegments[$index]]);
-            }
 
             $view = $view->replace(
                 $segment->trimmed(),
                 $segment->classVariable(),
-                $resolved
+                $segment->resolveOrFail($uriSegments[$index]),
             );
         }
 

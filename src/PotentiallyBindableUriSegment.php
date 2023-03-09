@@ -4,6 +4,7 @@ namespace Laravel\Folio;
 
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Routing\UrlRoutable;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
@@ -24,6 +25,27 @@ class PotentiallyBindableUriSegment
                str_ends_with($this->value, ']') &&
                class_exists($this->class()) &&
                is_a($this->class(), UrlRoutable::class, true);
+    }
+
+    /**
+     * Determine if the binding segment captures multiple segments.
+     */
+    public function capturesMultipleSegments(): bool
+    {
+        return str_starts_with($this->value, '[...');
+    }
+
+    /**
+     * Resolve the binding or throw a ModelNotFoundException.
+     */
+    public function resolveOrFail(mixed $value): UrlRoutable
+    {
+        if (is_null($resolved = $this->resolve($value))) {
+            throw (new ModelNotFoundException)
+                    ->setModel(get_class($this->newClassInstance()), [$value]);
+        }
+
+        return $resolved;
     }
 
     /**
@@ -53,6 +75,7 @@ class PotentiallyBindableUriSegment
 
         $this->class = (string) Str::of($this->value)
                     ->trim('[]')
+                    ->after('...')
                     ->beforeLast('|')
                     ->beforeLast('-')
                     ->replace('.', '\\')

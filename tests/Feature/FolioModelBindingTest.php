@@ -10,7 +10,7 @@ afterEach(function () {
     touch(__DIR__.'/../fixtures/views/.gitkeep');
 });
 
-test('basic model binding', function () {
+test('basic implicit model binding', function () {
     $this->views([
         '/index.blade.php',
         '/users' => [

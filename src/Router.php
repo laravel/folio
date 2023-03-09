@@ -112,7 +112,8 @@ class Router
                 );
             }
 
-            // TODO: Child bindings...
+            // TODO: withTrashed support...
+            // TODO: should child scoping happen even when no explicit field given?
 
             $parent = $segment;
 

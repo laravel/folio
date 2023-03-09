@@ -239,6 +239,36 @@ test('child model bindings are scoped to the parent when field is present on chi
     $this->assertEquals(2, count($view->data));
 });
 
+test('explicit model bindings take precedence over implicit scoped child bindings', function () {
+    $this->views([
+        '/index.blade.php',
+        '/users' => [
+            '/[.FolioModelBindingTestClass|first]' => [
+                '/posts' => [
+                    '/[.FolioModelBindingTestClass:slug|second].blade.php'
+                ],
+            ],
+        ],
+    ]);
+
+    Route::bind('first', function ($value) {
+        return new FolioModelBindingTestClass(strtoupper($value));
+    });
+
+    Route::bind('second', function ($value) {
+        return new FolioModelBindingTestClass(strtoupper($value));
+    });
+
+    $router = $this->router();
+
+    $view = $router->resolve('/users/abc/posts/def');
+
+    $this->assertEquals('ABC', $view->data['first']->value);
+    $this->assertEquals('DEF', $view->data['second']->value);
+
+    $this->assertEquals(2, count($view->data));
+});
+
 test('scoped child model bindings trigger model not found exception if they do not exist', function () {
     $this->views([
         '/index.blade.php',

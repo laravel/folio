@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Contracts\Routing\UrlRoutable;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +33,19 @@ test('basic implicit model binding', function () {
 
     $this->assertEquals(1, count($view->data));
 });
+
+test('missing models trigger model not found exception', function () {
+    $this->views([
+        '/index.blade.php',
+        '/users' => [
+            '/[.FolioModelBindingTestClass].blade.php',
+        ],
+    ]);
+
+    $router = $this->router();
+
+    $router->resolve('/users/_missing');
+})->throws(ModelNotFoundException::class);
 
 test('basic implicit model bindings with more than one binding in path', function () {
     $this->views([
@@ -200,7 +214,7 @@ test('model binding can span across multiple segments with custom fields and var
     [':slug|foo', 'slug', 'foo'],
 ]);
 
-test('basic child model bindings are scoped to the parent', function () {
+test('child model bindings are scoped to the parent when field is present on child', function () {
     $this->views([
         '/index.blade.php',
         '/users' => [
@@ -225,6 +239,23 @@ test('basic child model bindings are scoped to the parent', function () {
     $this->assertEquals(2, count($view->data));
 });
 
+test('scoped child model bindings trigger model not found exception if they do not exist', function () {
+    $this->views([
+        '/index.blade.php',
+        '/users' => [
+            '/[.FolioModelBindingTestClass|first]' => [
+                '/posts' => [
+                    '/[.FolioModelBindingTestClass:slug|second].blade.php'
+                ],
+            ],
+        ],
+    ]);
+
+    $router = $this->router();
+
+    $router->resolve('/users/1/posts/_missing');
+})->throws(ModelNotFoundException::class);
+
 class FolioModelBindingTestClass implements UrlRoutable
 {
     public function __construct(public mixed $value = null, public mixed $field = null, public mixed $childType = null)
@@ -243,11 +274,19 @@ class FolioModelBindingTestClass implements UrlRoutable
 
     public function resolveRouteBinding($value, $field = null)
     {
+        if ($value === '_missing') {
+            return null;
+        }
+
         return new FolioModelBindingTestClass($value, $field);
     }
 
     public function resolveChildRouteBinding($childType, $value, $field)
     {
+        if ($value === '_missing') {
+            return null;
+        }
+
         return new FolioModelBindingTestClass($value, $field, $childType);
     }
 }

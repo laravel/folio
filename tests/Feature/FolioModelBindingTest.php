@@ -27,10 +27,27 @@ test('basic model binding', function () {
     );
 });
 
+test('model binding can receive an explicit binding field', function () {
+    $this->views([
+        '/index.blade.php',
+        '/users' => [
+            '/[.FolioModelBindingTestClass-slug].blade.php',
+        ],
+    ]);
+
+    $router = $this->router();
+
+    $view = $router->resolve('/users/1');
+
+    $this->assertEquals(
+        'slug',
+        $view->data['folioModelBindingTestClass']->field
+    );
+});
 
 class FolioModelBindingTestClass implements UrlRoutable
 {
-    public function __construct(public mixed $value = null)
+    public function __construct(public mixed $value = null, public mixed $field = null)
     {
     }
 
@@ -46,7 +63,7 @@ class FolioModelBindingTestClass implements UrlRoutable
 
     public function resolveRouteBinding($value, $field = null)
     {
-        return new FolioModelBindingTestClass($value);
+        return new FolioModelBindingTestClass($value, $field);
     }
 
     public function resolveChildRouteBinding($childType, $value, $field)

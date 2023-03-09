@@ -33,7 +33,7 @@ class PotentiallyBindableUriSegment
         $classInstance = $this->newClassInstance();
 
         return $classInstance->resolveRouteBinding(
-            $value, $classInstance->getRouteKeyName()
+            $value, $this->field() ?: $classInstance->getRouteKeyName()
         );
     }
 
@@ -49,6 +49,7 @@ class PotentiallyBindableUriSegment
         $this->class = (string) Str::of($this->value)
                     ->trim('[]')
                     ->beforeLast('-')
+                    ->beforeLast('|')
                     ->replace('.', '\\')
                     ->unless(
                         fn ($s) => $s->contains('\\'),
@@ -80,6 +81,20 @@ class PotentiallyBindableUriSegment
     public function newClassInstance(): mixed
     {
         return Container::getInstance()->make($this->class());
+    }
+
+    /**
+     * Get the custom binding field (if any) that is specified in the segment.
+     */
+    public function field(): string|bool
+    {
+        if (str_contains($this->value, '|')) {
+            return Str::of($this->trimmed())->afterLast('|')->value();
+        } elseif (str_contains($this->value, '-')) {
+            return Str::of($this->trimmed())->afterLast('-')->value();
+        }
+
+        return false;
     }
 
     /**

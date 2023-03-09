@@ -128,6 +128,32 @@ test('model binding can span across multiple segments', function () {
     $this->assertEquals('3', $view->data['folioModelBindingTestClasses'][2]->value);
 });
 
+test('model binding can span across multiple segments with custom fields and variables', function (string $pathString, string $field, string $variable) {
+    $this->views([
+        '/index.blade.php',
+        '/users' => [
+            '/[....FolioModelBindingTestClass'.$pathString.'].blade.php',
+        ],
+    ]);
+
+    $router = $this->router();
+
+    $view = $router->resolve('/users/1/2/3');
+
+    $this->assertTrue(is_array($view->data[$variable]));
+
+    $this->assertEquals('1', $view->data[$variable][0]->value);
+    $this->assertEquals('2', $view->data[$variable][1]->value);
+    $this->assertEquals('3', $view->data[$variable][2]->value);
+
+    $this->assertEquals($field, $view->data[$variable][0]->field);
+    $this->assertEquals($field, $view->data[$variable][1]->field);
+    $this->assertEquals($field, $view->data[$variable][2]->field);
+})->with([
+    ['-slug-$foo', 'slug', 'foo'],
+    [':slug|foo', 'slug', 'foo'],
+]);
+
 class FolioModelBindingTestClass implements UrlRoutable
 {
     public function __construct(public mixed $value = null, public mixed $field = null)

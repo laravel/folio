@@ -2,6 +2,7 @@
 
 namespace Laravel\Folio;
 
+use Exception;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -21,10 +22,17 @@ class PotentiallyBindablePathSegment
      */
     public function bindable(): bool
     {
-        return str_starts_with($this->value, '[') &&
-               str_ends_with($this->value, ']') &&
-               class_exists($this->class()) &&
-               is_a($this->class(), UrlRoutable::class, true);
+        if (! str_starts_with($this->value, '[') ||
+            ! str_ends_with($this->value, ']') ||
+            ! class_exists($this->class())) {
+            return false;
+        }
+
+        if (! is_a($this->class(), UrlRoutable::class, true)) {
+            throw new Exception('Folio route attempting to bind to class ['.$this->class().'], but it does not implement the UrlRoutable interface.');
+        }
+
+        return true;
     }
 
     /**

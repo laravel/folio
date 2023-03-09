@@ -81,7 +81,7 @@ class PotentiallyBindablePathSegment
                     ->before(':')
                     ->replace('.', '\\')
                     ->unless(
-                        fn ($s) => $s->contains('\\'),
+                        fn ($s) => $s->contains('\\') || class_exists($s->value()),
                         fn ($s) => $s->prepend('App\\Models\\')
                     )->trim('\\');
 

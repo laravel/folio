@@ -157,7 +157,7 @@ test('model binding can span across multiple segments', function () {
     $this->views([
         '/index.blade.php',
         '/users' => [
-            '/[....FolioModelBindingTestClass].blade.php',
+            '/[...FolioModelBindingTestClass].blade.php',
         ],
     ]);
 
@@ -177,7 +177,7 @@ test('model binding can span across multiple segments with custom fields and var
     $this->views([
         '/index.blade.php',
         '/users' => [
-            '/[....FolioModelBindingTestClass'.$pathString.'].blade.php',
+            '/[...FolioModelBindingTestClass'.$pathString.'].blade.php',
         ],
     ]);
 

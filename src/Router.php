@@ -104,7 +104,7 @@ class Router
             if ($segment->capturesMultipleSegments()) {
                 return $view->replace(
                     $segment->trimmed(),
-                    $segment->classVariable(),
+                    $segment->variable(),
                     collect(array_slice($uriSegments, $index))
                         ->map(fn ($value) => $segment->resolveOrFail($value))
                         ->all(),
@@ -116,7 +116,7 @@ class Router
 
             $view = $view->replace(
                 $segment->trimmed(),
-                $segment->classVariable(),
+                $segment->variable(),
                 $segment->resolveOrFail($uriSegments[$index]),
             );
         }

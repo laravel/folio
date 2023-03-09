@@ -55,7 +55,7 @@ class PotentiallyBindableUriSegment
     {
         $classInstance = $this->newClassInstance();
 
-        if ($explicitBindingCallback = Route::getBindingCallback($this->classVariable())) {
+        if ($explicitBindingCallback = Route::getBindingCallback($this->variable())) {
             return $explicitBindingCallback($value);
         }
 
@@ -78,6 +78,7 @@ class PotentiallyBindableUriSegment
                     ->after('...')
                     ->beforeLast('|')
                     ->beforeLast('-')
+                    ->beforeLast(':')
                     ->replace('.', '\\')
                     ->unless(
                         fn ($s) => $s->contains('\\'),
@@ -93,14 +94,6 @@ class PotentiallyBindableUriSegment
     public function classBasename(): string
     {
         return class_basename($this->class());
-    }
-
-    /**
-     * Get the view injectable variable name for the class being bound.
-     */
-    public function classVariable(): string
-    {
-        return Str::camel($this->classBasename());
     }
 
     /**
@@ -123,6 +116,14 @@ class PotentiallyBindableUriSegment
         }
 
         return false;
+    }
+
+    /**
+     * Get the view injectable variable name for the class being bound.
+     */
+    public function variable(): string
+    {
+        return Str::camel($this->classBasename());
     }
 
     /**

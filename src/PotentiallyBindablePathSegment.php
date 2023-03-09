@@ -141,7 +141,9 @@ class PotentiallyBindablePathSegment
         if (str_contains($this->value, ':')) {
             return Str::of($this->trimmed())->after(':')->before('|')->before('$')->value();
         } elseif (str_contains($this->value, '-')) {
-            return explode('-', $this->trimmed())[1] ?? false;
+            $segments = explode('-', $this->trimmed());
+
+            return str_contains($segments[1] ?? '', '$') ? false : $segments[1];
         }
 
         return false;

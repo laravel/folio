@@ -2,8 +2,6 @@
 
 namespace Laravel\Folio;
 
-use Illuminate\Container\Container;
-use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Str;
@@ -98,8 +96,9 @@ class Router
         ];
 
         foreach ($pathSegments as $index => $segment) {
-            if (! str_starts_with($segment, '[') ||
-                ! str_ends_with($segment, ']')) {
+            $segment = new PotentiallyBindableUriSegment($segment);
+
+            if (! $segment->bindable()) {
                 continue;
             }
 
@@ -108,36 +107,16 @@ class Router
             // TODO: Custom binding fields...
             // TODO: Multi-segments...
 
-            $class = (string) Str::of($segment)
-                        ->trim('[]')
-                        ->beforeLast('-')
-                        ->replace('.', '\\');
-
-            if (! str_contains($class, '\\')) {
-                $class = 'App\\Models\\'.$class;
+            if (is_null($resolved = $segment->resolve($uriSegments[$index]))) {
+                throw (new ModelNotFoundException)
+                        ->setModel(get_class($classInstance), [$uriSegments[$index]]);
             }
 
-            if (! class_exists($class)) {
-                continue;
-            }
-
-            $classInstance = Container::getInstance()->make($class);
-
-            if (! $classInstance instanceof UrlRoutable) {
-                continue;
-            }
-
-            $resolved = $classInstance->resolveRouteBinding(
-                $uriSegments[$index], $classInstance->getRouteKeyName()
+            $view = $view->replace(
+                $segment->trimmed(),
+                $segment->classVariable(),
+                $resolved
             );
-
-            if (! $resolved) {
-                throw (new ModelNotFoundException)->setModel(get_class($classInstance), [$uriSegments[$index]]);
-            }
-
-            unset($view->data[Str::of($segment)->trim('[]')->value()]);
-
-            $view->data[Str::camel(class_basename($class))] = $resolved;
         }
 
         return $view;

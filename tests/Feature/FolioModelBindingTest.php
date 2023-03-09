@@ -2,6 +2,7 @@
 
 use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Route;
 
 afterEach(function () {
     (new Filesystem)->deleteDirectory(realpath(__DIR__.'/../fixtures/views'), preserve: true);
@@ -27,7 +28,7 @@ test('basic model binding', function () {
     );
 });
 
-test('model binding can receive an explicit binding field', function () {
+test('model binding can receive a custom binding field', function () {
     $this->views([
         '/index.blade.php',
         '/users' => [
@@ -42,6 +43,28 @@ test('model binding can receive an explicit binding field', function () {
     $this->assertEquals(
         'slug',
         $view->data['folioModelBindingTestClass']->field
+    );
+});
+
+test('model binding can be resolved by explicit binding callback', function () {
+    $this->views([
+        '/index.blade.php',
+        '/users' => [
+            '/[.FolioModelBindingTestClass].blade.php',
+        ],
+    ]);
+
+    Route::bind('folioModelBindingTestClass', function ($value) {
+        return new FolioModelBindingTestClass(strtoupper($value));
+    });
+
+    $router = $this->router();
+
+    $view = $router->resolve('/users/abc');
+
+    $this->assertEquals(
+        'ABC',
+        $view->data['folioModelBindingTestClass']->value
     );
 });
 

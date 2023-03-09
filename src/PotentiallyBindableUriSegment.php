@@ -4,6 +4,7 @@ namespace Laravel\Folio;
 
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Routing\UrlRoutable;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
 class PotentiallyBindableUriSegment
@@ -32,6 +33,10 @@ class PotentiallyBindableUriSegment
     {
         $classInstance = $this->newClassInstance();
 
+        if ($explicitBindingCallback = Route::getBindingCallback($this->classVariable())) {
+            return $explicitBindingCallback($value);
+        }
+
         return $classInstance->resolveRouteBinding(
             $value, $this->field() ?: $classInstance->getRouteKeyName()
         );
@@ -48,13 +53,13 @@ class PotentiallyBindableUriSegment
 
         $this->class = (string) Str::of($this->value)
                     ->trim('[]')
-                    ->beforeLast('-')
                     ->beforeLast('|')
+                    ->beforeLast('-')
                     ->replace('.', '\\')
                     ->unless(
                         fn ($s) => $s->contains('\\'),
                         fn ($s) => $s->prepend('App\\Models\\')
-                    );
+                    )->trim('\\');
 
         return $this->class;
     }

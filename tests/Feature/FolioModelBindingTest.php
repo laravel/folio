@@ -28,11 +28,11 @@ test('basic implicit model binding', function () {
     );
 });
 
-test('model binding can receive a custom binding field', function (string $field) {
+test('model binding can receive a custom binding field', function (string $pathString) {
     $this->views([
         '/index.blade.php',
         '/users' => [
-            '/[.FolioModelBindingTestClass'.$field.'].blade.php',
+            '/[.FolioModelBindingTestClass'.$pathString.'].blade.php',
         ],
     ]);
 

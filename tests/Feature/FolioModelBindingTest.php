@@ -22,7 +22,7 @@ test('basic model binding', function () {
     $view = $router->resolve('/users/1');
 
     $this->assertTrue($view->data['folioModelBindingTestClass'] instanceof FolioModelBindingTestClass);
-})->only();
+});
 
 
 class FolioModelBindingTestClass implements UrlRoutable

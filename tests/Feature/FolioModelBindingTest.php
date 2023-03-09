@@ -4,11 +4,14 @@ use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Route;
 
-afterEach(function () {
+$purgeDirectories = function () {
     (new Filesystem)->deleteDirectory(realpath(__DIR__.'/../fixtures/views'), preserve: true);
 
     touch(__DIR__.'/../fixtures/views/.gitkeep');
-});
+};
+
+beforeEach($purgeDirectories);
+afterEach($purgeDirectories);
 
 test('basic implicit model binding', function () {
     $this->views([
@@ -24,6 +27,33 @@ test('basic implicit model binding', function () {
 
     $this->assertTrue(
         $view->data['folioModelBindingTestClass'] instanceof
+        FolioModelBindingTestClass
+    );
+});
+
+test('basic implicit model bindings with more than one binding in path', function () {
+    $this->views([
+        '/index.blade.php',
+        '/users' => [
+            '/[.FolioModelBindingTestClass|first]' => [
+                '/posts' => [
+                    '/[.FolioModelBindingTestClass|second].blade.php'
+                ],
+            ],
+        ],
+    ]);
+
+    $router = $this->router();
+
+    $view = $router->resolve('/users/1/posts/2');
+
+    $this->assertTrue(
+        $view->data['first'] instanceof
+        FolioModelBindingTestClass
+    );
+
+    $this->assertTrue(
+        $view->data['second'] instanceof
         FolioModelBindingTestClass
     );
 });

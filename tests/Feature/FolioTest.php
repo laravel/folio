@@ -2,11 +2,14 @@
 
 use Illuminate\Filesystem\Filesystem;
 
-afterEach(function () {
+$purgeDirectories = function () {
     (new Filesystem)->deleteDirectory(realpath(__DIR__.'/../fixtures/views'), preserve: true);
 
     touch(__DIR__.'/../fixtures/views/.gitkeep');
-});
+};
+
+beforeEach($purgeDirectories);
+afterEach($purgeDirectories);
 
 test('root index view can be matched', function () {
     $this->views([

@@ -61,6 +61,7 @@ test('basic implicit model bindings with more than one binding in path', functio
 
     $this->assertEquals('1', $view->data['first']->value);
     $this->assertEquals('2', $view->data['second']->value);
+    $this->assertNull($view->data['second']->childType);
 
     $this->assertEquals(2, count($view->data));
 });
@@ -199,9 +200,34 @@ test('model binding can span across multiple segments with custom fields and var
     [':slug|foo', 'slug', 'foo'],
 ]);
 
+test('basic child model bindings are scoped to the parent', function () {
+    $this->views([
+        '/index.blade.php',
+        '/users' => [
+            '/[.FolioModelBindingTestClass|first]' => [
+                '/posts' => [
+                    '/[.FolioModelBindingTestClass:slug|second].blade.php'
+                ],
+            ],
+        ],
+    ]);
+
+    $router = $this->router();
+
+    $view = $router->resolve('/users/1/posts/2');
+
+    $this->assertEquals('1', $view->data['first']->value);
+
+    $this->assertEquals(FolioModelBindingTestClass::class, $view->data['second']->childType);
+    $this->assertEquals('slug', $view->data['second']->field);
+    $this->assertEquals('2', $view->data['second']->value);
+
+    $this->assertEquals(2, count($view->data));
+})->skip();
+
 class FolioModelBindingTestClass implements UrlRoutable
 {
-    public function __construct(public mixed $value = null, public mixed $field = null)
+    public function __construct(public mixed $value = null, public mixed $field = null, public mixed $childType = null)
     {
     }
 
@@ -222,6 +248,6 @@ class FolioModelBindingTestClass implements UrlRoutable
 
     public function resolveChildRouteBinding($childType, $value, $field)
     {
-        //
+        return new FolioModelBindingTestClass($value, $field, $childType);
     }
 }

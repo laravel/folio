@@ -2,6 +2,9 @@
 
 namespace Laravel\Folio;
 
+use Illuminate\Container\Container;
+use Illuminate\Contracts\Routing\UrlRoutable;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Str;
 use Laravel\Folio\Exceptions\PossibleDirectoryTraversal;
@@ -84,6 +87,57 @@ class Router
      */
     protected static function transformModelBindings(MatchedView $view, State $state): MatchedView
     {
+        $path = (string) Str::of($view->path)
+            ->replace($state->mountPath, '')
+            ->beforeLast('.blade.php')
+            ->trim('/');
+
+        [$uriSegments, $pathSegments] = [
+            explode('/', $state->uri),
+            explode('/', $path),
+        ];
+
+        foreach ($pathSegments as $index => $segment) {
+            if (! str_starts_with($segment, '[') ||
+                ! str_ends_with($segment, ']')) {
+                continue;
+            }
+
+            // TODO: Explicit bindings...
+            // TODO: Multi-segments...
+
+            $class = (string) Str::of($segment)
+                        ->trim('[]')
+                        ->beforeLast('-')
+                        ->replace('.', '\\');
+
+            if (! str_contains($class, '\\')) {
+                $class = 'App\\Models\\'.$class;
+            }
+
+            if (! class_exists($class)) {
+                continue;
+            }
+
+            $classInstance = Container::getInstance()->make($class);
+
+            if (! $classInstance instanceof UrlRoutable) {
+                continue;
+            }
+
+            $resolved = $classInstance->resolveRouteBinding(
+                $uriSegments[$index], $classInstance->getRouteKeyName()
+            );
+
+            if (! $resolved) {
+                throw (new ModelNotFoundException)->setModel(get_class($classInstance), [$uriSegments[$index]]);
+            }
+
+            unset($view->data[Str::of($segment)->trim('[]')->value()]);
+
+            $view->data[Str::camel(class_basename($class))] = $resolved;
+        }
+
         return $view;
     }
 

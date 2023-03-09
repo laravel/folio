@@ -95,7 +95,7 @@ class Router
         ];
 
         foreach ($pathSegments as $index => $segment) {
-            $segment = new PotentiallyBindableUriSegment($segment);
+            $segment = new PotentiallyBindablePathSegment($segment);
 
             if (! $segment->bindable()) {
                 continue;

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
-class PotentiallyBindableUriSegment
+class PotentiallyBindablePathSegment
 {
     protected $class;
 
@@ -76,9 +76,9 @@ class PotentiallyBindableUriSegment
         $this->class = (string) Str::of($this->value)
                     ->trim('[]')
                     ->after('...')
-                    ->beforeLast('|')
-                    ->beforeLast('-')
-                    ->beforeLast(':')
+                    ->before('-')
+                    ->before('|')
+                    ->before(':')
                     ->replace('.', '\\')
                     ->unless(
                         fn ($s) => $s->contains('\\'),
@@ -109,10 +109,10 @@ class PotentiallyBindableUriSegment
      */
     public function field(): string|bool
     {
-        if (str_contains($this->value, '|')) {
-            return Str::of($this->trimmed())->afterLast('|')->value();
+        if (str_contains($this->value, ':')) {
+            return Str::of($this->trimmed())->after(':')->before('|')->before('$')->value();
         } elseif (str_contains($this->value, '-')) {
-            return Str::of($this->trimmed())->afterLast('-')->value();
+            return explode('-', $this->trimmed())[1] ?? false;
         }
 
         return false;
@@ -123,7 +123,15 @@ class PotentiallyBindableUriSegment
      */
     public function variable(): string
     {
-        return Str::camel($this->classBasename());
+        if (str_contains($this->value, '|')) {
+            return Str::of($this->trimmed())->afterLast('|')->value();
+        } elseif (str_contains($this->value, '$')) {
+            return Str::of($this->trimmed())->afterLast('$')->value();
+        }
+
+        return $this->capturesMultipleSegments()
+                    ? Str::camel(Str::plural($this->classBasename()))
+                    : Str::camel($this->classBasename());
     }
 
     /**

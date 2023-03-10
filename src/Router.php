@@ -90,9 +90,7 @@ class Router
             ->trim('/');
 
         [$parent, $uriSegments, $pathSegments] = [
-            null,
-            explode('/', $state->uri),
-            explode('/', $path),
+            null, explode('/', $state->uri), explode('/', $path),
         ];
 
         foreach ($pathSegments as $index => $segment) {
@@ -113,7 +111,6 @@ class Router
             }
 
             // TODO: withTrashed support...
-            // TODO: should child scoping happen even when no explicit field given?
 
             $parent = $segment;
 

@@ -72,7 +72,7 @@ class Router
 
                 continue;
             } elseif ($value instanceof StopIterating) {
-                return null;
+                break;
             }
         }
 

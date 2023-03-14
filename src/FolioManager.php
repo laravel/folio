@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\View;
 class FolioManager
 {
     /**
+     * The registered mount paths that contain pages.
+     */
+    protected array $mountPaths = [];
+
+    /**
      * The registered middleware.
      */
     protected array $middleware = [];
@@ -31,25 +36,40 @@ class FolioManager
     }
 
     /**
-     * Mount the given paths as page based routing targets.
+     * Register the routes to handle page based routing at the given paths.
      */
     public function route(?string $to = null, ?string $uri = '/'): self
     {
-        $to = match (true) {
-            isset($to) => $to,
-            count($this->mountPaths) > 0 => $this->mountPaths,
-            default => config('view.paths')[0].'/pages',
-        };
+        if ($uri === '/') {
+            Route::fallback($this->handler($to));
+        } else {
+            Route::get(
+                '/'.trim($uri, '/').'/{uri?}',
+                $this->handler($to)
+            )->where('uri', '.*');
+        }
 
-        Route::get($uri === '/' ? '/{uri?}' : '/'.trim($uri, '/').'/{uri?}', function (Request $request, $uri = '/') use ($to) {
+        return $this;
+    }
+
+    /**
+     * Get the Folio request handler function.
+     */
+    protected function handler(?string $to): Closure
+    {
+        return function (Request $request, $uri = '/') use ($to) {
+            $to = match (true) {
+                isset($to) => $to,
+                count($this->mountPaths) > 0 => $this->mountPaths,
+                default => config('view.paths')[0].'/pages',
+            };
+
             $matchedView = (new Router(Arr::wrap($to)))->resolve($uri) ?? abort(404);
 
             return (
                 $this->renderUsing ??= fn ($m) => View::file($m->path, $m->data)
             )($matchedView);
-        })->where('uri', '.*');
-
-        return $this;
+        };
     }
 
     /**

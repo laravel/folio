@@ -15,7 +15,7 @@ test('path based middleware can be matched', function () {
     );
 
     $this->assertEquals(['foo', 'bar', 'baz'], $middleware);
-})->only();
+});
 
 test('path based middleware with wildcards can be matched', function () {
     $list = new PathBasedMiddlewareList([
@@ -28,4 +28,4 @@ test('path based middleware with wildcards can be matched', function () {
     );
 
     $this->assertEquals(['foo', 'bar'], $middleware);
-})->only();
+});

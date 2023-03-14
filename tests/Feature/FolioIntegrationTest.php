@@ -16,10 +16,10 @@ beforeEach(function () {
     ]);
 });
 
-test('root index view can be matched', function () {
+test('pages can be rendered and middleware invoked', function () {
     $response = $this->get('/users/Taylor');
 
     $response->assertSee('Hello, Taylor');
 
     $this->assertTrue($_SERVER['__folio_users_middleware']);
-})->only();
+});

@@ -41,7 +41,9 @@ class FolioManager
             )->where('uri', '.*');
         }
 
-        $this->mountedPaths[] = new MountedPath($to, $uri, $middleware);
+        $this->mountedPaths[] = new MountedPath(
+            $to, $uri, $middleware
+        );
 
         return $this;
     }
@@ -67,7 +69,10 @@ class FolioManager
                     return new Response(
                         View::file($matchedView->path, $matchedView->data),
                         200,
-                        ['Content-Type' => 'text/html'],
+                        [
+                            'Content-Type' => 'text/html',
+                            'X-Folio' => 'True',
+                        ],
                     );
                 });
         };

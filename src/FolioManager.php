@@ -4,6 +4,7 @@ namespace Laravel\Folio;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Pipeline;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
@@ -57,10 +58,18 @@ class FolioManager
 
             return (new Pipeline(app()))
                 ->send($request)
-                ->through($middleware)
-                ->then(fn ($request) => (
-                    $this->renderUsing ??= fn ($m) => View::file($m->path, $m->data)
-                )($matchedView));
+                ->through(Route::resolveMiddleware($middleware))
+                ->then(function ($request) use ($matchedView) {
+                    if ($this->renderUsing) {
+                        return call_user_func($this->renderUsing, $request, $matchedView);
+                    }
+
+                    return new Response(
+                        View::file($matchedView->path, $matchedView->data),
+                        200,
+                        ['Content-Type' => 'text/html'],
+                    );
+                });
         };
     }
 

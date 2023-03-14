@@ -24,7 +24,7 @@ class MatchedView
      */
     public function __construct(string $path, array $data, ?string $mountPath = null)
     {
-        $this->path = realpath($path);
+        $this->path = realpath($path) ?: $path;
         $this->data = $data;
         $this->mountPath = $mountPath;
     }
@@ -35,6 +35,16 @@ class MatchedView
     public function withMountPath(string $mountPath): MatchedView
     {
         return new static(mountPath: $mountPath, path: $this->path, data: $this->data);
+    }
+
+    /**
+     * Get the path to the matched view relative to the mount path.
+     */
+    public function relativePath(): string
+    {
+        $path = str_replace($this->mountPath, '', $this->path);
+
+        return '/'.trim(str_replace(DIRECTORY_SEPARATOR, '/', $path), '/');
     }
 
     /**

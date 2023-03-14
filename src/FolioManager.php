@@ -4,6 +4,7 @@ namespace Laravel\Folio;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Pipeline;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
@@ -11,9 +12,9 @@ use Illuminate\Support\Facades\View;
 class FolioManager
 {
     /**
-     * The registered middleware.
+     * The mounted paths that have been registered.
      */
-    protected array $middleware = [];
+    protected array $mountedPaths = [];
 
     /**
      * The callback that should be used to render mathced views.
@@ -23,16 +24,23 @@ class FolioManager
     /**
      * Register the routes to handle page based routing at the given paths.
      */
-    public function route(?string $to = null, ?string $uri = '/'): self
+    public function route(?string $to = null, ?string $uri = '/', array $middleware = []): self
     {
+        $to = match (true) {
+            isset($to) => realpath($to),
+            default => config('view.paths')[0].'/pages',
+        };
+
         if ($uri === '/') {
-            Route::fallback($this->handler($to));
+            Route::fallback($this->handler($to, $middleware));
         } else {
             Route::get(
                 '/'.trim($uri, '/').'/{uri?}',
-                $this->handler($to)
+                $this->handler($to, $middleware)
             )->where('uri', '.*');
         }
+
+        $this->mountedPaths[] = new MountedPath($to, $uri, $middleware);
 
         return $this;
     }
@@ -40,30 +48,20 @@ class FolioManager
     /**
      * Get the Folio request handler function.
      */
-    protected function handler(?string $to): Closure
+    protected function handler(string $mountPath, array $middleware): Closure
     {
-        return function (Request $request, $uri = '/') use ($to) {
-            $to = match (true) {
-                isset($to) => $to,
-                default => config('view.paths')[0].'/pages',
-            };
+        return function (Request $request, $uri = '/') use ($mountPath, $middleware) {
+            $middleware = (new PathBasedMiddlewareList($middleware))->match(
+                $matchedView = (new Router(Arr::wrap($mountPath)))->resolve($uri) ?? abort(404)
+            );
 
-            $matchedView = (new Router(Arr::wrap($to)))->resolve($uri) ?? abort(404);
-
-            return (
-                $this->renderUsing ??= fn ($m) => View::file($m->path, $m->data)
-            )($matchedView);
+            return (new Pipeline(app()))
+                ->send($request)
+                ->through($middleware)
+                ->then(fn ($request) => (
+                    $this->renderUsing ??= fn ($m) => View::file($m->path, $m->data)
+                )($matchedView));
         };
-    }
-
-    /**
-     * Specify the middleware that should be applied to specific pages.
-     */
-    public function middleware(array $middleware): self
-    {
-        $this->middleware = $middleware;
-
-        return $this;
     }
 
     /**

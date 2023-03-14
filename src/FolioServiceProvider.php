@@ -13,7 +13,7 @@ class FolioServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->singleton(FolioManager::class);
     }
 
     /**

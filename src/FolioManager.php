@@ -11,11 +11,6 @@ use Illuminate\Support\Facades\View;
 class FolioManager
 {
     /**
-     * The registered mount paths that contain pages.
-     */
-    protected array $mountPaths = [];
-
-    /**
      * The registered middleware.
      */
     protected array $middleware = [];
@@ -24,16 +19,6 @@ class FolioManager
      * The callback that should be used to render mathced views.
      */
     protected ?Closure $renderUsing = null;
-
-    /**
-     * Specify the path that contains pages.
-     */
-    public function to(string $to): self
-    {
-        $this->mountPaths = [$to];
-
-        return $this;
-    }
 
     /**
      * Register the routes to handle page based routing at the given paths.
@@ -60,7 +45,6 @@ class FolioManager
         return function (Request $request, $uri = '/') use ($to) {
             $to = match (true) {
                 isset($to) => $to,
-                count($this->mountPaths) > 0 => $this->mountPaths,
                 default => config('view.paths')[0].'/pages',
             };
 

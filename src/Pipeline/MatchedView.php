@@ -4,8 +4,15 @@ namespace Laravel\Folio\Pipeline;
 
 class MatchedView
 {
-    public $path;
-    public $data;
+    /**
+     * The full path to the matched view file.
+     */
+    public string $path;
+
+    /**
+     * The data that should be given to the view.
+     */
+    public array $data;
 
     /**
      * Create a new matched view instance.

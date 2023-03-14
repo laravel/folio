@@ -21,9 +21,11 @@ class Folio
         $to ??= config('view.paths')[0];
 
         Route::get($uri === '/' ? '/{uri?}' : '/'.trim($uri, '/').'/{uri?}', function ($uri = '/') use ($to) {
+            $matchedView = (new Router([$to]))->resolve($uri) ?? abort(404);
+
             return (
                 static::$renderUsing ??= fn ($m) => View::file($m->path, $m->data)
-            )((new Router([$to]))->resolve($uri) ?? abort(404));
+            )($matchedView);
         })->where('uri', '.*');
     }
 

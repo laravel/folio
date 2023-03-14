@@ -10,6 +10,11 @@ class MatchedView
     public string $path;
 
     /**
+     * The mount path that the view was located in.
+     */
+    public ?string $mountPath;
+
+    /**
      * The data that should be given to the view.
      */
     public array $data;
@@ -17,10 +22,19 @@ class MatchedView
     /**
      * Create a new matched view instance.
      */
-    public function __construct(string $path, array $data)
+    public function __construct(string $path, array $data, ?string $mountPath = null)
     {
         $this->path = realpath($path);
         $this->data = $data;
+        $this->mountPath = $mountPath;
+    }
+
+    /**
+     * Set the mount path on the matched view, returning a new instance.
+     */
+    public function withMountPath(string $mountPath): MatchedView
+    {
+        return new static(mountPath: $mountPath, path: $this->path, data: $this->data);
     }
 
     /**

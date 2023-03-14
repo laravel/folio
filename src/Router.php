@@ -64,6 +64,8 @@ class Router
                         ])->then(fn () => new StopIterating);
 
             if ($value instanceof MatchedView) {
+                $value = $value->withMountPath($mountPath);
+
                 static::ensureNoDirectoryTraversal($value->path, $state->mountPath);
 
                 return static::transformModelBindings($value, $state);

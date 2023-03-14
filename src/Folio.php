@@ -3,6 +3,7 @@
 namespace Laravel\Folio;
 
 use Closure;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 
@@ -20,7 +21,7 @@ class Folio
     {
         $to ??= config('view.paths')[0];
 
-        Route::get($uri === '/' ? '/{uri?}' : '/'.trim($uri, '/').'/{uri?}', function ($uri = '/') use ($to) {
+        Route::get($uri === '/' ? '/{uri?}' : '/'.trim($uri, '/').'/{uri?}', function (Request $request, $uri = '/') use ($to) {
             $matchedView = (new Router([$to]))->resolve($uri) ?? abort(404);
 
             return (

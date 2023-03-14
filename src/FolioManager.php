@@ -4,6 +4,7 @@ namespace Laravel\Folio;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 
@@ -20,14 +21,28 @@ class FolioManager
     protected ?Closure $renderUsing = null;
 
     /**
+     * Specify the path that contains pages.
+     */
+    public function to(string $to): self
+    {
+        $this->mountPaths = [$to];
+
+        return $this;
+    }
+
+    /**
      * Mount the given paths as page based routing targets.
      */
     public function route(?string $to = null, ?string $uri = '/'): self
     {
-        $to ??= config('view.paths')[0];
+        $to = match (true) {
+            isset($to) => $to,
+            count($this->mountPaths) > 0 => $this->mountPaths,
+            default => config('view.paths')[0].'/pages',
+        };
 
         Route::get($uri === '/' ? '/{uri?}' : '/'.trim($uri, '/').'/{uri?}', function (Request $request, $uri = '/') use ($to) {
-            $matchedView = (new Router([$to]))->resolve($uri) ?? abort(404);
+            $matchedView = (new Router(Arr::wrap($to)))->resolve($uri) ?? abort(404);
 
             return (
                 $this->renderUsing ??= fn ($m) => View::file($m->path, $m->data)

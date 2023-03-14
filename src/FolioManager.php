@@ -22,7 +22,7 @@ class FolioManager
     /**
      * Mount the given paths as page based routing targets.
      */
-    public function route(?string $to = null, ?string $uri = '/'): Folio
+    public function route(?string $to = null, ?string $uri = '/'): self
     {
         $to ??= config('view.paths')[0];
 
@@ -40,7 +40,7 @@ class FolioManager
     /**
      * Specify the middleware that should be applied to specific pages.
      */
-    public function middleware(array $middleware): Folio
+    public function middleware(array $middleware): self
     {
         $this->middleware = $middleware;
 
@@ -50,7 +50,7 @@ class FolioManager
     /**
      * Specify the callback that should be used to render matched views.
      */
-    public function renderUsing(Closure $callback): Folio
+    public function renderUsing(Closure $callback): self
     {
         $this->renderUsing = $callback;
 

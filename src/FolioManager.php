@@ -29,12 +29,12 @@ class FolioManager
 
         if ($uri === '/') {
             Route::fallback($this->handler($mountPath))
-                ->name('folio-'.substr(sha1($uri), 0, 10));
+                ->name($mountPath->routeName());
         } else {
             Route::get(
                 '/'.trim($uri, '/').'/{uri?}',
                 $this->handler($mountPath)
-            )->name('folio-'.substr(sha1($uri), 0, 10))->where('uri', '.*');
+            )->name($mountPath->routeName())->where('uri', '.*');
         }
 
         return $this;

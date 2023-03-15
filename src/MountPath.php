@@ -20,6 +20,14 @@ class MountPath
     }
 
     /**
+     * Get the route name assigned to the route at this mount path.
+     */
+    public function routeName(): string
+    {
+        return 'folio-'.substr(sha1($this->baseUri), 0, 10);
+    }
+
+    /**
      * Determine if the mounted path uses a "fallback" route.
      */
     public function usesFallbackRoute(): bool

@@ -46,9 +46,7 @@ class FolioManager
     protected function handler(MountPath $mountPath): Closure
     {
         return function (Request $request, $uri = '/') use ($mountPath) {
-            return (new RequestHandler(
-                $mountPath, $this->renderUsing
-            ))($request, $uri);
+            return (new RequestHandler($mountPath, $this->renderUsing))($request, $uri);
         };
     }
 

@@ -2,7 +2,7 @@
 
 namespace Laravel\Folio;
 
-class MountedPath
+class MountPath
 {
     /**
      * The path based middleware for the mounted path.

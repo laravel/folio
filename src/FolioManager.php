@@ -12,7 +12,7 @@ class FolioManager
     /**
      * The mounted paths that have been registered.
      */
-    protected array $mountedPaths = [];
+    protected array $mountPaths = [];
 
     /**
      * The callback that should be used to render mathced views.
@@ -29,17 +29,17 @@ class FolioManager
             default => config('view.paths')[0].'/pages',
         };
 
-        $this->mountedPaths[] = $mountedPath = new MountedPath(
+        $this->mountPaths[] = $mountPath = new MountPath(
             $to, $uri, $middleware
         );
 
         if ($uri === '/') {
-            Route::fallback($this->handler($mountedPath))
+            Route::fallback($this->handler($mountPath))
                 ->name('folio-'.substr(sha1($uri), 0, 10));
         } else {
             Route::get(
                 '/'.trim($uri, '/').'/{uri?}',
-                $this->handler($mountedPath)
+                $this->handler($mountPath)
             )->name('folio-'.substr(sha1($uri), 0, 10))->where('uri', '.*');
         }
 
@@ -49,11 +49,11 @@ class FolioManager
     /**
      * Get the Folio request handler function.
      */
-    protected function handler(MountedPath $mountedPath): Closure
+    protected function handler(MountPath $mountPath): Closure
     {
-        return function (Request $request, $uri = '/') use ($mountedPath) {
+        return function (Request $request, $uri = '/') use ($mountPath) {
             return (new RequestHandler(
-                $mountedPath, $this->renderUsing
+                $mountPath, $this->renderUsing
             ))($request, $uri);
         };
     }
@@ -63,12 +63,12 @@ class FolioManager
      */
     public function middlewareFor(string $uri): array
     {
-        foreach ($this->mountedPaths as $mountedPath) {
-            if (! $matchedView = (new Router($mountedPath->path))->resolve($uri)) {
+        foreach ($this->mountPaths as $mountPath) {
+            if (! $matchedView = (new Router($mountPath->path))->resolve($uri)) {
                 continue;
             }
 
-            return $mountedPath->middleware->match($matchedView)->merge(
+            return $mountPath->middleware->match($matchedView)->merge(
                 $matchedView->inlineMiddleware()
             )->unique()->values()->all();
         }

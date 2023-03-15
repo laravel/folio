@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\View;
 
 class RequestHandler
 {
-    public function __construct(protected MountedPath $mountedPath,
+    public function __construct(protected MountPath $mountPath,
                                 protected ?Closure $renderUsing = null)
     {
     }
@@ -20,10 +20,10 @@ class RequestHandler
     public function __invoke(Request $request, string $uri)
     {
         $matchedView = (new Router(
-            $this->mountedPath->path
+            $this->mountPath->path
         ))->resolve($uri) ?? abort(404);
 
-        $middleware = $this->mountedPath
+        $middleware = $this->mountPath
                 ->middleware
                 ->match($matchedView)
                 ->prepend('web')

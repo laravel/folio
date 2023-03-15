@@ -64,11 +64,13 @@ class FolioManager
     public function middlewareFor(string $uri): array
     {
         foreach ($this->mountedPaths as $mountedPath) {
-            if ($matchedView = (new Router($mountedPath->path))->resolve($uri)) {
-                return $mountedPath->middleware->match($matchedView)->merge(
-                    $matchedView->inlineMiddleware()
-                )->unique()->values()->all();
+            if (! $matchedView = (new Router($mountedPath->path))->resolve($uri)) {
+                continue;
             }
+
+            return $mountedPath->middleware->match($matchedView)->merge(
+                $matchedView->inlineMiddleware()
+            )->unique()->values()->all();
         }
 
         return [];

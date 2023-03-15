@@ -64,10 +64,7 @@ class RequestHandler
         return new Response(
             View::file($matchedView->path, $matchedView->data),
             200,
-            [
-                'Content-Type' => 'text/html',
-                'X-Folio' => 'True',
-            ]
+            ['Content-Type' => 'text/html'],
         );
     }
 }

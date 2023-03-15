@@ -122,7 +122,6 @@ class Router
                 );
             }
 
-            // TODO: Enum binding...
             // TODO: withTrashed support...
 
             $parent = $segment;

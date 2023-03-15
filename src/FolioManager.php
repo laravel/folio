@@ -4,11 +4,8 @@ namespace Laravel\Folio;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Routing\Pipeline;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\View;
 
 class FolioManager
 {
@@ -64,8 +61,22 @@ class FolioManager
     /**
      * Get the middleware that should be applied to the Folio handled URI.
      */
-    public function middlewareFor(): array
+    public function middlewareFor(string $uri): array
     {
+        foreach ($this->mountedPaths as $mountedPath) {
+            $matchedView = (new Router(Arr::wrap($mountPath->mountPath)))->resolve($uri);
+
+            if (! $matchedView) {
+                continue;
+            }
+
+            $middleware = (new PathBasedMiddlewareList($mountedPath->middleware))->match($matchedView);
+
+            // TODO...
+
+            return $middleware->all();
+        }
+
         return [];
     }
 

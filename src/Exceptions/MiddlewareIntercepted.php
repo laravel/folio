@@ -2,6 +2,8 @@
 
 namespace Laravel\Folio\Exceptions;
 
+use RuntimeException;
+
 class MiddlewareIntercepted extends RuntimeException
 {
     /**

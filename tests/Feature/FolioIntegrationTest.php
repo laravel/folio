@@ -4,6 +4,7 @@ use Laravel\Folio\Folio;
 
 beforeEach(function () {
     $_SERVER['__folio_users_middleware'] = false;
+    $_SERVER['__folio_flights_inline_middleware'] = false;
 
     Folio::route(__DIR__.'/resources/views/pages', middleware: [
         '/users/*' => [
@@ -24,6 +25,13 @@ test('pages can be rendered and middleware invoked', function () {
     $this->assertTrue($_SERVER['__folio_users_middleware']);
 });
 
+test('inline middleware are invoked', function () {
+    $response = $this->get('/flights');
+
+    $response->assertSee('Flight Index');
+
+    $this->assertTrue($_SERVER['__folio_flights_inline_middleware']);
+});
 
 test('middleware can be retrieved for a given uri', function () {
     $middleware = Folio::middlewareFor('/users/1');
@@ -32,3 +40,4 @@ test('middleware can be retrieved for a given uri', function () {
     $this->assertTrue($middleware[0] instanceof Closure);
     $this->assertEmpty(Folio::middlewareFor('/flights/1'));
 });
+

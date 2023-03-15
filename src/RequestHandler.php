@@ -6,7 +6,6 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Pipeline;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use Laravel\Folio\Pipeline\MatchedView;
@@ -49,15 +48,20 @@ class RequestHandler
             });
     }
 
+    /**
+     * Get the middleware that should be applied to the matched view.
+     */
     protected function middleware(MatchedView $matchedView): array
     {
-        return Route::resolveMiddleware($this->mountPath
+        return Route::resolveMiddleware(
+            $this->mountPath
                 ->middleware
                 ->match($matchedView)
                 ->prepend('web')
                 ->merge($matchedView->inlineMiddleware())
                 ->unique()
                 ->values()
-                ->all());
+                ->all()
+        );
     }
 }

@@ -12,7 +12,7 @@ class MountedPath
     /**
      * Create a new mounted path instance.
      */
-    public function __construct(public string $mountPath,
+    public function __construct(public string $path,
                                 public string $baseUri,
                                 array $middleware = [])
     {

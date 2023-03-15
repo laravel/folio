@@ -29,6 +29,12 @@ test('enums can be injected', function () {
     $response->assertSee('posts');
 });
 
+test('not found error is generated if enum value is not valid', function () {
+    $response = $this->get('/categories/missing-category');
+
+    $response->assertNotFound();
+});
+
 test('pages can be rendered and middleware invoked', function () {
     $response = $this->get('/users/Taylor');
 

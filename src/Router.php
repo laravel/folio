@@ -3,6 +3,7 @@
 namespace Laravel\Folio;
 
 use Illuminate\Pipeline\Pipeline;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Laravel\Folio\Exceptions\PossibleDirectoryTraversal;
 use Laravel\Folio\Pipeline\ContinueIterating;
@@ -19,8 +20,17 @@ use Laravel\Folio\Pipeline\StopIterating;
 
 class Router
 {
-    public function __construct(protected array $mountPaths)
+    /**
+     * The array of mount paths that contain routable pages.
+     */
+    protected array $mountPaths;
+
+    /**
+     * Create a new router instance.
+     */
+    public function __construct(array|string $mountPaths)
     {
+        $this->mountPaths = Arr::wrap($mountPaths);
     }
 
     /**

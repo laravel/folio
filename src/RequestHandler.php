@@ -20,7 +20,7 @@ class RequestHandler
     public function __invoke(Request $request, string $uri)
     {
         $matchedView = (new Router(
-            Arr::wrap($this->mountedPath->path)
+            $this->mountedPath->path
         ))->resolve($uri) ?? abort(404);
 
         $middleware = $this->mountedPath

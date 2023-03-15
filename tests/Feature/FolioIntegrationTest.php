@@ -11,14 +11,12 @@ beforeEach(function () {
         '/users/*' => [
             function ($request, $next) {
                 $_SERVER['__folio_users_middleware'] = true;
-
                 return $next($request);
             }
         ],
         '/flights/*' => [
             function ($request, $next) {
                 $_SERVER['__folio_flights_middleware'] = true;
-
                 return $next($request);
             }
         ],
@@ -49,7 +47,6 @@ test('middleware can be retrieved for a given uri', function () {
     $this->assertTrue($middleware[0] instanceof Closure);
     $this->assertEmpty(Folio::middlewareFor('/missing/1'));
 });
-
 
 test('inline can be retrieved for a given uri', function () {
     $middleware = Folio::middlewareFor('/flights');

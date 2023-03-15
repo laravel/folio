@@ -26,9 +26,8 @@ class RequestHandler
                 ->middleware
                 ->match($matchedView)
                 ->prepend('web')
-                ->merge(
-                    $matchedView->inlineMiddleware()
-                )->unique()
+                ->merge($matchedView->inlineMiddleware())
+                ->unique()
                 ->values();
 
         return (new Pipeline(app()))

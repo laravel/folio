@@ -33,19 +33,19 @@ class MatchedView
     }
 
     /**
-     * Set the mount path on the matched view, returning a new instance.
-     */
-    public function withMountPath(string $mountPath): MatchedView
-    {
-        return new static(mountPath: $mountPath, path: $this->path, data: $this->data);
-    }
-
-    /**
      * Get the matched view's inline middleware.
      */
     public function inlineMiddleware(): Collection
     {
         return app(InlineMiddlewareInterceptor::class)->intercept($this);
+    }
+
+    /**
+     * Set the mount path on the matched view, returning a new instance.
+     */
+    public function withMountPath(string $mountPath): MatchedView
+    {
+        return new static(mountPath: $mountPath, path: $this->path, data: $this->data);
     }
 
     /**

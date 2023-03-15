@@ -23,3 +23,11 @@ test('pages can be rendered and middleware invoked', function () {
 
     $this->assertTrue($_SERVER['__folio_users_middleware']);
 });
+
+
+test('middleware can be retrieved for a given uri', function () {
+    $middleware = Folio::middlewareFor('/users/1');
+
+    $this->assertCount(1, $middleware);
+    $this->assertTrue($middleware[0] instanceof Closure);
+});

@@ -23,13 +23,8 @@ class FolioManager
      */
     public function route(?string $to = null, ?string $uri = '/', array $middleware = []): self
     {
-        $to = match (true) {
-            isset($to) => realpath($to),
-            default => config('view.paths')[0].'/pages',
-        };
-
         $this->mountPaths[] = $mountPath = new MountPath(
-            $to, $uri, $middleware
+            $to ? realpath($to) : config('view.paths')[0].'/pages', $uri, $middleware
         );
 
         if ($uri === '/') {

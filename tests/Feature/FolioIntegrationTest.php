@@ -23,6 +23,12 @@ beforeEach(function () {
     ]);
 });
 
+test('enums can be injected', function () {
+    $response = $this->get('/categories/posts');
+
+    $response->assertSee('posts');
+});
+
 test('pages can be rendered and middleware invoked', function () {
     $response = $this->get('/users/Taylor');
 

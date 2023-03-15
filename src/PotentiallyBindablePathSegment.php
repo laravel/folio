@@ -2,10 +2,12 @@
 
 namespace Laravel\Folio;
 
+use BackedEnum;
 use Exception;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Routing\Exceptions\BackedEnumCaseNotFoundException;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
@@ -28,6 +30,10 @@ class PotentiallyBindablePathSegment
             return false;
         }
 
+        if (enum_exists($this->class())) {
+            return true;
+        }
+
         if (! is_a($this->class(), UrlRoutable::class, true)) {
             throw new Exception('Folio route attempting to bind to class ['.$this->class().'], but it does not implement the UrlRoutable interface.');
         }
@@ -46,7 +52,7 @@ class PotentiallyBindablePathSegment
     /**
      * Resolve the binding or throw a ModelNotFoundException.
      */
-    public function resolveOrFail(mixed $value, ?PotentiallyBindablePathSegment $parent = null): UrlRoutable
+    public function resolveOrFail(mixed $value, ?PotentiallyBindablePathSegment $parent = null): UrlRoutable|BackedEnum
     {
         if (is_null($resolved = $this->resolve($value, $parent))) {
             throw (new ModelNotFoundException)
@@ -59,13 +65,15 @@ class PotentiallyBindablePathSegment
     /**
      * Attempt to resolve the binding.
      */
-    public function resolve(mixed $value, ?PotentiallyBindablePathSegment $parent = null): ?UrlRoutable
+    public function resolve(mixed $value, ?PotentiallyBindablePathSegment $parent = null): mixed
     {
         if ($explicitBindingCallback = Route::getBindingCallback($this->variable())) {
             return $explicitBindingCallback($value);
         }
 
-        if ($parent && $this->field()) {
+        if (enum_exists($this->class())) {
+            return $this->resolveEnum($value);
+        } elseif ($parent && $this->field()) {
             return $this->resolveViaParent($value, $parent);
         }
 
@@ -74,6 +82,20 @@ class PotentiallyBindablePathSegment
         return $classInstance->resolveRouteBinding(
             $value, $this->field() ?: $classInstance->getRouteKeyName()
         );
+    }
+
+    /**
+     * Resolve the binding as an Enum.
+     */
+    protected function resolveEnum(mixed $value): BackedEnum
+    {
+        $backedEnumClass = $this->class();
+
+        if (is_null($backedEnum = $backedEnumClass::tryFrom((string) $value))) {
+            throw new BackedEnumCaseNotFoundException($backedEnumClass, $value);
+        }
+
+        return $backedEnum;
     }
 
     /**

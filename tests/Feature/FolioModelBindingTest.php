@@ -14,7 +14,7 @@ $purgeDirectories = function () {
 beforeEach($purgeDirectories);
 afterEach($purgeDirectories);
 
-test('basic implicit model binding', function () {
+test('implicit model binding', function () {
     $this->views([
         '/index.blade.php',
         '/users' => [
@@ -285,6 +285,22 @@ test('scoped child model bindings trigger model not found exception if they do n
 
     $router->resolve('/users/1/posts/_missing');
 })->throws(ModelNotFoundException::class);
+
+test('enums can be bound', function () {
+    $this->views([
+        '/categories' => [
+            '/[.Tests.Feature.Fixtures.Category].blade.php',
+        ],
+    ]);
+
+    $router = $this->router();
+
+    $view = $router->resolve('/categories/posts');
+
+    $this->assertEquals('posts', $view->data['category']->value);
+
+    $this->assertEquals(1, count($view->data));
+});
 
 class FolioModelBindingTestClass implements UrlRoutable
 {

@@ -19,7 +19,7 @@ class FolioManager
     protected ?Closure $renderUsing = null;
 
     /**
-     * Register the routes to handle page based routing at the given paths.
+     * Register a route to handle page based routing at the given paths.
      */
     public function route(?string $to = null, ?string $uri = '/', array $middleware = []): self
     {

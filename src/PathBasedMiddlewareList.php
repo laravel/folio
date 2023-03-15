@@ -12,7 +12,7 @@ class PathBasedMiddlewareList
     /**
      * Create a new path based middleware list instance.
      */
-    public function __construct(protected array $middleware)
+    public function __construct(public array $middleware)
     {
     }
 

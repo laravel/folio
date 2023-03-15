@@ -5,12 +5,18 @@ namespace Laravel\Folio;
 class MountedPath
 {
     /**
+     * The path based middleware for the mounted path.
+     */
+    public PathBasedMiddlewareList $middleware;
+
+    /**
      * Create a new mounted path instance.
      */
     public function __construct(public string $mountPath,
                                 public string $baseUri,
-                                public array $middleware = [])
+                                array $middleware = [])
     {
+        $this->middleware = new PathBasedMiddlewareList($middleware);
     }
 
     /**

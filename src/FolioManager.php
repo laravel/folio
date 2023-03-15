@@ -29,19 +29,19 @@ class FolioManager
             default => config('view.paths')[0].'/pages',
         };
 
+        $this->mountedPaths[] = $mountedPath = new MountedPath(
+            $to, $uri, $middleware
+        );
+
         if ($uri === '/') {
-            Route::fallback($this->handler($to, $middleware))
+            Route::fallback($this->handler($mountedPath))
                 ->name('folio-'.substr(sha1($uri), 0, 10));
         } else {
             Route::get(
                 '/'.trim($uri, '/').'/{uri?}',
-                $this->handler($to, $middleware)
+                $this->handler($mountedPath)
             )->name('folio-'.substr(sha1($uri), 0, 10))->where('uri', '.*');
         }
-
-        $this->mountedPaths[] = new MountedPath(
-            $to, $uri, $middleware
-        );
 
         return $this;
     }
@@ -49,11 +49,11 @@ class FolioManager
     /**
      * Get the Folio request handler function.
      */
-    protected function handler(string $mountPath, array $middleware): Closure
+    protected function handler(MountedPath $mountedPath): Closure
     {
-        return function (Request $request, $uri = '/') use ($mountPath, $middleware) {
+        return function (Request $request, $uri = '/') use ($mountedPath) {
             return (new RequestHandler(
-                $mountPath, $middleware, $this->renderUsing
+                $mountedPath, $this->renderUsing
             ))($request, $uri);
         };
     }
@@ -70,9 +70,7 @@ class FolioManager
                 continue;
             }
 
-            return (new PathBasedMiddlewareList(
-                $mountedPath->middleware
-            ))->match($matchedView)->merge(
+            return $mountedPath->middleware->match($matchedView)->merge(
                 $matchedView->inlineMiddleware()
             )->unique()->values()->all();
         }

@@ -12,21 +12,25 @@ use Illuminate\Support\Facades\View;
 
 class RequestHandler
 {
-    public function __construct(protected string $mountPath,
-                                protected array $pathMiddleware = [],
+    public function __construct(protected MountedPath $mountedPath,
                                 protected ?Closure $renderUsing = null)
     {
     }
 
     public function __invoke(Request $request, string $uri)
     {
-        $middleware = (new PathBasedMiddlewareList($this->pathMiddleware))->match(
-            $matchedView = (new Router(Arr::wrap($this->mountPath)))->resolve($uri) ?? abort(404)
-        );
+        $matchedView = (new Router(
+            Arr::wrap($this->mountedPath->mountPath)
+        ))->resolve($uri) ?? abort(404);
 
-        $middleware = $middleware->prepend('web')->merge(
-            $matchedView->inlineMiddleware()
-        )->unique()->values();
+        $middleware = $this->mountedPath
+                ->middleware
+                ->match($matchedView)
+                ->prepend('web')
+                ->merge(
+                    $matchedView->inlineMiddleware()
+                )->unique()
+                ->values();
 
         return (new Pipeline(app()))
             ->send($request)

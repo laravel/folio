@@ -23,7 +23,7 @@ class RequestHandler
     /**
      * Handle the incoming request using Folio.
      */
-    public function __invoke(Request $request, string $uri): Response
+    public function __invoke(Request $request, string $uri): mixed
     {
         $matchedView = (new Router(
             $this->mountPath->path

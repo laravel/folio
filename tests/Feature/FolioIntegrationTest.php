@@ -30,4 +30,6 @@ test('middleware can be retrieved for a given uri', function () {
 
     $this->assertCount(1, $middleware);
     $this->assertTrue($middleware[0] instanceof Closure);
+
+    $this->assertEmpty(Folio::middlewareFor('/flights/1'));
 });

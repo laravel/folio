@@ -4,7 +4,6 @@ namespace Laravel\Folio;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
 
 class FolioManager

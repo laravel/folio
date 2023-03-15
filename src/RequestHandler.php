@@ -6,7 +6,6 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Pipeline;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 

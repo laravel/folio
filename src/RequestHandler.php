@@ -33,18 +33,9 @@ class RequestHandler
             ->send($request)
             ->through($this->middleware($matchedView))
             ->then(function ($request) use ($matchedView) {
-                if ($this->renderUsing) {
-                    return call_user_func($this->renderUsing, $request, $matchedView);
-                }
-
-                return new Response(
-                    View::file($matchedView->path, $matchedView->data),
-                    200,
-                    [
-                        'Content-Type' => 'text/html',
-                        'X-Folio' => 'True',
-                    ]
-                );
+                return $this->renderUsing
+                    ? ($this->renderUsing)($request, $matchedView)
+                    : $this->toResponse($matchedView);
             });
     }
 
@@ -62,6 +53,21 @@ class RequestHandler
                 ->unique()
                 ->values()
                 ->all()
+        );
+    }
+
+    /**
+     * Create a response instance for the given matched view.
+     */
+    protected function toResponse(MatchedView $matchedView): Response
+    {
+        return new Response(
+            View::file($matchedView->path, $matchedView->data),
+            200,
+            [
+                'Content-Type' => 'text/html',
+                'X-Folio' => 'True',
+            ]
         );
     }
 }

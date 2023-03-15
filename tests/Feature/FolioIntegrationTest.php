@@ -48,7 +48,7 @@ test('middleware can be retrieved for a given uri', function () {
     $this->assertEmpty(Folio::middlewareFor('/missing/1'));
 });
 
-test('inline can be retrieved for a given uri', function () {
+test('inline middleware can be retrieved for a given uri', function () {
     $middleware = Folio::middlewareFor('/flights');
 
     $this->assertCount(2, $middleware);

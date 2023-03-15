@@ -14,10 +14,19 @@ class InlineMiddlewareInterceptor
     protected bool $listening = false;
 
     /**
+     * The cached path to middleware mappings.
+     */
+    protected array $cache = [];
+
+    /**
      * Intercept the inline middleware for the given matched view.
      */
     public function intercept(MatchedView $matchedView): Collection
     {
+        if (array_key_exists($matchedView->path, $this->cache)) {
+            return collect($this->cache[$matchedView->path]);
+        }
+
         try {
             $this->listen(function () use ($matchedView) {
                 ob_start();
@@ -29,10 +38,14 @@ class InlineMiddlewareInterceptor
                 })();
             });
         } catch (MiddlewareIntercepted $e) {
+            $this->cache[$matchedView->path] = $e->middleware;
+
             return collect($e->middleware);
         } finally {
             ob_get_clean();
         }
+
+        $this->cache[$matchedView->path] = [];
 
         return new Collection;
     }

@@ -24,9 +24,9 @@ class RequestHandler
             $matchedView = (new Router(Arr::wrap($this->mountPath)))->resolve($uri) ?? abort(404)
         );
 
-        $middleware = $middleware->prepend('web')->unique();
-
-        // TODO: gather middleware from the matched file...
+        $middleware = $middleware->prepend('web')->merge(
+            $matchedView->inlineMiddleware()
+        )->unique()->values();
 
         return (new Pipeline(app()))
             ->send($request)

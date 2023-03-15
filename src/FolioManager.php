@@ -70,15 +70,11 @@ class FolioManager
                 continue;
             }
 
-            $middleware = (new PathBasedMiddlewareList(
+            return (new PathBasedMiddlewareList(
                 $mountedPath->middleware
             ))->match($matchedView)->merge(
                 $matchedView->inlineMiddleware()
-            );
-
-            // TODO: gather middleware from the matched file...
-
-            return $middleware->all();
+            )->unique()->values()->all();
         }
 
         return [];

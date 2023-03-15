@@ -2,6 +2,9 @@
 
 namespace Laravel\Folio\Pipeline;
 
+use Illuminate\Support\Collection;
+use Laravel\Folio\InlineMiddlewareInterceptor;
+
 class MatchedView
 {
     /**
@@ -35,6 +38,14 @@ class MatchedView
     public function withMountPath(string $mountPath): MatchedView
     {
         return new static(mountPath: $mountPath, path: $this->path, data: $this->data);
+    }
+
+    /**
+     * Get the matched view's inline middleware.
+     */
+    public function inlineMiddleware(): Collection
+    {
+        return app(InlineMiddlewareInterceptor::class)->intercept($this);
     }
 
     /**

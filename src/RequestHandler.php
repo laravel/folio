@@ -26,7 +26,7 @@ class RequestHandler
 
         $middleware = $middleware->prepend('web')->unique();
 
-        // Gather middleware from the matched file...
+        // TODO: gather middleware from the matched file...
 
         return (new Pipeline(app()))
             ->send($request)

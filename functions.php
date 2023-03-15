@@ -5,11 +5,13 @@ namespace Laravel\Folio;
 use Closure;
 use Illuminate\Container\Container;
 use Illuminate\Support\Arr;
-use Laravel\Folio\Exceptions\MiddlewareIntercepted;
+use Laravel\Folio\Exceptions\MetadataIntercepted;
 
-function middleware(Closure|string|array $middleware)
+function folio(Closure|string|array $middleware)
 {
-    if (Container::getInstance()->make(InlineMiddlewareInterceptor::class)->listening()) {
-        throw new MiddlewareIntercepted(Arr::wrap($middleware));
+    if (Container::getInstance()->make(InlineMetadataInterceptor::class)->listening()) {
+        throw new MetadataIntercepted(
+            new Metadata(middleware: collect(Arr::wrap($middleware)))
+        );
     }
 }

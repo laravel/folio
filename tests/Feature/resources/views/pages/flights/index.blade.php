@@ -1,7 +1,7 @@
 <?php
-use function Laravel\Folio\{middleware};
+use function Laravel\Folio\{folio};
 
-middleware([function ($request, $next) {
+folio(middleware: [function ($request, $next) {
     $_SERVER['__folio_flights_inline_middleware'] = true;
     return $next($request);
 }]);

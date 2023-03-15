@@ -3,7 +3,7 @@
 namespace Laravel\Folio\Pipeline;
 
 use Illuminate\Support\Collection;
-use Laravel\Folio\InlineMiddlewareInterceptor;
+use Laravel\Folio\InlineMetadataInterceptor;
 
 class MatchedView
 {
@@ -37,7 +37,7 @@ class MatchedView
      */
     public function inlineMiddleware(): Collection
     {
-        return app(InlineMiddlewareInterceptor::class)->intercept($this);
+        return app(InlineMetadataInterceptor::class)->intercept($this)->middleware;
     }
 
     /**

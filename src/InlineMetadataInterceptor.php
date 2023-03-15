@@ -2,26 +2,25 @@
 
 namespace Laravel\Folio;
 
-use Illuminate\Support\Collection;
-use Laravel\Folio\Exceptions\MiddlewareIntercepted;
+use Laravel\Folio\Exceptions\MetadataIntercepted;
 use Laravel\Folio\Pipeline\MatchedView;
 
-class InlineMiddlewareInterceptor
+class InlineMetadataInterceptor
 {
     /**
-     * Indicates if the interceptor is listening for definitions.
+     * Indicates if the interceptor is listening for metadata.
      */
     protected bool $listening = false;
 
     /**
-     * The cached path to middleware mappings.
+     * The cached path to metadata mappings.
      */
     protected array $cache = [];
 
     /**
-     * Intercept the inline middleware for the given matched view.
+     * Intercept the inline metadata for the given matched view.
      */
-    public function intercept(MatchedView $matchedView): Collection
+    public function intercept(MatchedView $matchedView): Metadata
     {
         if (array_key_exists($matchedView->path, $this->cache)) {
             return collect($this->cache[$matchedView->path]);
@@ -37,21 +36,17 @@ class InlineMiddlewareInterceptor
                     require $__path;
                 })();
             });
-        } catch (MiddlewareIntercepted $e) {
-            $this->cache[$matchedView->path] = $e->middleware;
-
-            return collect($e->middleware);
+        } catch (MetadataIntercepted $e) {
+            return $this->cache[$matchedView->path] = $e->metadata;
         } finally {
             ob_get_clean();
         }
 
-        $this->cache[$matchedView->path] = [];
-
-        return new Collection;
+        return $this->cache[$matchedView->path] = new Metadata;
     }
 
     /**
-     * Execute the callback while listening for middleware.
+     * Execute the callback while listening for metadata.
      */
     public function listen(callable $callback): void
     {
@@ -65,7 +60,7 @@ class InlineMiddlewareInterceptor
     }
 
     /**
-     * Determine if the interceptor is listening for middleware.
+     * Determine if the interceptor is listening for metadata.
      */
     public function listening(): bool
     {

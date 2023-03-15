@@ -45,6 +45,7 @@ test('middleware can be retrieved for a given uri', function () {
 
     $this->assertCount(1, $middleware);
     $this->assertTrue($middleware[0] instanceof Closure);
+
     $this->assertEmpty(Folio::middlewareFor('/missing/1'));
 });
 
@@ -54,5 +55,6 @@ test('inline middleware can be retrieved for a given uri', function () {
     $this->assertCount(2, $middleware);
     $this->assertTrue($middleware[0] instanceof Closure);
     $this->assertTrue($middleware[1] instanceof Closure);
+
     $this->assertEmpty(Folio::middlewareFor('/missing/1'));
 });

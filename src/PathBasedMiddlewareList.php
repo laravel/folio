@@ -3,6 +3,7 @@
 namespace Laravel\Folio;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Laravel\Folio\Pipeline\MatchedView;
 
@@ -18,7 +19,7 @@ class PathBasedMiddlewareList
     /**
      * Find the middleware that match the given matched view's path.
      */
-    public function match(MatchedView $view): array
+    public function match(MatchedView $view): Collection
     {
         $matched = [];
 
@@ -30,6 +31,6 @@ class PathBasedMiddlewareList
             }
         }
 
-        return $matched;
+        return collect($matched);
     }
 }

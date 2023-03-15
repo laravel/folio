@@ -14,7 +14,7 @@ test('path based middleware can be matched', function () {
         new MatchedView('/test/path/index.blade.php', [], '/test/path')
     );
 
-    $this->assertEquals(['foo', 'bar', 'baz'], $middleware);
+    $this->assertEquals(['foo', 'bar', 'baz'], $middleware->all());
 });
 
 test('path based middleware with wildcards can be matched', function () {
@@ -27,5 +27,5 @@ test('path based middleware with wildcards can be matched', function () {
         new MatchedView('/test/path/users/[id].blade.php', [], '/test/path')
     );
 
-    $this->assertEquals(['foo', 'bar'], $middleware);
+    $this->assertEquals(['foo', 'bar'], $middleware->all());
 });

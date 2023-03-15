@@ -11,6 +11,7 @@
         </include>
     </coverage>
     <php>
+        <env name="APP_KEY" value="lp0azzXLPJl7BJZkm2agvfXojVsPOWMe"/>
         <env name="DB_CONNECTION" value="sqlite"/>
         <env name="DB_DATABASE" value=":memory:"/>
     </php>

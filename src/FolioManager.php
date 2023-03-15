@@ -33,12 +33,13 @@ class FolioManager
         };
 
         if ($uri === '/') {
-            Route::fallback($this->handler($to, $middleware));
+            Route::fallback($this->handler($to, $middleware))
+                ->name('folio-'.substr(sha1($uri), 0, 10));
         } else {
             Route::get(
                 '/'.trim($uri, '/').'/{uri?}',
                 $this->handler($to, $middleware)
-            )->where('uri', '.*');
+            )->name('folio-'.substr(sha1($uri), 0, 10))->where('uri', '.*');
         }
 
         $this->mountedPaths[] = new MountedPath(
@@ -54,28 +55,16 @@ class FolioManager
     protected function handler(string $mountPath, array $middleware): Closure
     {
         return function (Request $request, $uri = '/') use ($mountPath, $middleware) {
-            $middleware = (new PathBasedMiddlewareList($middleware))->match(
-                $matchedView = (new Router(Arr::wrap($mountPath)))->resolve($uri) ?? abort(404)
-            );
-
-            return (new Pipeline(app()))
-                ->send($request)
-                ->through(Route::resolveMiddleware($middleware))
-                ->then(function ($request) use ($matchedView) {
-                    if ($this->renderUsing) {
-                        return call_user_func($this->renderUsing, $request, $matchedView);
-                    }
-
-                    return new Response(
-                        View::file($matchedView->path, $matchedView->data),
-                        200,
-                        [
-                            'Content-Type' => 'text/html',
-                            'X-Folio' => 'True',
-                        ],
-                    );
-                });
+            return (new RequestHandler($mountPath, $middleware, $this->renderUsing))($request, $uri);
         };
+    }
+
+    /**
+     * Get the middleware that should be applied to the Folio handled URI.
+     */
+    public function middlewareFor(): array
+    {
+        return [];
     }
 
     /**

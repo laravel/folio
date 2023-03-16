@@ -31,7 +31,7 @@ test('pages can be rendered and middleware invoked', function () {
     $this->assertTrue($_SERVER['__folio_users_middleware']);
 });
 
-test('inline middleware are invoked', function () {
+test('inline middleware are parsed from page and invoked', function () {
     $response = $this->get('/flights');
 
     $response->assertSee('Flight Index');

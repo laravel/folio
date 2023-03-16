@@ -1,6 +1,6 @@
 <?php
 
-namespace Laravel\Folio;
+namespace Laravel\Folio\Pipeline;
 
 use BackedEnum;
 use Exception;

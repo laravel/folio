@@ -1,6 +1,6 @@
 <?php
 
-use Laravel\Folio\PotentiallyBindablePathSegment;
+use Laravel\Folio\Pipeline\PotentiallyBindablePathSegment;
 
 test('test model directory is assumed for classes that are not fully qualified and do not exist', function () {
     $segment = new PotentiallyBindablePathSegment('[User]');

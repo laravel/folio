@@ -17,6 +17,7 @@ use Laravel\Folio\Pipeline\MatchWildcardViews;
 use Laravel\Folio\Pipeline\MatchWildcardViewsThatCaptureMultipleSegments;
 use Laravel\Folio\Pipeline\State;
 use Laravel\Folio\Pipeline\StopIterating;
+use Laravel\Folio\Pipeline\TransformModelBindings;
 
 class Router
 {
@@ -64,6 +65,7 @@ class Router
             $value = (new Pipeline)
                         ->send($state->forIteration($i))
                         ->through([
+                            new TransformModelBindings,
                             new MatchRootIndex,
                             new MatchDirectoryIndexViews,
                             new MatchWildcardViewsThatCaptureMultipleSegments,
@@ -78,7 +80,7 @@ class Router
 
                 static::ensureNoDirectoryTraversal($value->path, $state->mountPath);
 
-                return static::transformModelBindings($value, $state);
+                return $value;
             } elseif ($value instanceof ContinueIterating) {
                 $state = $value->state;
 
@@ -89,51 +91,6 @@ class Router
         }
 
         return null;
-    }
-
-    /**
-     * Transform the model bindings for the matched view.
-     */
-    protected static function transformModelBindings(MatchedView $view, State $state): MatchedView
-    {
-        $path = (string) Str::of($view->path)
-            ->replace($state->mountPath, '')
-            ->beforeLast('.blade.php')
-            ->trim('/');
-
-        [$parent, $uriSegments, $pathSegments] = [
-            null, explode('/', $state->uri), explode('/', $path),
-        ];
-
-        foreach ($pathSegments as $index => $segment) {
-            $segment = new PotentiallyBindablePathSegment($segment);
-
-            if (! $segment->bindable()) {
-                continue;
-            }
-
-            if ($segment->capturesMultipleSegments()) {
-                return $view->replace(
-                    $segment->trimmed(),
-                    $segment->variable(),
-                    collect(array_slice($uriSegments, $index))
-                        ->map(fn ($value) => $segment->resolveOrFail($value, $parent))
-                        ->all(),
-                );
-            }
-
-            // TODO: withTrashed support...
-
-            $parent = $segment;
-
-            $view = $view->replace(
-                $segment->trimmed(),
-                $segment->variable(),
-                $segment->resolveOrFail($uriSegments[$index], $parent),
-            );
-        }
-
-        return $view;
     }
 
     /**

@@ -53,7 +53,7 @@ class PotentiallyBindablePathSegment
      * Resolve the binding or throw a ModelNotFoundException.
      */
     public function resolveOrFail(mixed $value,
-                                  ?PotentiallyBindablePathSegment $parent = null,
+                                  ?UrlRoutable $parent = null,
                                   bool $withTrashed = false): UrlRoutable|BackedEnum
     {
         if (is_null($resolved = $this->resolve($value, $parent, $withTrashed))) {
@@ -67,7 +67,7 @@ class PotentiallyBindablePathSegment
     /**
      * Attempt to resolve the binding.
      */
-    protected function resolve(mixed $value, ?PotentiallyBindablePathSegment $parent, bool $withTrashed): mixed
+    protected function resolve(mixed $value, ?UrlRoutable $parent, bool $withTrashed): mixed
     {
         if ($explicitBindingCallback = Route::getBindingCallback($this->variable())) {
             return $explicitBindingCallback($value);
@@ -91,19 +91,16 @@ class PotentiallyBindablePathSegment
     /**
      * Attempt to resolve the binding via the given parent.
      */
-    protected function resolveViaParent(mixed $value, PotentiallyBindablePathSegment $parent, bool $withTrashed): ?UrlRoutable
+    protected function resolveViaParent(mixed $value, UrlRoutable $parent, bool $withTrashed): ?UrlRoutable
     {
-        [$parentInstance, $childInstance] = [
-            $parent->newClassInstance(),
-            $this->newClassInstance(),
-        ];
+        $childInstance = $this->newClassInstance();
 
         $method = $withTrashed
                 ? 'resolveSoftDeletableChildRouteBinding'
                 : 'resolveChildRouteBinding';
 
-        return $parentInstance->{$method}(
-            get_class($this->newClassInstance()),
+        return $parent->{$method}(
+            $this->variable(),
             $value,
             $this->field() ?: $childInstance->getRouteKeyName()
         );

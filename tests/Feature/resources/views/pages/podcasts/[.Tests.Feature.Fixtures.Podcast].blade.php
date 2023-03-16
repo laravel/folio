@@ -1,0 +1,3 @@
+<div>
+    {{ $podcast->name }}
+</div>

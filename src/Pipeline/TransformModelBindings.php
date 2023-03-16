@@ -41,14 +41,14 @@ class TransformModelBindings
             $view = $view->replace(
                 $segment->trimmed(),
                 $segment->variable(),
-                $segment->resolveOrFail(
+                $resolved = $segment->resolveOrFail(
                     $uriSegments[$index],
                     $parent ?? null,
                     $view->allowsTrashedBindings()
                 ),
             );
 
-            $parent = $segment;
+            $parent = $resolved;
         }
 
         return $view;

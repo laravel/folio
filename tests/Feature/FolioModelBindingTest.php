@@ -232,7 +232,7 @@ test('child model bindings are scoped to the parent when field is present on chi
 
     $this->assertEquals('1', $view->data['first']->value);
 
-    $this->assertEquals(FolioModelBindingTestChildClass::class, $view->data['second']->childType);
+    $this->assertEquals('second', $view->data['second']->childType);
     $this->assertInstanceOf(FolioModelBindingTestChildClass::class, $view->data['second']);
     $this->assertEquals('slug', $view->data['second']->field);
     $this->assertEquals('2', $view->data['second']->value);
@@ -305,6 +305,8 @@ test('enums can be bound', function () {
 
 class FolioModelBindingTestClass implements UrlRoutable
 {
+    public $trashed = false;
+
     public function __construct(public mixed $value = null, public mixed $field = null, public mixed $childType = null)
     {
     }
@@ -320,6 +322,15 @@ class FolioModelBindingTestClass implements UrlRoutable
     }
 
     public function resolveRouteBinding($value, $field = null)
+    {
+        if ($value === '_missing') {
+            return null;
+        }
+
+        return new FolioModelBindingTestClass($value, $field);
+    }
+
+    public function resolveSoftDeletableRouteBinding($value, $field = null)
     {
         if ($value === '_missing') {
             return null;

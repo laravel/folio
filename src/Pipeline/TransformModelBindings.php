@@ -46,13 +46,13 @@ class TransformModelBindings
 
             // TODO: withTrashed support...
 
-            $parent = $segment;
-
             $view = $view->replace(
                 $segment->trimmed(),
                 $segment->variable(),
-                $segment->resolveOrFail($uriSegments[$index], $parent),
+                $segment->resolveOrFail($uriSegments[$index], $parent ?? null),
             );
+
+            $parent = $segment;
         }
 
         return $view;

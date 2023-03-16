@@ -220,7 +220,7 @@ test('child model bindings are scoped to the parent when field is present on chi
         '/users' => [
             '/[.FolioModelBindingTestClass|first]' => [
                 '/posts' => [
-                    '/[.FolioModelBindingTestClass:slug|second].blade.php'
+                    '/[.FolioModelBindingTestChildClass:slug|second].blade.php'
                 ],
             ],
         ],
@@ -232,7 +232,8 @@ test('child model bindings are scoped to the parent when field is present on chi
 
     $this->assertEquals('1', $view->data['first']->value);
 
-    $this->assertEquals(FolioModelBindingTestClass::class, $view->data['second']->childType);
+    $this->assertEquals(FolioModelBindingTestChildClass::class, $view->data['second']->childType);
+    $this->assertInstanceOf(FolioModelBindingTestChildClass::class, $view->data['second']);
     $this->assertEquals('slug', $view->data['second']->field);
     $this->assertEquals('2', $view->data['second']->value);
 
@@ -333,6 +334,14 @@ class FolioModelBindingTestClass implements UrlRoutable
             return null;
         }
 
-        return new FolioModelBindingTestClass($value, $field, $childType);
+        return new FolioModelBindingTestChildClass($value, $field, $childType);
+    }
+}
+
+class FolioModelBindingTestChildClass extends FolioModelBindingTestClass
+{
+    public function resolveChildRouteBinding($childType, $value, $field)
+    {
+        throw new Exception("Model does not have children.");
     }
 }

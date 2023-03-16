@@ -3,10 +3,8 @@
 namespace Laravel\Folio\Pipeline;
 
 use Closure;
-use Illuminate\Support\Str;
-use Laravel\Folio\Exceptions\PossibleDirectoryTraversal;
 
-class EnsureNoDirectoryTraversal
+class SetMountPathOnMatchedView
 {
     /**
      * Invoke the routing pipeline handler.
@@ -17,10 +15,6 @@ class EnsureNoDirectoryTraversal
             return $view;
         }
 
-        if (Str::of(realpath($view->path))->startsWith($state->mountPath.'/')) {
-            return $view;
-        }
-
-        throw new PossibleDirectoryTraversal;
+        return $view->withMountPath($state->mountPath);
     }
 }

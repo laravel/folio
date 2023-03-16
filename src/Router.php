@@ -7,13 +7,14 @@ use Illuminate\Support\Arr;
 use Laravel\Folio\Pipeline\ContinueIterating;
 use Laravel\Folio\Pipeline\EnsureNoDirectoryTraversal;
 use Laravel\Folio\Pipeline\MatchDirectoryIndexViews;
-use Laravel\Folio\Pipeline\MatchedView;
 use Laravel\Folio\Pipeline\MatchLiteralDirectories;
 use Laravel\Folio\Pipeline\MatchLiteralViews;
 use Laravel\Folio\Pipeline\MatchRootIndex;
 use Laravel\Folio\Pipeline\MatchWildcardDirectories;
 use Laravel\Folio\Pipeline\MatchWildcardViews;
 use Laravel\Folio\Pipeline\MatchWildcardViewsThatCaptureMultipleSegments;
+use Laravel\Folio\Pipeline\MatchedView;
+use Laravel\Folio\Pipeline\SetMountPathOnMatchedView;
 use Laravel\Folio\Pipeline\State;
 use Laravel\Folio\Pipeline\StopIterating;
 use Laravel\Folio\Pipeline\TransformModelBindings;
@@ -64,8 +65,10 @@ class Router
             $value = (new Pipeline)
                         ->send($state->forIteration($i))
                         ->through([
-                            new EnsureNoDirectoryTraversal($mountPath),
+                            new EnsureNoDirectoryTraversal,
                             new TransformModelBindings,
+                            new SetMountPathOnMatchedView,
+                            // ...
                             new MatchRootIndex,
                             new MatchDirectoryIndexViews,
                             new MatchWildcardViewsThatCaptureMultipleSegments,

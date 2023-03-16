@@ -12,25 +12,16 @@ class TransformModelBindings
      */
     public function __invoke(State $state, Closure $next): mixed
     {
-        $view = $next($state);
-
-        if (! $view instanceof MatchedView) {
+        if (! ($view = $next($state)) instanceof MatchedView) {
             return $view;
         }
 
-        $path = (string) Str::of($view->path)
-            ->replace($state->mountPath, '')
-            ->beforeLast('.blade.php')
-            ->trim('/');
-
         [$parent, $uriSegments, $pathSegments] = [
-            null, explode('/', $state->uri), explode('/', $path),
+            null, explode('/', $state->uri), $this->pathSegments($view, $state),
         ];
 
         foreach ($pathSegments as $index => $segment) {
-            $segment = new PotentiallyBindablePathSegment($segment);
-
-            if (! $segment->bindable()) {
+            if (! ($segment = new PotentiallyBindablePathSegment($segment))->bindable()) {
                 continue;
             }
 
@@ -49,12 +40,23 @@ class TransformModelBindings
             $view = $view->replace(
                 $segment->trimmed(),
                 $segment->variable(),
-                $segment->resolveOrFail($uriSegments[$index], $parent ?? null),
+                $segment->resolveOrFail($uriSegments[$index], $parent),
             );
 
             $parent = $segment;
         }
 
         return $view;
+    }
+
+    /**
+     * Get the bindable path segments for the matched view.
+     */
+    protected function pathSegments(MatchedView $view, State $state): array
+    {
+        return explode('/', (string) Str::of($view->path)
+            ->replace($state->mountPath, '')
+            ->beforeLast('.blade.php')
+            ->trim('/'));
     }
 }

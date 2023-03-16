@@ -16,8 +16,8 @@ class TransformModelBindings
             return $view;
         }
 
-        [$parent, $uriSegments, $pathSegments] = [
-            null, explode('/', $state->uri), $this->pathSegments($view),
+        [$uriSegments, $pathSegments] = [
+            explode('/', $state->uri), $this->pathSegments($view),
         ];
 
         foreach ($pathSegments as $index => $segment) {
@@ -30,7 +30,7 @@ class TransformModelBindings
                     $segment->trimmed(),
                     $segment->variable(),
                     collect(array_slice($uriSegments, $index))
-                        ->map(fn ($value) => $segment->resolveOrFail($value, $parent))
+                        ->map(fn ($value) => $segment->resolveOrFail($value, $parent ?? null))
                         ->all(),
                 );
             }
@@ -40,7 +40,7 @@ class TransformModelBindings
             $view = $view->replace(
                 $segment->trimmed(),
                 $segment->variable(),
-                $segment->resolveOrFail($uriSegments[$index], $parent),
+                $segment->resolveOrFail($uriSegments[$index], $parent ?? null),
             );
 
             $parent = $segment;

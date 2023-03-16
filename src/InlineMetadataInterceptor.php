@@ -23,7 +23,7 @@ class InlineMetadataInterceptor
     public function intercept(MatchedView $matchedView): Metadata
     {
         if (array_key_exists($matchedView->path, $this->cache)) {
-            return collect($this->cache[$matchedView->path]);
+            return $this->cache[$matchedView->path];
         }
 
         try {

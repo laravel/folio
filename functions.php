@@ -7,11 +7,14 @@ use Illuminate\Container\Container;
 use Illuminate\Support\Arr;
 use Laravel\Folio\Exceptions\MetadataIntercepted;
 
-function folio(Closure|string|array $middleware)
+function folio(Closure|string|array $middleware, bool $withTrashed = false)
 {
     if (Container::getInstance()->make(InlineMetadataInterceptor::class)->listening()) {
         throw new MetadataIntercepted(
-            new Metadata(middleware: collect(Arr::wrap($middleware)))
+            new Metadata(
+                middleware: collect(Arr::wrap($middleware)),
+                withTrashed: $withTrashed,
+            )
         );
     }
 }

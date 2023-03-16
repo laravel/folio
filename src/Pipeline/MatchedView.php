@@ -33,6 +33,14 @@ class MatchedView
     }
 
     /**
+     * Set the mount path on the matched view, returning a new instance.
+     */
+    public function withMountPath(string $mountPath): MatchedView
+    {
+        return new static(mountPath: $mountPath, path: $this->path, data: $this->data);
+    }
+
+    /**
      * Get the matched view's inline middleware.
      */
     public function inlineMiddleware(): Collection
@@ -41,11 +49,11 @@ class MatchedView
     }
 
     /**
-     * Set the mount path on the matched view, returning a new instance.
+     * Determine if the matched view resolves soft deleted model bindings.
      */
-    public function withMountPath(string $mountPath): MatchedView
+    public function allowsTrashedBindings(): bool
     {
-        return new static(mountPath: $mountPath, path: $this->path, data: $this->data);
+        return app(InlineMetadataInterceptor::class)->intercept($this)->withTrashed;
     }
 
     /**

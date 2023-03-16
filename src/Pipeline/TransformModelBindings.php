@@ -31,17 +31,21 @@ class TransformModelBindings
                     $segment->trimmed(),
                     $segment->variable(),
                     collect(array_slice($uriSegments, $index))
-                        ->map(fn ($value) => $segment->resolveOrFail($value, $parent ?? null))
+                        ->map(fn ($value) => $segment->resolveOrFail(
+                            $value, $parent ?? null, $view->allowsTrashedBindings()
+                        ))
                         ->all(),
                 );
             }
 
-            // TODO: withTrashed support...
-
             $view = $view->replace(
                 $segment->trimmed(),
                 $segment->variable(),
-                $segment->resolveOrFail($uriSegments[$index], $parent ?? null),
+                $segment->resolveOrFail(
+                    $uriSegments[$index],
+                    $parent ?? null,
+                    $view->allowsTrashedBindings()
+                ),
             );
 
             $parent = $segment;

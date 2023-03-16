@@ -52,9 +52,11 @@ class PotentiallyBindablePathSegment
     /**
      * Resolve the binding or throw a ModelNotFoundException.
      */
-    public function resolveOrFail(mixed $value, ?PotentiallyBindablePathSegment $parent = null): UrlRoutable|BackedEnum
+    public function resolveOrFail(mixed $value,
+                                  ?PotentiallyBindablePathSegment $parent = null,
+                                  bool $withTrashed = false): UrlRoutable|BackedEnum
     {
-        if (is_null($resolved = $this->resolve($value, $parent))) {
+        if (is_null($resolved = $this->resolve($value, $parent, $withTrashed))) {
             throw (new ModelNotFoundException)
                     ->setModel(get_class($this->newClassInstance()), [$value]);
         }
@@ -65,7 +67,7 @@ class PotentiallyBindablePathSegment
     /**
      * Attempt to resolve the binding.
      */
-    public function resolve(mixed $value, ?PotentiallyBindablePathSegment $parent = null): mixed
+    protected function resolve(mixed $value, ?PotentiallyBindablePathSegment $parent, bool $withTrashed): mixed
     {
         if ($explicitBindingCallback = Route::getBindingCallback($this->variable())) {
             return $explicitBindingCallback($value);
@@ -74,13 +76,36 @@ class PotentiallyBindablePathSegment
         if (enum_exists($this->class())) {
             return $this->resolveEnum($value);
         } elseif ($parent && $this->field()) {
-            return $this->resolveViaParent($value, $parent);
+            return $this->resolveViaParent($value, $parent, $withTrashed);
         }
 
         $classInstance = $this->newClassInstance();
 
-        return $classInstance->resolveRouteBinding(
+        $method = $withTrashed ? 'resolveSoftDeletableRouteBinding' : 'resolveRouteBinding';
+
+        return $classInstance->{$method}(
             $value, $this->field() ?: $classInstance->getRouteKeyName()
+        );
+    }
+
+    /**
+     * Attempt to resolve the binding via the given parent.
+     */
+    protected function resolveViaParent(mixed $value, PotentiallyBindablePathSegment $parent, bool $withTrashed): ?UrlRoutable
+    {
+        [$parentInstance, $childInstance] = [
+            $parent->newClassInstance(),
+            $this->newClassInstance(),
+        ];
+
+        $method = $withTrashed
+                ? 'resolveSoftDeletableChildRouteBinding'
+                : 'resolveChildRouteBinding';
+
+        return $parentInstance->{$method}(
+            get_class($this->newClassInstance()),
+            $value,
+            $this->field() ?: $childInstance->getRouteKeyName()
         );
     }
 
@@ -96,23 +121,6 @@ class PotentiallyBindablePathSegment
         }
 
         return $backedEnum;
-    }
-
-    /**
-     * Attempt to resolve the binding via the given parent.
-     */
-    protected function resolveViaParent(mixed $value, PotentiallyBindablePathSegment $parent): ?UrlRoutable
-    {
-        [$parentInstance, $childInstance] = [
-            $parent->newClassInstance(),
-            $this->newClassInstance(),
-        ];
-
-        return $parentInstance->resolveChildRouteBinding(
-            get_class($this->newClassInstance()),
-            $value,
-            $this->field() ?: $childInstance->getRouteKeyName()
-        );
     }
 
     /**

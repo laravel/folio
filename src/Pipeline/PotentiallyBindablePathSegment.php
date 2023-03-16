@@ -93,8 +93,6 @@ class PotentiallyBindablePathSegment
      */
     protected function resolveViaParent(mixed $value, UrlRoutable $parent, bool $withTrashed): ?UrlRoutable
     {
-        $childInstance = $this->newClassInstance();
-
         $method = $withTrashed
                 ? 'resolveSoftDeletableChildRouteBinding'
                 : 'resolveChildRouteBinding';
@@ -102,7 +100,7 @@ class PotentiallyBindablePathSegment
         return $parent->{$method}(
             $this->variable(),
             $value,
-            $this->field() ?: $childInstance->getRouteKeyName()
+            $this->field() ?: $this->newClassInstance()->getRouteKeyName()
         );
     }
 

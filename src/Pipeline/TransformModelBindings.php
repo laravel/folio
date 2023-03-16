@@ -17,7 +17,8 @@ class TransformModelBindings
         }
 
         [$uriSegments, $pathSegments] = [
-            explode('/', $state->uri), $this->pathSegments($view),
+            explode('/', $state->uri),
+            $this->bindablePathSegments($view),
         ];
 
         foreach ($pathSegments as $index => $segment) {
@@ -52,7 +53,7 @@ class TransformModelBindings
     /**
      * Get the bindable path segments for the matched view.
      */
-    protected function pathSegments(MatchedView $view): array
+    protected function bindablePathSegments(MatchedView $view): array
     {
         return explode('/', (string) Str::of($view->path)
             ->replace($view->mountPath, '')

@@ -31,6 +31,14 @@ test('implicit bindings are resolved', function () {
     $this->get('/podcasts/'.$podcast->id)->assertSee('test-podcast-name');
 });
 
+test('not found error is thrown if implicit binding can not be resolved', function () {
+    $podcast = Podcast::create([
+        'name' => 'test-podcast-name',
+    ]);
+
+    $this->get('/podcasts/missing-id')->assertNotFound();
+});
+
 test('child implicit bindings are scoped to the parent if field is present', function () {
     $podcast = Podcast::create([
         'name' => 'test-podcast-name',

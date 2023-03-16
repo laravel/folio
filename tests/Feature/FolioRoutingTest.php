@@ -3,9 +3,9 @@
 use Illuminate\Filesystem\Filesystem;
 
 $purgeDirectories = function () {
-    (new Filesystem)->deleteDirectory(realpath(__DIR__.'/../fixtures/views'), preserve: true);
+    (new Filesystem)->deleteDirectory(realpath(__DIR__.'/../tmp/views'), preserve: true);
 
-    touch(__DIR__.'/../fixtures/views/.gitkeep');
+    touch(__DIR__.'/../tmp/views/.gitkeep');
 };
 
 beforeEach($purgeDirectories);
@@ -18,7 +18,7 @@ test('root index view can be matched', function () {
 
     $router = $this->router();
 
-    expect(realpath(__DIR__.'/../fixtures/views/index.blade.php'))->toEqual($router->resolve('/')->path)
+    expect(realpath(__DIR__.'/../tmp/views/index.blade.php'))->toEqual($router->resolve('/')->path)
         ->and($router->resolve('/missing-view'))->toBeNull();
 });
 
@@ -31,7 +31,7 @@ test('directory index views can be matched', function () {
 
     $router = $this->router();
 
-    expect(realpath(__DIR__.'/../fixtures/views/users/index.blade.php'))->toEqual($router->resolve('/users')->path);
+    expect(realpath(__DIR__.'/../tmp/views/users/index.blade.php'))->toEqual($router->resolve('/users')->path);
 });
 
 test('literal view can be matched', function () {
@@ -42,7 +42,7 @@ test('literal view can be matched', function () {
 
     $router = $this->router();
 
-    expect(realpath(__DIR__.'/../fixtures/views/profile.blade.php'))->toEqual($router->resolve('/profile')->path);
+    expect(realpath(__DIR__.'/../tmp/views/profile.blade.php'))->toEqual($router->resolve('/profile')->path);
 });
 
 test('wildcard view can be matched', function () {
@@ -55,7 +55,7 @@ test('wildcard view can be matched', function () {
 
     $resolved = $router->resolve('/1');
 
-    expect(realpath(__DIR__.'/../fixtures/views/[id].blade.php'))->toEqual($resolved->path)
+    expect(realpath(__DIR__.'/../tmp/views/[id].blade.php'))->toEqual($resolved->path)
         ->and($resolved->data)->toEqual(['id' => 1]);
 });
 
@@ -70,7 +70,7 @@ test('literal views take precendence over wildcard views', function () {
 
     $resolved = $router->resolve('/profile');
 
-    expect(realpath(__DIR__.'/../fixtures/views/profile.blade.php'))->toEqual($resolved->path)
+    expect(realpath(__DIR__.'/../tmp/views/profile.blade.php'))->toEqual($resolved->path)
         ->and($resolved->data)->toEqual([])
         ->and($router->resolve('/profile/missing-view'))->toBeNull();
 });
@@ -84,7 +84,7 @@ test('literal views may be in directories', function () {
 
     $router = $this->router();
 
-    expect(realpath(__DIR__.'/../fixtures/views/users/profile.blade.php'))->toEqual($router->resolve('/users/profile')->path);
+    expect(realpath(__DIR__.'/../tmp/views/users/profile.blade.php'))->toEqual($router->resolve('/users/profile')->path);
 });
 
 test('wildcard views may be in directories', function () {
@@ -98,7 +98,7 @@ test('wildcard views may be in directories', function () {
 
     $resolved = $router->resolve('/users/1');
 
-    expect(realpath(__DIR__.'/../fixtures/views/users/[id].blade.php'))->toEqual($resolved->path);
+    expect(realpath(__DIR__.'/../tmp/views/users/[id].blade.php'))->toEqual($resolved->path);
 
     expect($resolved->data)->toEqual(['id' => 1]);
 });
@@ -112,7 +112,7 @@ test('multisegment wildcard views', function () {
 
     $resolved = $router->resolve('/1/2/3');
 
-    expect(realpath(__DIR__.'/../fixtures/views/[...id].blade.php'))->toEqual($resolved->path);
+    expect(realpath(__DIR__.'/../tmp/views/[...id].blade.php'))->toEqual($resolved->path);
 
     expect($resolved->data)->toEqual(['id' => [1, 2, 3]]);
 });
@@ -129,7 +129,7 @@ test('multisegment views take priority over further directories', function () {
 
     $resolved = $router->resolve('/1/2/3');
 
-    expect(realpath(__DIR__.'/../fixtures/views/[...id].blade.php'))->toEqual($resolved->path);
+    expect(realpath(__DIR__.'/../tmp/views/[...id].blade.php'))->toEqual($resolved->path);
 
     expect($resolved->data)->toEqual(['id' => [1, 2, 3]]);
 });
@@ -147,7 +147,7 @@ test('wildcard directories', function () {
 
     $resolved = $router->resolve('/flights/1/connections');
 
-    expect(realpath(__DIR__.'/../fixtures/views/flights/[id]/connections.blade.php'))->toEqual($resolved->path);
+    expect(realpath(__DIR__.'/../tmp/views/flights/[id]/connections.blade.php'))->toEqual($resolved->path);
 
     expect($resolved->data)->toEqual(['id' => 1]);
 });
@@ -169,6 +169,6 @@ test('nested wildcard directories', function () {
 
     $resolved = $router->resolve('/flights/1/connections/2/map');
 
-    expect(realpath(__DIR__.'/../fixtures/views/flights/[id]/connections/[connectionId]/map.blade.php'))->toEqual($resolved->path)
+    expect(realpath(__DIR__.'/../tmp/views/flights/[id]/connections/[connectionId]/map.blade.php'))->toEqual($resolved->path)
         ->and($resolved->data)->toEqual(['id' => 1, 'connectionId' => 2]);
 });

@@ -6,9 +6,9 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Route;
 
 $purgeDirectories = function () {
-    (new Filesystem)->deleteDirectory(realpath(__DIR__.'/../fixtures/views'), preserve: true);
+    (new Filesystem)->deleteDirectory(realpath(__DIR__.'/../tmp/views'), preserve: true);
 
-    touch(__DIR__.'/../fixtures/views/.gitkeep');
+    touch(__DIR__.'/../tmp/views/.gitkeep');
 };
 
 beforeEach($purgeDirectories);

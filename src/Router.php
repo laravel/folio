@@ -35,14 +35,14 @@ class Router
     }
 
     /**
-     * Resolve the given URI via page based routing.
+     * Match the given URI to a view via page based routing.
      */
-    public function resolve(string $uri): ?MatchedView
+    public function match(string $uri): ?MatchedView
     {
         $uri = strlen($uri) > 1 ? trim($uri, '/') : $uri;
 
         foreach ($this->mountPaths as $mountPath) {
-            if ($view = $this->resolveAtPath($mountPath, $uri)) {
+            if ($view = $this->matchAtPath($mountPath, $uri)) {
                 return $view;
             }
         }
@@ -53,7 +53,7 @@ class Router
     /**
      * Resolve the given URI via page based routing at the given mount path.
      */
-    protected function resolveAtPath(string $mountPath, string $uri): ?MatchedView
+    protected function matchAtPath(string $mountPath, string $uri): ?MatchedView
     {
         $state = new State(
             uri: $uri,

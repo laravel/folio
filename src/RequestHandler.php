@@ -27,7 +27,7 @@ class RequestHandler
     {
         $matchedView = (new Router(
             $this->mountPath->path
-        ))->resolve($uri) ?? abort(404);
+        ))->match($uri) ?? abort(404);
 
         return (new Pipeline(app()))
             ->send($request)

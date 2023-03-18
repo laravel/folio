@@ -18,8 +18,8 @@ test('root index view can be matched', function () {
 
     $router = $this->router();
 
-    expect(realpath(__DIR__.'/../tmp/views/index.blade.php'))->toEqual($router->resolve('/')->path)
-        ->and($router->resolve('/missing-view'))->toBeNull();
+    expect(realpath(__DIR__.'/../tmp/views/index.blade.php'))->toEqual($router->match('/')->path)
+        ->and($router->match('/missing-view'))->toBeNull();
 });
 
 test('directory index views can be matched', function () {
@@ -31,7 +31,7 @@ test('directory index views can be matched', function () {
 
     $router = $this->router();
 
-    expect(realpath(__DIR__.'/../tmp/views/users/index.blade.php'))->toEqual($router->resolve('/users')->path);
+    expect(realpath(__DIR__.'/../tmp/views/users/index.blade.php'))->toEqual($router->match('/users')->path);
 });
 
 test('literal views can be matched', function () {
@@ -42,7 +42,7 @@ test('literal views can be matched', function () {
 
     $router = $this->router();
 
-    expect(realpath(__DIR__.'/../tmp/views/profile.blade.php'))->toEqual($router->resolve('/profile')->path);
+    expect(realpath(__DIR__.'/../tmp/views/profile.blade.php'))->toEqual($router->match('/profile')->path);
 });
 
 test('wildcard views can be matched', function () {
@@ -53,7 +53,7 @@ test('wildcard views can be matched', function () {
 
     $router = $this->router();
 
-    $resolved = $router->resolve('/1');
+    $resolved = $router->match('/1');
 
     expect(realpath(__DIR__.'/../tmp/views/[id].blade.php'))->toEqual($resolved->path)
         ->and($resolved->data)->toEqual(['id' => 1]);
@@ -68,11 +68,11 @@ test('literal views take precendence over wildcard views', function () {
 
     $router = $this->router();
 
-    $resolved = $router->resolve('/profile');
+    $resolved = $router->match('/profile');
 
     expect(realpath(__DIR__.'/../tmp/views/profile.blade.php'))->toEqual($resolved->path)
         ->and($resolved->data)->toEqual([])
-        ->and($router->resolve('/profile/missing-view'))->toBeNull();
+        ->and($router->match('/profile/missing-view'))->toBeNull();
 });
 
 test('literal views may be in directories', function () {
@@ -84,7 +84,7 @@ test('literal views may be in directories', function () {
 
     $router = $this->router();
 
-    expect(realpath(__DIR__.'/../tmp/views/users/profile.blade.php'))->toEqual($router->resolve('/users/profile')->path);
+    expect(realpath(__DIR__.'/../tmp/views/users/profile.blade.php'))->toEqual($router->match('/users/profile')->path);
 });
 
 test('wildcard views may be in directories', function () {
@@ -96,7 +96,7 @@ test('wildcard views may be in directories', function () {
 
     $router = $this->router();
 
-    $resolved = $router->resolve('/users/1');
+    $resolved = $router->match('/users/1');
 
     expect(realpath(__DIR__.'/../tmp/views/users/[id].blade.php'))->toEqual($resolved->path);
 
@@ -110,7 +110,7 @@ test('multisegment wildcard views can be matched', function () {
 
     $router = $this->router();
 
-    $resolved = $router->resolve('/1/2/3');
+    $resolved = $router->match('/1/2/3');
 
     expect(realpath(__DIR__.'/../tmp/views/[...id].blade.php'))->toEqual($resolved->path);
 
@@ -127,7 +127,7 @@ test('multisegment views take priority over further directories', function () {
 
     $router = $this->router();
 
-    $resolved = $router->resolve('/1/2/3');
+    $resolved = $router->match('/1/2/3');
 
     expect(realpath(__DIR__.'/../tmp/views/[...id].blade.php'))->toEqual($resolved->path);
 
@@ -145,7 +145,7 @@ test('wildcard directories are properly handled', function () {
 
     $router = $this->router();
 
-    $resolved = $router->resolve('/flights/1/connections');
+    $resolved = $router->match('/flights/1/connections');
 
     expect(realpath(__DIR__.'/../tmp/views/flights/[id]/connections.blade.php'))->toEqual($resolved->path);
 
@@ -167,7 +167,7 @@ test('nested wildcard directories are properly handled', function () {
 
     $router = $this->router();
 
-    $resolved = $router->resolve('/flights/1/connections/2/map');
+    $resolved = $router->match('/flights/1/connections/2/map');
 
     expect(realpath(__DIR__.'/../tmp/views/flights/[id]/connections/[connectionId]/map.blade.php'))->toEqual($resolved->path)
         ->and($resolved->data)->toEqual(['id' => 1, 'connectionId' => 2]);

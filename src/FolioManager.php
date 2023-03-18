@@ -21,10 +21,10 @@ class FolioManager
     /**
      * Register a route to handle page based routing at the given paths.
      */
-    public function route(?string $to = null, ?string $uri = '/', array $middleware = []): self
+    public function route(?string $path = null, ?string $uri = '/', array $middleware = []): self
     {
         $this->mountPaths[] = $mountPath = new MountPath(
-            $to ? realpath($to) : config('view.paths')[0].'/pages', $uri, $middleware
+            $path ? realpath($path) : config('view.paths')[0].'/pages', $uri, $middleware
         );
 
         if ($uri === '/') {

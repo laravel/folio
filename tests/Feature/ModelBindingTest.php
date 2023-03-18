@@ -22,7 +22,7 @@ beforeEach(function () {
     Folio::route(__DIR__.'/resources/views/pages');
 });
 
-test('implicit bindings are resolved', function () {
+test('implicit model bindings are resolved', function () {
     $podcast = Podcast::create([
         'name' => 'test-podcast-name',
     ]);
@@ -64,7 +64,7 @@ test('child implicit bindings are scoped to the parent if field is present', fun
             ->assertSee('test-comment-content');
 });
 
-test('soft deletable bindings are not resolved if not allowed', function () {
+test('soft deletable bindings are not resolved if not allowed by page', function () {
     $podcast = Podcast::create([
         'name' => 'test-podcast-name',
     ]);
@@ -74,7 +74,7 @@ test('soft deletable bindings are not resolved if not allowed', function () {
     $this->get('/podcasts/'.$podcast->id)->assertNotFound();
 });
 
-test('soft deletable bindings are resolved if allowed', function () {
+test('soft deletable bindings are resolved if allowed by page', function () {
     $podcast = Podcast::create([
         'name' => 'test-podcast-name',
     ]);
@@ -84,7 +84,7 @@ test('soft deletable bindings are resolved if allowed', function () {
     $this->get('/deleted-podcasts/'.$podcast->id)->assertSee('test-podcast-name');
 });
 
-test('enums can be injected', function () {
+test('enums are properly injected into page', function () {
     $response = $this->get('/categories/posts');
 
     $response->assertSee('posts');

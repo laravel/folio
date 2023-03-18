@@ -34,7 +34,7 @@ test('directory index views can be matched', function () {
     expect(realpath(__DIR__.'/../tmp/views/users/index.blade.php'))->toEqual($router->resolve('/users')->path);
 });
 
-test('literal view can be matched', function () {
+test('literal views can be matched', function () {
     $this->views([
         '/index.blade.php',
         '/profile.blade.php',
@@ -45,7 +45,7 @@ test('literal view can be matched', function () {
     expect(realpath(__DIR__.'/../tmp/views/profile.blade.php'))->toEqual($router->resolve('/profile')->path);
 });
 
-test('wildcard view can be matched', function () {
+test('wildcard views can be matched', function () {
     $this->views([
         '/index.blade.php',
         '/[id].blade.php',
@@ -103,7 +103,7 @@ test('wildcard views may be in directories', function () {
     expect($resolved->data)->toEqual(['id' => 1]);
 });
 
-test('multisegment wildcard views', function () {
+test('multisegment wildcard views can be matched', function () {
     $this->views([
         '/[...id].blade.php',
     ]);
@@ -134,7 +134,7 @@ test('multisegment views take priority over further directories', function () {
     expect($resolved->data)->toEqual(['id' => [1, 2, 3]]);
 });
 
-test('wildcard directories', function () {
+test('wildcard directories are properly handled', function () {
     $this->views([
         '/flights' => [
             '/[id]' => [
@@ -152,7 +152,7 @@ test('wildcard directories', function () {
     expect($resolved->data)->toEqual(['id' => 1]);
 });
 
-test('nested wildcard directories', function () {
+test('nested wildcard directories are properly handled', function () {
     $this->views([
         '/flights' => [
             '/[id]' => [

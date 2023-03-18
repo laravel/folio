@@ -14,7 +14,8 @@ class Metadata
     /**
      * Create a new metadata instance.
      */
-    public function __construct(?Collection $middleware = null, public bool $withTrashed = false)
+    public function __construct(?Collection $middleware = null,
+                                public bool $withTrashed = false)
     {
         $this->middleware = $middleware ?? new Collection;
     }

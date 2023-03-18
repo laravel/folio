@@ -47,7 +47,7 @@ test('missing models trigger model not found exception', function () {
     $router->resolve('/users/_missing');
 })->throws(ModelNotFoundException::class);
 
-test('basic implicit model bindings with more than one binding in path', function () {
+test('implicit model bindings with more than one binding in path', function () {
     $this->views([
         '/index.blade.php',
         '/users' => [
@@ -80,7 +80,7 @@ test('basic implicit model bindings with more than one binding in path', functio
     $this->assertEquals(2, count($view->data));
 });
 
-test('model binding can receive a custom binding field', function (string $pathString) {
+test('model bindings can receive a custom binding field', function (string $pathString) {
     $this->views([
         '/index.blade.php',
         '/users' => [
@@ -100,7 +100,7 @@ test('model binding can receive a custom binding field', function (string $pathS
     $this->assertEquals(1, count($view->data));
 })->with(['-slug', ':slug']);
 
-test('model binding can receive a custom binding variable', function (string $pathString, string $variable) {
+test('model bindings can receive a custom binding variable', function (string $pathString, string $variable) {
     $this->views([
         '/index.blade.php',
         '/users' => [
@@ -123,7 +123,7 @@ test('model binding can receive a custom binding variable', function (string $pa
     ['|foo', 'foo'],
 ]);
 
-test('model binding can receive a custom binding field and custom binding variable at same time', function (string $pathString, string $field, string $variable) {
+test('model bindings can receive a custom binding field and custom binding variable at same time', function (string $pathString, string $field, string $variable) {
     $this->views([
         '/index.blade.php',
         '/users' => [
@@ -146,7 +146,7 @@ test('model binding can receive a custom binding field and custom binding variab
     [':slug|foo', 'slug', 'foo'],
 ]);
 
-test('model binding can be resolved by explicit binding callback', function () {
+test('model bindings can be resolved by explicit binding callback', function () {
     $this->views([
         '/index.blade.php',
         '/users' => [
@@ -168,7 +168,7 @@ test('model binding can be resolved by explicit binding callback', function () {
     );
 });
 
-test('model binding can span across multiple segments', function () {
+test('model bindings can span across multiple segments', function () {
     $this->views([
         '/index.blade.php',
         '/users' => [
@@ -188,7 +188,7 @@ test('model binding can span across multiple segments', function () {
     $this->assertEquals(1, count($view->data));
 });
 
-test('model binding can span across multiple segments with custom fields and variables', function (string $pathString, string $field, string $variable) {
+test('model bindings can span across multiple segments with custom fields and variables', function (string $pathString, string $field, string $variable) {
     $this->views([
         '/index.blade.php',
         '/users' => [
@@ -287,7 +287,7 @@ test('scoped child model bindings trigger model not found exception if they do n
     $router->resolve('/users/1/posts/_missing');
 })->throws(ModelNotFoundException::class);
 
-test('enums can be bound', function () {
+test('model bindings can be enums', function () {
     $this->views([
         '/categories' => [
             '/[.Tests.Feature.Fixtures.Category].blade.php',

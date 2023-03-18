@@ -17,10 +17,10 @@ class EnsureNoDirectoryTraversal
             return $view;
         }
 
-        if (Str::of(realpath($view->path))->startsWith($state->mountPath.'/')) {
-            return $view;
+        if (! Str::of(realpath($view->path))->startsWith($state->mountPath.'/')) {
+            throw new PossibleDirectoryTraversal;
         }
 
-        throw new PossibleDirectoryTraversal;
+        return $view;
     }
 }

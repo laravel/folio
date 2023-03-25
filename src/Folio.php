@@ -4,6 +4,9 @@ namespace Laravel\Folio;
 
 use Illuminate\Support\Facades\Facade;
 
+/**
+ * @method static \Laravel\Folio\FolioManager route(?string $path = null, ?string $uri = '/', array $middleware = [])
+ */
 class Folio extends Facade
 {
     /**

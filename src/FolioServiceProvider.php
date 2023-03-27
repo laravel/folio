@@ -8,10 +8,8 @@ class FolioServiceProvider extends ServiceProvider
 {
     /**
      * Register the package's services.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->app->singleton(FolioManager::class);
         $this->app->singleton(InlineMetadataInterceptor::class);
@@ -19,10 +17,8 @@ class FolioServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap the package's services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         //
     }

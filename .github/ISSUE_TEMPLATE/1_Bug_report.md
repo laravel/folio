@@ -9,7 +9,6 @@ about: "Report something that's broken. Please ensure your Laravel version is st
 - Laravel Folio Version: #.#.#
 - Laravel Version: #.#.#
 - PHP Version: #.#.#
-- Database Driver & Version:
 
 ### Description:
 

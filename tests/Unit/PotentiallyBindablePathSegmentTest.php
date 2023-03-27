@@ -14,7 +14,7 @@ test('variable name is pluralized if the segment captures multiple segments and 
     $this->assertEquals('users', $segment->variable());
 });
 
-test('field parsing', function (string $segment, string $field) {
+test('field parsing', function (string $segment, string|bool $field) {
     $segment = new PotentiallyBindablePathSegment($segment);
 
     $this->assertEquals($field, $segment->field());

@@ -6,7 +6,7 @@ about: "Report something that's broken. Please ensure your Laravel version is st
 <!-- DO NOT THROW THIS AWAY -->
 <!-- Fill out the FULL versions with patch versions -->
 
-- Laravel Package Version: #.#.#
+- Laravel Folio Version: #.#.#
 - Laravel Version: #.#.#
 - PHP Version: #.#.#
 - Database Driver & Version:

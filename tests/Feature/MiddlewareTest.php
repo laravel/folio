@@ -11,14 +11,16 @@ beforeEach(function () {
         '/users/*' => [
             function ($request, $next) {
                 $_SERVER['__folio_users_middleware'] = true;
+
                 return $next($request);
-            }
+            },
         ],
         '/flights/*' => [
             function ($request, $next) {
                 $_SERVER['__folio_flights_middleware'] = true;
+
                 return $next($request);
-            }
+            },
         ],
     ]);
 });

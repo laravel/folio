@@ -10,6 +10,7 @@ class Podcast extends Model
     use SoftDeletes;
 
     protected $table = 'podcasts';
+
     protected $guarded = [];
 
     public function comments()

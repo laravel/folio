@@ -53,7 +53,7 @@ test('implicit model bindings with more than one binding in path', function () {
         '/users' => [
             '/[.FolioModelBindingTestClass|first]' => [
                 '/posts' => [
-                    '/[.FolioModelBindingTestClass|second].blade.php'
+                    '/[.FolioModelBindingTestClass|second].blade.php',
                 ],
             ],
         ],
@@ -220,7 +220,7 @@ test('child model bindings are scoped to the parent when field is present on chi
         '/users' => [
             '/[.FolioModelBindingTestClass|first]' => [
                 '/posts' => [
-                    '/[.FolioModelBindingTestChildClass:slug|second].blade.php'
+                    '/[.FolioModelBindingTestChildClass:slug|second].blade.php',
                 ],
             ],
         ],
@@ -246,7 +246,7 @@ test('explicit model bindings take precedence over implicit scoped child binding
         '/users' => [
             '/[.FolioModelBindingTestClass|first]' => [
                 '/posts' => [
-                    '/[.FolioModelBindingTestClass:slug|second].blade.php'
+                    '/[.FolioModelBindingTestClass:slug|second].blade.php',
                 ],
             ],
         ],
@@ -276,7 +276,7 @@ test('scoped child model bindings trigger model not found exception if they do n
         '/users' => [
             '/[.FolioModelBindingTestClass|first]' => [
                 '/posts' => [
-                    '/[.FolioModelBindingTestClass:slug|second].blade.php'
+                    '/[.FolioModelBindingTestClass:slug|second].blade.php',
                 ],
             ],
         ],
@@ -353,6 +353,6 @@ class FolioModelBindingTestChildClass extends FolioModelBindingTestClass
 {
     public function resolveChildRouteBinding($childType, $value, $field)
     {
-        throw new Exception("Model does not have children.");
+        throw new Exception('Model does not have children.');
     }
 }

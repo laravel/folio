@@ -8,28 +8,14 @@ use Laravel\Folio\InlineMetadataInterceptor;
 class MatchedView
 {
     /**
-     * The full path to the matched view file.
-     */
-    public string $path;
-
-    /**
-     * The mount path that the view was located in.
-     */
-    public ?string $mountPath;
-
-    /**
-     * The data that should be given to the view.
-     */
-    public array $data;
-
-    /**
      * Create a new matched view instance.
      */
-    public function __construct(string $path, array $data, ?string $mountPath = null)
-    {
+    public function __construct(
+        public string $path,
+        public array $data,
+        public ?string $mountPath = null
+    ) {
         $this->path = realpath($path) ?: $path;
-        $this->data = $data;
-        $this->mountPath = $mountPath;
     }
 
     /**

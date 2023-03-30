@@ -27,7 +27,7 @@ class FolioManager
             $path ? realpath($path) : config('view.paths')[0].'/pages', $uri, $middleware
         );
 
-        if ($mountPath->usesFallbackRoute()) {
+        if ($uri === '/') {
             Route::fallback($this->handler($mountPath))
                 ->name($mountPath->routeName());
         } else {

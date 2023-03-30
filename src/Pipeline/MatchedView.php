@@ -63,7 +63,7 @@ class MatchedView
 
         $data[$newKey] = $value;
 
-        return new static($this->path, $data);
+        return $this->withData($data);
     }
 
     /**

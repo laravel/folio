@@ -10,6 +10,8 @@ class EnsureNoDirectoryTraversal
 {
     /**
      * Invoke the routing pipeline handler.
+     *
+     * @throws \Laravel\Folio\Exceptions\PossibleDirectoryTraversal
      */
     public function __invoke(State $state, Closure $next): mixed
     {

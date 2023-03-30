@@ -1,8 +1,9 @@
 <?php
 
-namespace Laravel\Folio;
+namespace Laravel\Folio\Facades;
 
 use Illuminate\Support\Facades\Facade;
+use Laravel\Folio\FolioManager;
 
 /**
  * @method static \Laravel\Folio\FolioManager route(?string $path = null, ?string $uri = '/', array $middleware = [])

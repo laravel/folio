@@ -1,6 +1,6 @@
 <?php
 
-use Laravel\Folio\Folio;
+use Laravel\Folio\Facades\Folio;
 
 beforeEach(function () {
     $_SERVER['__folio_users_middleware'] = false;

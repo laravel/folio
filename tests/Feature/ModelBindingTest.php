@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Schema;
-use Laravel\Folio\Folio;
+use Laravel\Folio\Facades\Folio;
 use Tests\Feature\Fixtures\Podcast;
 
 beforeEach(function () {

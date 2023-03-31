@@ -14,7 +14,7 @@ class FolioManager
     protected array $mountPaths = [];
 
     /**
-     * The callback that should be used to render mathced views.
+     * The callback that should be used to render matched views.
      */
     protected ?Closure $renderUsing = null;
 
@@ -71,7 +71,7 @@ class FolioManager
     /**
      * Specify the callback that should be used to render matched views.
      */
-    public function renderUsing(Closure $callback): self
+    public function renderUsing(Closure $callback = null): self
     {
         $this->renderUsing = $callback;
 

@@ -71,6 +71,6 @@ class MatchedView
      */
     public function withData(array $data): MatchedView
     {
-        return new static($this->path, $data);
+        return new static($this->path, $data, $this->mountPath);
     }
 }

@@ -95,3 +95,12 @@ test('not found error is generated if enum value is not valid', function () {
 
     $response->assertNotFound();
 });
+
+it('throws exception when attempting to bind to class that is not routable', function () {
+    $this->withoutExceptionHandling();
+
+    $this->get('/non-routables/1')->assertNotFound();
+})->throws(
+    Exception::class,
+    'Folio route attempting to bind to class [Tests\Feature\Fixtures\NonRoutable], but it does not implement the UrlRoutable interface.',
+);

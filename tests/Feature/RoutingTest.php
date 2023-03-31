@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Filesystem\Filesystem;
+use Laravel\Folio\Exceptions\PossibleDirectoryTraversal;
 
 $purgeDirectories = function () {
     (new Filesystem)->deleteDirectory(realpath(__DIR__.'/../tmp/views'), preserve: true);
@@ -103,6 +104,18 @@ test('wildcard views may be in directories', function () {
     expect($resolved->data)->toEqual(['id' => 1]);
 });
 
+test('wildcard views must be blade files', function () {
+    $this->views([
+        '/users' => [
+            '/[id].php',
+        ],
+    ]);
+
+    $router = $this->router();
+
+    expect($router->match('/users/1'))->toBeNull();
+});
+
 test('multisegment wildcard views can be matched', function () {
     $this->views([
         '/[...id].blade.php',
@@ -172,3 +185,9 @@ test('nested wildcard directories are properly handled', function () {
     expect(realpath(__DIR__.'/../tmp/views/flights/[id]/connections/[connectionId]/map.blade.php'))->toEqual($resolved->path)
         ->and($resolved->data)->toEqual(['id' => 1, 'connectionId' => 2]);
 });
+
+it('ensures directory traversal is not possible', function () {
+    $router = $this->router();
+
+    $router->match('/../');
+})->throws(PossibleDirectoryTraversal::class);

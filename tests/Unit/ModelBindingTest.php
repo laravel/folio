@@ -27,8 +27,7 @@ test('implicit model binding', function () {
     $view = $router->match('/users/1');
 
     $this->assertTrue(
-        $view->data['folioModelBindingTestClass'] instanceof
-        FolioModelBindingTestClass
+        $view->data['folioModelBindingTestClass'] instanceof FolioModelBindingTestClass
     );
 
     $this->assertEquals(1, count($view->data));
@@ -64,13 +63,11 @@ test('implicit model bindings with more than one binding in path', function () {
     $view = $router->match('/users/1/posts/2');
 
     $this->assertTrue(
-        $view->data['first'] instanceof
-        FolioModelBindingTestClass
+        $view->data['first'] instanceof FolioModelBindingTestClass
     );
 
     $this->assertTrue(
-        $view->data['second'] instanceof
-        FolioModelBindingTestClass
+        $view->data['second'] instanceof FolioModelBindingTestClass
     );
 
     $this->assertEquals('1', $view->data['first']->value);

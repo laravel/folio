@@ -4,7 +4,9 @@ namespace Laravel\Folio;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
+use Laravel\Folio\Pipeline\MatchedView;
 
 class FolioManager
 {
@@ -17,6 +19,11 @@ class FolioManager
      * The callback that should be used to render matched views.
      */
     protected ?Closure $renderUsing = null;
+
+    /**
+     * The view that was last matched by Folio.
+     */
+    protected ?MatchedView $lastMatchedView = null;
 
     /**
      * Register a route to handle page based routing at the given paths.
@@ -46,7 +53,11 @@ class FolioManager
     protected function handler(MountPath $mountPath): Closure
     {
         return function (Request $request, $uri = '/') use ($mountPath) {
-            return (new RequestHandler($mountPath, $this->renderUsing))($request, $uri);
+            return (new RequestHandler(
+                $mountPath,
+                $this->renderUsing,
+                fn ($matchedView) => $this->lastMatchedView = $matchedView,
+            ))($request, $uri);
         };
     }
 
@@ -66,6 +77,14 @@ class FolioManager
         }
 
         return [];
+    }
+
+    /**
+     * Get a piece of data from the route / view that was last matched by Folio.
+     */
+    public function data(?string $key = null, mixed $default = null): mixed
+    {
+        return Arr::get($this->lastMatchedView?->data ?: [], $key, $default);
     }
 
     /**

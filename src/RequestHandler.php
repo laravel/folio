@@ -16,7 +16,8 @@ class RequestHandler
      * Create a new request handler instance.
      */
     public function __construct(protected MountPath $mountPath,
-                                protected ?Closure $renderUsing = null)
+                                protected ?Closure $renderUsing = null,
+                                protected ?Closure $onViewMatch = null)
     {
     }
 
@@ -29,10 +30,18 @@ class RequestHandler
             $this->mountPath->path
         ))->match($uri) ?? abort(404);
 
+        if ($this->onViewMatch) {
+            ($this->onViewMatch)($matchedView);
+        }
+
         return (new Pipeline(app()))
             ->send($request)
             ->through($this->middleware($matchedView))
             ->then(function ($request) use ($matchedView) {
+                if ($this->onViewMatch) {
+                    ($this->onViewMatch)($matchedView);
+                }
+
                 return $this->renderUsing
                     ? ($this->renderUsing)($request, $matchedView)
                     : $this->toResponse($matchedView);

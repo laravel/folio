@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Container\Container;
 use Illuminate\Support\Arr;
 use Laravel\Folio\Exceptions\MetadataIntercepted;
+use Laravel\Folio\Folio;
 
 function page(Closure|string|array $middleware = [], bool $withTrashed = false)
 {
@@ -17,4 +18,9 @@ function page(Closure|string|array $middleware = [], bool $withTrashed = false)
             )
         );
     }
+}
+
+function prop(?string $key = null, mixed $default = null): mixed
+{
+    return Folio::data($key, $default);
 }

@@ -27,6 +27,10 @@ class TransformModelBindings
             }
 
             if ($segment->capturesMultipleSegments()) {
+                $view = $this->initializeVariable(
+                    $view, $segment, array_slice($uriSegments, $index)
+                );
+
                 return $view->replace(
                     $segment->trimmed(),
                     $segment->variable(),
@@ -37,6 +41,8 @@ class TransformModelBindings
                         ->all(),
                 );
             }
+
+            $view = $this->initializeVariable($view, $segment, $uriSegments[$index]);
 
             $view = $view->replace(
                 $segment->trimmed(),
@@ -63,5 +69,17 @@ class TransformModelBindings
             ->replace($view->mountPath, '')
             ->beforeLast('.blade.php')
             ->trim('/'));
+    }
+
+    /**
+     * Initialize a given variable on the matched view so we can intercept the page metadata without errors.
+     */
+    protected function initializeVariable(MatchedView $view, PotentiallyBindablePathSegment $segment, mixed $value): MatchedView
+    {
+        return $view->replace(
+            $segment->trimmed(),
+            $segment->variable(),
+            $value,
+        );
     }
 }

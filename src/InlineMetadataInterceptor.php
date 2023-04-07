@@ -30,9 +30,14 @@ class InlineMetadataInterceptor
             $this->listen(function () use ($matchedView) {
                 ob_start();
 
-                $__path = $matchedView->path;
+                [$__path, $__variables] = [
+                    $matchedView->path,
+                    $matchedView->data,
+                ];
 
-                (static function () use ($__path) {
+                (static function () use ($__path, $__variables) {
+                    extract($__variables);
+
                     require $__path;
                 })();
             });

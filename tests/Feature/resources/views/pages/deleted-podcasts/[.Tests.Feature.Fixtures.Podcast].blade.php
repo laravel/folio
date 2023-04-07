@@ -1,7 +1,7 @@
 <?php
-use function Laravel\Folio\{folio};
+use function Laravel\Folio\{page};
 
-folio(withTrashed: true);
+page(withTrashed: true);
 ?>
 <div>
     {{ $podcast->name }}

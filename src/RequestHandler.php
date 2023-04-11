@@ -30,10 +30,6 @@ class RequestHandler
             $this->mountPath->path
         ))->match($uri) ?? abort(404);
 
-        if ($this->onViewMatch) {
-            ($this->onViewMatch)($matchedView);
-        }
-
         return (new Pipeline(app()))
             ->send($request)
             ->through($this->middleware($matchedView))

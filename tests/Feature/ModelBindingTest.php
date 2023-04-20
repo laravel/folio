@@ -57,11 +57,11 @@ test('child implicit bindings are scoped to the parent if field is present', fun
 
     //Doesn't belong to parent...
     $this->get('/podcasts/'.$podcast->id.'/comments/'.$secondComment->id)
-            ->assertNotFound();
+        ->assertNotFound();
 
     //Belongs to parent...
     $this->get('/podcasts/'.$podcast->id.'/comments/'.$comment->id)
-            ->assertSee('test-comment-content');
+        ->assertSee('test-comment-content');
 });
 
 test('soft deletable bindings are not resolved if not allowed by page', function () {

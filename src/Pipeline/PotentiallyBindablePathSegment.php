@@ -58,7 +58,7 @@ class PotentiallyBindablePathSegment
     {
         if (is_null($resolved = $this->resolve($value, $parent, $withTrashed))) {
             throw (new ModelNotFoundException)
-                    ->setModel(get_class($this->newClassInstance()), [$value]);
+                ->setModel(get_class($this->newClassInstance()), [$value]);
         }
 
         return $resolved;
@@ -128,16 +128,16 @@ class PotentiallyBindablePathSegment
         }
 
         $this->class = (string) Str::of($this->value)
-                    ->trim('[]')
-                    ->after('...')
-                    ->before('-')
-                    ->before('|')
-                    ->before(':')
-                    ->replace('.', '\\')
-                    ->unless(
-                        fn ($s) => $s->contains('\\') || class_exists($s->value()),
-                        fn ($s) => $s->prepend('App\\Models\\')
-                    )->trim('\\');
+            ->trim('[]')
+            ->after('...')
+            ->before('-')
+            ->before('|')
+            ->before(':')
+            ->replace('.', '\\')
+            ->unless(
+                fn ($s) => $s->contains('\\') || class_exists($s->value()),
+                fn ($s) => $s->prepend('App\\Models\\')
+            )->trim('\\');
 
         return $this->class;
     }

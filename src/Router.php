@@ -63,20 +63,20 @@ class Router
 
         for ($i = 0; $i < $state->uriSegmentCount(); $i++) {
             $value = (new Pipeline)
-                        ->send($state->forIteration($i))
-                        ->through([
-                            new EnsureNoDirectoryTraversal,
-                            new TransformModelBindings,
-                            new SetMountPathOnMatchedView,
-                            // ...
-                            new MatchRootIndex,
-                            new MatchDirectoryIndexViews,
-                            new MatchWildcardViewsThatCaptureMultipleSegments,
-                            new MatchLiteralDirectories,
-                            new MatchWildcardDirectories,
-                            new MatchLiteralViews,
-                            new MatchWildcardViews,
-                        ])->then(fn () => new StopIterating);
+                ->send($state->forIteration($i))
+                ->through([
+                    new EnsureNoDirectoryTraversal,
+                    new TransformModelBindings,
+                    new SetMountPathOnMatchedView,
+                    // ...
+                    new MatchRootIndex,
+                    new MatchDirectoryIndexViews,
+                    new MatchWildcardViewsThatCaptureMultipleSegments,
+                    new MatchLiteralDirectories,
+                    new MatchWildcardDirectories,
+                    new MatchLiteralViews,
+                    new MatchWildcardViews,
+                ])->then(fn () => new StopIterating);
 
             if ($value instanceof MatchedView) {
                 return $value;

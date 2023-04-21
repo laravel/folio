@@ -20,6 +20,31 @@ class FolioServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->registerCommands();
+        $this->registerPublishing();
+    }
+
+    /**
+     * Register the package's commands.
+     */
+    protected function registerCommands(): void
+    {
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                Console\InstallCommand::class,
+            ]);
+        }
+    }
+
+    /**
+     * Register the package's publishable resources.
+     */
+    private function registerPublishing(): void
+    {
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__.'/../stubs/FolioServiceProvider.stub' => app_path('Providers/FolioServiceProvider.php'),
+            ], 'folio-provider');
+        }
     }
 }

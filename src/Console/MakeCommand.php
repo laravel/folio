@@ -48,7 +48,13 @@ class MakeCommand extends GeneratorCommand
             $name .= '.blade.php';
         }
 
-        return $mountPath.'/'.Str::lower($name);
+        return $mountPath.'/' . preg_replace_callback('/(?:\[.*?\])|(\w+)/', function($matches) {
+            if (!empty($matches[1])) {
+                return strtolower($matches[1]);
+            } else {
+                return $matches[0];
+            }
+        }, $name);
     }
 
     /**

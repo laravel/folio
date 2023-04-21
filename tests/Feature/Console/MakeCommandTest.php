@@ -23,9 +23,12 @@ it('makes routes', function (string $name, string $path) {
     ['index', 'index.blade.php'],
     ['chirps/index', 'chirps/index.blade.php'],
     ['chirps-index.blade.php', 'chirps-index.blade.php'],
-    ['chirps_index.blade.php', 'chirps_index.blade.php'],
+    ['ChIrPs_index.blade.php', 'chirps_index.blade.php'],
     ['chirps/index.blade.php', 'chirps/index.blade.php'],
+    ['chirps/[id].blade.php', 'chirps/[id].blade.php'],
+    ['chirps/[...id].blade.php', 'chirps/[...id].blade.php'],
     ['chirps/[Chirp].blade.php', 'chirps/[Chirp].blade.php'],
+    ['USERS/[User]/chirps/[Chirp]', 'users/[User]/chirps/[Chirp].blade.php'],
 ]);
 
 afterEach(function () {

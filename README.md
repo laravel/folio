@@ -51,21 +51,15 @@ After installing Folio, you may execute the `folio:install` Artisan command, whi
 php artisan folio:install
 ```
 
-<a name="defining-routes"></a>
-## Defining Routes
+<a name="creating-routes"></a>
+## Creating Routes
 
-You may define a Folio route by placing a file with the `.blade.php` extension in any of your Folio "route" directories.
+You may create a Folio route by placing a file with the `.blade.php` extension in any of your Folio mount directories. The default mounted directories are `resources/views/pages`, but you may customize these directories in your Folio service provider's `boot` method.
 
-Or, you can use the `folio:make` Artisan command to create the blade view:
+Or, you can use the `folio:make` Artisan command to create a Folio route:
 
 ```bash
 php artisan folio:make greeting
-```
-
-By adding the `--test` directive when generating a route, a corresponding test file will also be generated. If you want the associated test to use [Pest](https://pestphp.com/), you should use the `--pest` flag:
-
-```bash
-php artisan folio:make greeting --test --pest
 ```
 
 ## Contributing

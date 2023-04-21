@@ -12,6 +12,8 @@ class FolioManager
 {
     /**
      * The mounted paths that have been registered.
+     *
+     * @param  array<int, \Laravel\Folio\MountPath>
      */
     protected array $mountPaths = [];
 
@@ -85,6 +87,16 @@ class FolioManager
     public function data(?string $key = null, mixed $default = null): mixed
     {
         return Arr::get($this->lastMatchedView?->data ?: [], $key, $default);
+    }
+
+    /**
+     * Get the mounted directory paths.
+     *
+     * @return  array<int, string>
+     */
+    public function paths(): array
+    {
+        return array_map(fn (MountPath $mountPath) => $mountPath->path, $this->mountPaths);
     }
 
     /**

@@ -20,6 +20,18 @@ class FolioServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->registerCommands();
+    }
+
+    /**
+     * Register the package's commands.
+     */
+    protected function registerCommands(): void
+    {
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                Console\MakeCommand::class,
+            ]);
+        }
     }
 }

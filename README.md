@@ -19,6 +19,7 @@
 - [Installation](#installation)
 - [Creating Routes](#creating-routes)
     - [Nested Routes](#nested-routes)
+    - [Index Routes](#index-routes)
 - [Contributing](#contributing)
 - [Code of Conduct](#code-of-conduct)
 - [Security Vulnerabilities](#security-vulnerabilities)
@@ -61,21 +62,32 @@ Or, you can use the `folio:make` Artisan command to create a Folio route:
 
 ```bash
 php artisan folio:make greeting
+
+# pages/greeting.blade.php → /greeting
 ```
 
 <a name="nested-routes"></a>
 ### Nested Routes
 
-You may create a nested route by creating one or more directories within a Folio mount directory. For instance, if you wish to include a route for `/user/profile`, you can accomplish this by placing the `profile.blade.php` file inside the `pages/user` directory.
+You may create a nested route by creating one or more directories within a Folio mount directory. For instance, if you wish to include a route for `/user/profile`, you can accomplish this by placing the `profile.blade.php` file inside the `pages/user` directory:
 
 ```bash
 php artisan folio:make user/profile
+
+# pages/user/profile.blade.php → /user/profile
 ```
 
-Alternatively, you can also place an `index.blade.php` file in the `pages/user/profile` folder, which essentially achieves the same result.
+<a name="index-routes"></a>
+### Index Routes
 
-```bash
+You can create a route to the root directory by placing an `index.blade.php` file in the directory itself. Folio will then automatically route any file named `index.blade.php` to the root of that directory:
+
+```
+php artisan folio:make index
+# pages/index.blade.php → /
+
 php artisan folio:make user/profile/index
+# pages/user/profile/index.blade.php → /user/profile
 ```
 
 ## Contributing

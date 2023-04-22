@@ -20,6 +20,7 @@
 - [Creating Routes](#creating-routes)
     - [Nested Routes](#nested-routes)
     - [Index Routes](#index-routes)
+    - [Route Parameters](#route-parameters)
 - [Contributing](#contributing)
 - [Code of Conduct](#code-of-conduct)
 - [Security Vulnerabilities](#security-vulnerabilities)
@@ -88,6 +89,43 @@ php artisan folio:make index
 
 php artisan folio:make user/profile/index
 # pages/user/profile/index.blade.php → /user/profile
+```
+
+<a name="route-parameters"></a>
+### Route Parameters
+
+To capture segments of the URI within your route, you may use the bracket syntax. As example, you may use the `[id]` as blade view name, to capture a user's ID from the URL:
+
+```
+php artisan folio:make user/[id]
+
+# pages/user/[id].blade.php → /user/1
+```
+
+The captured segments can be accessed as variables within your blade view:
+
+```html
+<div>
+    User {{ $id }}
+</div>
+```
+
+To capture multiple segments, you can use three dots `...` within the brackets:
+
+```
+php artisan folio:make user/[...id]
+
+# pages/user/[...id].blade.php → /user/1/2/3
+```
+
+In this scenario, the captured `$id` will be accessible in `array` format:
+
+```html
+<ul>
+    @foreach ($id)
+        <li> User {{ $id }} </li>
+    @endforeach
+</ul>
 ```
 
 ## Contributing

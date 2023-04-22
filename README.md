@@ -62,6 +62,15 @@ Or, you can use the `folio:make` Artisan command to create a Folio route:
 php artisan folio:make greeting
 ```
 
+<a name="nested-routes"></a>
+### Nested Routes
+
+You may create a nested route by creating one or more directories within a Folio mount directory. For instance, if you wish to include a route for `/user/profile`, you can accomplish this by placing the `profile.blade.php` file inside the `pages/user` directory.
+
+```bash
+php artisan folio:make user/profile
+```
+
 ## Contributing
 <a name="contributing"></a>
 

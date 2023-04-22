@@ -17,7 +17,8 @@
 
 - [Introduction](#introduction)
 - [Installation](#installation)
-- [Defining Routes](#defining-routes)
+- [Creating Routes](#creating-routes)
+    - [Nested Routes](#nested-routes)
 - [Contributing](#contributing)
 - [Code of Conduct](#code-of-conduct)
 - [Security Vulnerabilities](#security-vulnerabilities)
@@ -69,6 +70,12 @@ You may create a nested route by creating one or more directories within a Folio
 
 ```bash
 php artisan folio:make user/profile
+```
+
+Alternatively, you can also place an `index.blade.php` file in the `pages/user/profile` folder, which essentially achieves the same result.
+
+```bash
+php artisan folio:make user/profile/index
 ```
 
 ## Contributing

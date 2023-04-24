@@ -86,7 +86,7 @@ php artisan folio:make user/profile
 
 You can create a route to the root directory by placing an `index.blade.php` file in the directory itself. Folio will then automatically route any file named `index.blade.php` to the root of that directory:
 
-```
+```bash
 php artisan folio:make index
 # pages/index.blade.php → /
 
@@ -99,7 +99,7 @@ php artisan folio:make user/profile/index
 
 To capture segments of the URI within your route, you may use the bracket syntax. As example, you may use the `[id]` as blade view name, to capture a user's ID from the URL:
 
-```
+```bash
 php artisan folio:make user/[id]
 
 # pages/user/[id].blade.php → /user/1
@@ -115,7 +115,7 @@ Captured segments can be accessed as regular variables within your blade view:
 
 To capture multiple segments, you can use three dots `...` within the brackets:
 
-```
+```bash
 php artisan folio:make user/[...id]
 
 # pages/user/[...id].blade.php → /user/1/2/3

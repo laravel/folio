@@ -162,6 +162,22 @@ Folio::route(resource_path('views/pages'), middleware: [
 ]);
 ```
 
+It is also possible to apply middleware to a specific page using the `page` function:
+
+```php
+<?php
+
+use function Laravel\Folio\{page};
+
+page(middleware: ['auth']);
+
+?>
+
+<div>
+    Dashboard
+</div>
+```
+
 ## Contributing
 <a name="contributing"></a>
 

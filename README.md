@@ -64,7 +64,8 @@ Or, you can use the `folio:make` Artisan command to create a Folio route:
 ```bash
 php artisan folio:make greeting
 
-# pages/greeting.blade.php → /greeting
+# ├── pages
+# │   ├── greeting.blade.php → /greeting
 ```
 
 <a name="nested-routes"></a>
@@ -102,7 +103,7 @@ php artisan folio:make user/[id]
 # pages/user/[id].blade.php → /user/1
 ```
 
-The captured segments can be accessed as variables within your blade view:
+Captured segments can be accessed as regular variables within your blade view:
 
 ```html
 <div>

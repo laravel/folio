@@ -193,7 +193,7 @@ php artisan folio:make user/[User]
 # pages/user/[User].blade.php → /user/1
 ```
 
-Folio will search for your model name within the `app/Models` directory by default. Nonetheless, you have the option to provide the fully qualified name as well:
+Folio will search for your model name within the `app/Models` directory by default. Nonetheless, you have the option to provide the model class fully qualified name as well:
 
 ```bash
 php artisan folio:make user/[App.Models.User]

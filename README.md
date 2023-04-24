@@ -178,6 +178,56 @@ page(middleware: ['auth']);
 </div>
 ```
 
+<a name="route-model-binding"></a>
+## Route Model Binding
+
+As you may be aware, Laravel's route model binding offers a simple approach to inject model instances directly into your routes.
+
+In Folio, you can opt to inject the complete model instance by specifying the model name enclosed in square brackets:
+
+```bash
+php artisan folio:make user/[User]
+
+# pages/user/[User].blade.php → /user/1
+```
+
+Folio will search for your model name within the `app/Models` directory by default. Nonetheless, you have the option to provide the fully qualified name as well:
+
+```bash
+php artisan folio:make user/[App.Models.User]
+
+# pages/user/[App.Models.User].blade.php → /user/1
+```
+
+Captured models can be accessed as regular variables within your blade view, and the variable name will follow the "$camelCase" naming convention:
+
+```html
+<div>
+    User {{ $user->id }}
+</div>
+```
+
+<a name="soft-deleted-models"></a>
+### Soft Deleted Models
+
+Models that have been soft deleted are not retrieved through implicit model binding.
+
+However, if you wish, you can instruct implicit binding to retrieve such models by using the named argument `withTrashed` and the function `page`:
+
+```php
+<?php
+
+use function Laravel\Folio\{page};
+
+page(withTrashed: true);
+
+?>
+
+<div>
+    User {{ $user->id }}
+</div>
+```
+
 ## Contributing
 <a name="contributing"></a>
 

@@ -20,7 +20,8 @@
 - [Creating Routes](#creating-routes)
     - [Nested Routes](#nested-routes)
     - [Index Routes](#index-routes)
-    - [Route Parameters](#route-parameters)
+- [Route Parameters](#route-parameters)
+- [Middleware](#middleware)
 - [Contributing](#contributing)
 - [Code of Conduct](#code-of-conduct)
 - [Security Vulnerabilities](#security-vulnerabilities)
@@ -92,7 +93,7 @@ php artisan folio:make user/profile/index
 ```
 
 <a name="route-parameters"></a>
-### Route Parameters
+## Route Parameters
 
 To capture segments of the URI within your route, you may use the bracket syntax. As example, you may use the `[id]` as blade view name, to capture a user's ID from the URL:
 
@@ -126,6 +127,39 @@ In this scenario, the captured `$id` will be accessible in `array` format:
         <li> User {{ $id }} </li>
     @endforeach
 </ul>
+```
+
+<a name="middleware"></a>
+## Middleware
+
+To assign middleware to a particular set of routes, you may use the `middleware` named argument when invoking the `Folio::route` method.
+
+To specify which routes the middleware should be applied to, the array's keys should indicate the desired URL patterns. The `*` character can be utilized as a wildcard character:
+
+```php
+Folio::route(resource_path('views/pages'), middleware: [
+    'chirps/*' => [
+        'auth',
+
+        //
+    ],
+]);
+```
+
+You can include either multiple middleware names or a `closure` on the array:
+
+```php
+Folio::route(resource_path('views/pages'), middleware: [
+    'chirps/*' => [
+        'auth',
+
+        function (Request $request, Closure $next) {
+            //
+
+            return $next($request);
+        },
+    ],
+]);
 ```
 
 ## Contributing

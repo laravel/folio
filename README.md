@@ -1,4 +1,4 @@
-<p align="center"><img src="/art/logo.svg" alt="Laravel Folio Package Logo"></p>
+<p align="center"><img width="472" src="/art/logo.svg" alt="Laravel Folio Package Logo"></p>
 
 <p align="center">
     <a href="https://github.com/laravel/folio/actions">

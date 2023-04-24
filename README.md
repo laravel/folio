@@ -22,6 +22,8 @@
     - [Index Routes](#index-routes)
 - [Route Parameters](#route-parameters)
 - [Middleware](#middleware)
+- [Route Model Binding](#route-model-binding)
+    - [Soft Deleted Models](#soft-deleted-models)
 - [Contributing](#contributing)
 - [Code of Conduct](#code-of-conduct)
 - [Security Vulnerabilities](#security-vulnerabilities)

@@ -97,7 +97,7 @@ php artisan folio:make user/profile/index
 <a name="route-parameters"></a>
 ## Route Parameters
 
-To capture segments of the URI within your route, you may use the bracket syntax. As example, you may use the `[id]` as blade view name, to capture a user's ID from the URL:
+To capture segments of the URL within your route, you may use the bracket syntax. As example, you may use the `[id]` as blade view name, to capture a user's ID from the URL:
 
 ```bash
 php artisan folio:make user/[id]

@@ -214,7 +214,7 @@ Captured models can be accessed as regular variables within your blade view, and
 
 Models that have been soft deleted are not retrieved through implicit model binding.
 
-However, if you wish, you can instruct implicit binding to retrieve such models by using the named argument `withTrashed` and the function `page`:
+However, if you wish, you can instruct implicit binding to retrieve such models by using the named argument `withTrashed` and invoke the function `page`:
 
 ```php
 <?php

@@ -116,16 +116,16 @@ Captured segments can be accessed as regular variables within your blade view:
 To capture multiple segments, you can use three dots `...` within the brackets:
 
 ```bash
-php artisan folio:make user/[...id]
+php artisan folio:make user/[...ids]
 
-# pages/user/[...id].blade.php → /user/1/2/3
+# pages/user/[...ids].blade.php → /user/1/2/3
 ```
 
-In this scenario, the captured `$id` will be accessible in `array` format:
+In this scenario, the captured `$ids` will be accessible in `array` format:
 
 ```html
 <ul>
-    @foreach ($id)
+    @foreach ($ids as $id)
         <li> User {{ $id }} </li>
     @endforeach
 </ul>

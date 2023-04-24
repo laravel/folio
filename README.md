@@ -64,8 +64,7 @@ Or, you can use the `folio:make` Artisan command to create a Folio route:
 ```bash
 php artisan folio:make greeting
 
-# ├── pages
-# │   ├── greeting.blade.php → /greeting
+# pages/greeting.blade.php → /greeting
 ```
 
 <a name="nested-routes"></a>

@@ -97,7 +97,7 @@ php artisan folio:make user/profile/index
 <a name="route-parameters"></a>
 ## Route Parameters
 
-To capture segments of the URL within your route, you may use the bracket syntax. As example, you may use the `[id]` as blade view name, to capture a user's ID from the URL:
+To capture segments of the URL within your route, you may use the square bracket syntax. As example, you may use the `[id]` as blade view name, to capture a user's ID from the URL:
 
 ```bash
 php artisan folio:make user/[id]
@@ -113,7 +113,7 @@ Captured segments can be accessed as regular variables within your blade view:
 </div>
 ```
 
-To capture multiple segments, you can use three dots `...` within the brackets:
+To capture multiple segments, you can use three dots `...` within the square brackets:
 
 ```bash
 php artisan folio:make user/[...ids]
@@ -121,7 +121,7 @@ php artisan folio:make user/[...ids]
 # pages/user/[...ids].blade.php → /user/1/2/3
 ```
 
-In this scenario, the captured `$ids` will be accessible in `array` format:
+The `$ids` that have been captured will be available in the form of an `array`:
 
 ```html
 <ul>
@@ -183,9 +183,7 @@ page(middleware: ['auth']);
 <a name="route-model-binding"></a>
 ## Route Model Binding
 
-As you may be aware, Laravel's route model binding offers a simple approach to inject model instances directly into your routes.
-
-In Folio, you can opt to inject the complete model instance by specifying the model name enclosed in square brackets:
+As you may be aware, Laravel's route model binding offers a simple approach to inject model instances directly into your routes. In Folio, you can opt to inject the complete model instance by specifying the model name enclosed in square brackets:
 
 ```bash
 php artisan folio:make user/[User]
@@ -193,7 +191,7 @@ php artisan folio:make user/[User]
 # pages/user/[User].blade.php → /user/1
 ```
 
-Folio will search for your model name within the `app/Models` directory by default. Nonetheless, you have the option to provide the fully qualified name as well:
+Folio will search for your model name within the `app/Models` directory by default. Nonetheless, you have the option to provide the model class fully qualified name as well:
 
 ```bash
 php artisan folio:make user/[App.Models.User]
@@ -212,9 +210,7 @@ Captured models can be accessed as regular variables within your blade view, and
 <a name="soft-deleted-models"></a>
 ### Soft Deleted Models
 
-Models that have been soft deleted are not retrieved through implicit model binding.
-
-However, if you wish, you can instruct implicit binding to retrieve such models by using the named argument `withTrashed` and invoke the function `page`:
+Models that have been soft deleted are not retrieved through implicit model binding. However, if you wish, you can instruct implicit binding to retrieve such models by using the named argument `withTrashed` and the function `page`:
 
 ```php
 <?php

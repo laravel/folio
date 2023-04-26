@@ -13,8 +13,8 @@ class MountPath
      * Create a new mounted path instance.
      */
     public function __construct(public string $path,
-                                public string $baseUri,
-                                array $middleware = [])
+        public string $baseUri,
+        array $middleware = [])
     {
         $this->middleware = new PathBasedMiddlewareList($middleware);
     }

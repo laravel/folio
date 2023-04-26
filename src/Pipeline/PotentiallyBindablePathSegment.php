@@ -53,8 +53,8 @@ class PotentiallyBindablePathSegment
      * Resolve the binding or throw a ModelNotFoundException.
      */
     public function resolveOrFail(mixed $value,
-                                  ?UrlRoutable $parent = null,
-                                  bool $withTrashed = false): UrlRoutable|BackedEnum
+        ?UrlRoutable $parent = null,
+        bool $withTrashed = false): UrlRoutable|BackedEnum
     {
         if (is_null($resolved = $this->resolve($value, $parent, $withTrashed))) {
             throw (new ModelNotFoundException)

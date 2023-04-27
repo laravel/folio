@@ -28,10 +28,10 @@ class FolioServiceProvider extends ServiceProvider
      */
     protected function registerCommands(): void
     {
-    if ($this->app->runningInConsole()) {
-        $this->commands([
-            Console\ListCommand::class,
-        ]);
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                Console\ListCommand::class,
+            ]);
+        }
     }
-}
 }

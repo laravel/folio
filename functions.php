@@ -18,8 +18,3 @@ function page(Closure|string|array $middleware = [], bool $withTrashed = false)
         );
     }
 }
-
-function prop(?string $key = null, mixed $default = null): mixed
-{
-    return Folio::data($key, $default);
-}

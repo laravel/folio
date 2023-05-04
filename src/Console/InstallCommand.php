@@ -27,6 +27,7 @@ class InstallCommand extends Command
     public function handle(): void
     {
         $this->comment('Publishing Folio Service Provider...');
+
         $this->callSilent('vendor:publish', ['--tag' => 'folio-provider']);
 
         $this->registerFolioServiceProvider();

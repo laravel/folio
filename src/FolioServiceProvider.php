@@ -31,6 +31,7 @@ class FolioServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 Console\MakeCommand::class,
+                Console\ListCommand::class,
             ]);
         }
     }

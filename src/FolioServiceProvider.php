@@ -21,6 +21,8 @@ class FolioServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerCommands();
+
+        $this->registerPublishing();
     }
 
     /**
@@ -30,9 +32,22 @@ class FolioServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->commands([
-                Console\MakeCommand::class,
+                Console\InstallCommand::class,
                 Console\ListCommand::class,
+                Console\MakeCommand::class,
             ]);
+        }
+    }
+
+    /**
+     * Register the package's publishable resources.
+     */
+    private function registerPublishing(): void
+    {
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__.'/../stubs/FolioServiceProvider.stub' => app_path('Providers/FolioServiceProvider.php'),
+            ], 'folio-provider');
         }
     }
 }

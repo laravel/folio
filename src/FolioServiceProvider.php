@@ -21,6 +21,7 @@ class FolioServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerCommands();
+
         $this->registerPublishing();
     }
 
@@ -31,6 +32,7 @@ class FolioServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->commands([
+                Console\ListCommand::class,
                 Console\InstallCommand::class,
             ]);
         }

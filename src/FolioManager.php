@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
+use InvalidArgumentException;
 use Laravel\Folio\Pipeline\MatchedView;
 
 class FolioManager
@@ -27,12 +28,18 @@ class FolioManager
 
     /**
      * Register a route to handle page based routing at the given paths.
+     *
+     * @throws \InvalidArgumentException
      */
     public function route(?string $path = null, ?string $uri = '/', array $middleware = []): static
     {
-        $this->mountPaths[] = $mountPath = new MountPath(
-            $path ? realpath($path) : config('view.paths')[0].'/pages', $uri, $middleware
-        );
+        $path = $path ? realpath($path) : config('view.paths')[0].'/pages';
+
+        if (! is_dir($path)) {
+            throw new InvalidArgumentException("The given path [{$path}] is not a directory.");
+        }
+
+        $this->mountPaths[] = $mountPath = new MountPath($path, $uri, $middleware);
 
         if ($uri === '/') {
             Route::fallback($this->handler($mountPath))
@@ -95,5 +102,13 @@ class FolioManager
         $this->renderUsing = $callback;
 
         return $this;
+    }
+
+    /**
+     * Get the array of mounted paths that have been registered.
+     */
+    public function mountPaths(): array
+    {
+        return $this->mountPaths;
     }
 }

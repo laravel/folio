@@ -9,7 +9,7 @@ use Laravel\Folio\Folio;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
 
-#[AsCommand(name: 'folio:make')]
+#[AsCommand(name: 'make:folio')]
 class MakeCommand extends GeneratorCommand
 {
     /**
@@ -17,21 +17,21 @@ class MakeCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $name = 'folio:make';
+    protected $name = 'make:folio';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a new Folio route';
+    protected $description = 'Create a new Folio page';
 
     /**
      * The type of file being generated.
      *
      * @var string
      */
-    protected $type = 'Folio route';
+    protected $type = 'Page';
 
     /**
      * Get the destination view path.
@@ -42,15 +42,9 @@ class MakeCommand extends GeneratorCommand
     {
         $mountPath = Folio::paths()[0] ?? resource_path('views/pages');
 
-        $name = $this->argument('name');
-
-        if (! Str::endsWith($name, '.blade.php')) {
-            $name .= '.blade.php';
-        }
-
         return $mountPath.'/'.preg_replace_callback('/(?:\[.*?\])|(\w+)/', function (array $matches) {
             return empty($matches[1]) ? $matches[0] : Str::lower($matches[1]);
-        }, $name);
+        }, Str::finish($this->argument('name'), '.blade.php'));
     }
 
     /**
@@ -58,9 +52,9 @@ class MakeCommand extends GeneratorCommand
      */
     protected function getStub(): string
     {
-        return file_exists($customPath = $this->laravel->basePath('stubs/folio-route.stub'))
+        return file_exists($customPath = $this->laravel->basePath('stubs/folio-page.stub'))
             ? $customPath
-            : __DIR__.'/../../stubs/folio-route.stub';
+            : __DIR__.'/../../stubs/folio-page.stub';
     }
 
     /**
@@ -69,7 +63,7 @@ class MakeCommand extends GeneratorCommand
     protected function getOptions(): array
     {
         return [
-            ['force', 'f', InputOption::VALUE_NONE, 'Create the Folio route even if the route already exists'],
+            ['force', 'f', InputOption::VALUE_NONE, 'Create the Folio page even if the page already exists'],
         ];
     }
 }

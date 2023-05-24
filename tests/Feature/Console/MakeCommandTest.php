@@ -7,7 +7,7 @@ beforeEach(function () {
 });
 
 it('makes routes', function (string $name, string $path) {
-    $this->artisan('folio:make', ['name' => $name])->assertOk();
+    $this->artisan('make:folio', ['name' => $name])->assertOk();
 
     $path = resource_path('views/pages/'.$path);
 

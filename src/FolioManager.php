@@ -97,16 +97,6 @@ class FolioManager
     }
 
     /**
-     * Get the mounted directory paths.
-     *
-     * @return  array<int, string>
-     */
-    public function paths(): array
-    {
-        return array_map(fn (MountPath $mountPath) => $mountPath->path, $this->mountPaths);
-    }
-
-    /**
      * Specify the callback that should be used to render matched views.
      */
     public function renderUsing(Closure $callback = null): self
@@ -122,5 +112,15 @@ class FolioManager
     public function mountPaths(): array
     {
         return $this->mountPaths;
+    }
+
+    /**
+     * Get the mounted directory paths as strings.
+     *
+     * @return  array<int, string>
+     */
+    public function paths(): array
+    {
+        return collect($this->mountPaths)->map->path->all();
     }
 }

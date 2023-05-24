@@ -13,6 +13,8 @@ class FolioManager
 {
     /**
      * The mounted paths that have been registered.
+     *
+     * @param  array<int, \Laravel\Folio\MountPath>
      */
     protected array $mountPaths = [];
 
@@ -110,5 +112,15 @@ class FolioManager
     public function mountPaths(): array
     {
         return $this->mountPaths;
+    }
+
+    /**
+     * Get the mounted directory paths as strings.
+     *
+     * @return  array<int, string>
+     */
+    public function paths(): array
+    {
+        return collect($this->mountPaths)->map->path->all();
     }
 }

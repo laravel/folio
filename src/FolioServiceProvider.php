@@ -34,6 +34,7 @@ class FolioServiceProvider extends ServiceProvider
             $this->commands([
                 Console\InstallCommand::class,
                 Console\ListCommand::class,
+                Console\MakeCommand::class,
             ]);
         }
     }

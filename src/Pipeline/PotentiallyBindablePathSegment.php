@@ -10,11 +10,18 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Routing\Exceptions\BackedEnumCaseNotFoundException;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
+use Illuminate\Support\Stringable;
 
 class PotentiallyBindablePathSegment
 {
-    protected $class;
+    /**
+     * The class name of the binding, if any.
+     */
+    protected string|null $class = null;
 
+    /**
+     * Create a new potentially bindable path segment instance.
+     */
     public function __construct(public string $value)
     {
     }
@@ -135,8 +142,8 @@ class PotentiallyBindablePathSegment
             ->before(':')
             ->replace('.', '\\')
             ->unless(
-                fn ($s) => $s->contains('\\') || class_exists($s->value()),
-                fn ($s) => $s->prepend('App\\Models\\')
+                fn (Stringable $s) => $s->contains('\\') || class_exists($s->value()),
+                fn (Stringable $s) => $s->prepend('App\\Models\\')
             )->trim('\\');
 
         return $this->class;

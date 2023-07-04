@@ -4,6 +4,9 @@ namespace Laravel\Folio\Pipeline;
 
 class State
 {
+    /**
+     * Create a new state instance.
+     */
     public function __construct(
         public string $uri,
         public string $mountPath,

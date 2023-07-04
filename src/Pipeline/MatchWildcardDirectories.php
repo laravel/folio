@@ -34,7 +34,7 @@ class MatchWildcardDirectories
     public function findWildcardDirectory(string $directory): ?string
     {
         return collect((new Filesystem)->directories($directory))
-            ->first(function ($directory) {
+            ->first(function (string $directory) {
                 $directory = Str::of($directory)->basename();
 
                 return $directory->startsWith('[') &&

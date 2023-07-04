@@ -14,8 +14,14 @@ use Illuminate\Support\Stringable;
 
 class PotentiallyBindablePathSegment
 {
+    /**
+     * The class name of the binding, if any.
+     */
     protected string|null $class = null;
 
+    /**
+     * Create a new potentially bindable path segment instance.
+     */
     public function __construct(public string $value)
     {
     }

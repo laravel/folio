@@ -26,13 +26,13 @@ class InstallCommand extends Command
      */
     public function handle(): void
     {
-        $this->comment('Publishing Folio Service Provider...');
+        $this->components->info('Publishing Folio Service Provider.');
 
         $this->callSilent('vendor:publish', ['--tag' => 'folio-provider']);
 
         $this->registerFolioServiceProvider();
 
-        $this->info('Folio scaffolding installed successfully.');
+        $this->components->info('Folio scaffolding installed successfully.');
     }
 
     /**

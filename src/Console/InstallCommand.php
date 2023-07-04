@@ -3,6 +3,7 @@
 namespace Laravel\Folio\Console;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 class InstallCommand extends Command
@@ -26,13 +27,27 @@ class InstallCommand extends Command
      */
     public function handle(): void
     {
-        $this->comment('Publishing Folio Service Provider...');
+        $this->components->info('Publishing Folio Service Provider.');
 
         $this->callSilent('vendor:publish', ['--tag' => 'folio-provider']);
 
         $this->registerFolioServiceProvider();
 
-        $this->info('Folio scaffolding installed successfully.');
+        $this->ensurePagesDirectoryExists();
+
+        $this->components->info('Folio scaffolding installed successfully.');
+    }
+
+    /**
+     * Ensure the pages directory exists.
+     */
+    protected function ensurePagesDirectoryExists(): void
+    {
+        if (! is_dir($directory = resource_path('views/pages'))) {
+            File::ensureDirectoryExists($directory);
+
+            File::put($directory.'/.gitkeep', '');
+        }
     }
 
     /**

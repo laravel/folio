@@ -3,7 +3,6 @@
 namespace Laravel\Folio\Console;
 
 use Illuminate\Console\GeneratorCommand;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Laravel\Folio\Folio;
 use Symfony\Component\Console\Attribute\AsCommand;

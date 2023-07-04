@@ -35,7 +35,7 @@ class TransformModelBindings
                     $segment->trimmed(),
                     $segment->variable(),
                     collect(array_slice($uriSegments, $index))
-                        ->map(fn ($value) => $segment->resolveOrFail(
+                        ->map(fn (string $value) => $segment->resolveOrFail(
                             $value, $parent ?? null, $view->allowsTrashedBindings()
                         ))
                         ->all(),

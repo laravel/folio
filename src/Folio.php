@@ -12,7 +12,7 @@ class Folio extends Facade
     /**
      * {@inheritDoc}     .
      */
-    public static function getFacadeAccessor()
+    public static function getFacadeAccessor(): string
     {
         return FolioManager::class;
     }

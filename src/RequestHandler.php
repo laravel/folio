@@ -33,7 +33,7 @@ class RequestHandler
         return (new Pipeline(app()))
             ->send($request)
             ->through($this->middleware($matchedView))
-            ->then(function ($request) use ($matchedView) {
+            ->then(function (Request $request) use ($matchedView) {
                 if ($this->onViewMatch) {
                     ($this->onViewMatch)($matchedView);
                 }

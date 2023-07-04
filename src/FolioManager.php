@@ -61,11 +61,11 @@ class FolioManager
      */
     protected function handler(MountPath $mountPath): Closure
     {
-        return function (Request $request, $uri = '/') use ($mountPath) {
+        return function (Request $request, string $uri = '/') use ($mountPath) {
             return (new RequestHandler(
                 $mountPath,
                 $this->renderUsing,
-                fn ($matchedView) => $this->lastMatchedView = $matchedView,
+                fn (MatchedView $matchedView) => $this->lastMatchedView = $matchedView,
             ))($request, $uri);
         };
     }

@@ -3,10 +3,18 @@
 namespace Laravel\Folio\Pipeline;
 
 use Closure;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class TransformModelBindings
 {
+    /**
+     * Create a new pipeline step instance.
+     */
+    public function __construct(protected Request $request)
+    {
+    }
+
     /**
      * Invoke the routing pipeline handler.
      */
@@ -55,6 +63,12 @@ class TransformModelBindings
             );
 
             $parent = $resolved;
+        }
+
+        if ($this->request->route()) {
+            foreach ($view->data as $key => $value) {
+                $this->request->route()->setParameter($key, $value);
+            }
         }
 
         return $view;

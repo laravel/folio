@@ -3,6 +3,7 @@
 use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 $purgeDirectories = function () {
@@ -24,7 +25,7 @@ test('implicit model binding', function () {
 
     $router = $this->router();
 
-    $view = $router->match('/users/1');
+    $view = $router->match(new Request, '/users/1');
 
     $this->assertTrue(
         $view->data['folioModelBindingTestClass'] instanceof FolioModelBindingTestClass
@@ -43,7 +44,7 @@ test('missing models trigger model not found exception', function () {
 
     $router = $this->router();
 
-    $router->match('/users/_missing');
+    $router->match(new Request, '/users/_missing');
 })->throws(ModelNotFoundException::class);
 
 test('implicit model bindings with more than one binding in path', function () {
@@ -60,7 +61,7 @@ test('implicit model bindings with more than one binding in path', function () {
 
     $router = $this->router();
 
-    $view = $router->match('/users/1/posts/2');
+    $view = $router->match(new Request, '/users/1/posts/2');
 
     $this->assertTrue(
         $view->data['first'] instanceof FolioModelBindingTestClass
@@ -87,7 +88,7 @@ test('model bindings can receive a custom binding field', function (string $path
 
     $router = $this->router();
 
-    $view = $router->match('/users/1');
+    $view = $router->match(new Request, '/users/1');
 
     $this->assertEquals(
         'slug',
@@ -107,7 +108,7 @@ test('model bindings can receive a custom binding variable', function (string $p
 
     $router = $this->router();
 
-    $view = $router->match('/users/1');
+    $view = $router->match(new Request, '/users/1');
 
     $this->assertEquals(
         '1',
@@ -130,7 +131,7 @@ test('model bindings can receive a custom binding field and custom binding varia
 
     $router = $this->router();
 
-    $view = $router->match('/users/1');
+    $view = $router->match(new Request, '/users/1');
 
     $this->assertEquals(
         $field,
@@ -157,7 +158,7 @@ test('model bindings can be resolved by explicit binding callback', function () 
 
     $router = $this->router();
 
-    $view = $router->match('/users/abc');
+    $view = $router->match(new Request, '/users/abc');
 
     $this->assertEquals(
         'ABC',
@@ -175,7 +176,7 @@ test('model bindings can span across multiple segments', function () {
 
     $router = $this->router();
 
-    $view = $router->match('/users/1/2/3');
+    $view = $router->match(new Request, '/users/1/2/3');
 
     $this->assertTrue(is_array($view->data['folioModelBindingTestClasses']));
     $this->assertEquals('1', $view->data['folioModelBindingTestClasses'][0]->value);
@@ -195,7 +196,7 @@ test('model bindings can span across multiple segments with custom fields and va
 
     $router = $this->router();
 
-    $view = $router->match('/users/1/2/3');
+    $view = $router->match(new Request, '/users/1/2/3');
 
     $this->assertTrue(is_array($view->data[$variable]));
 
@@ -225,7 +226,7 @@ test('child model bindings are scoped to the parent when field is present on chi
 
     $router = $this->router();
 
-    $view = $router->match('/users/1/posts/2');
+    $view = $router->match(new Request, '/users/1/posts/2');
 
     $this->assertEquals('1', $view->data['first']->value);
 
@@ -259,7 +260,7 @@ test('explicit model bindings take precedence over implicit scoped child binding
 
     $router = $this->router();
 
-    $view = $router->match('/users/abc/posts/def');
+    $view = $router->match(new Request, '/users/abc/posts/def');
 
     $this->assertEquals('ABC', $view->data['first']->value);
     $this->assertEquals('DEF', $view->data['second']->value);
@@ -281,7 +282,7 @@ test('scoped child model bindings trigger model not found exception if they do n
 
     $router = $this->router();
 
-    $router->match('/users/1/posts/_missing');
+    $router->match(new Request, '/users/1/posts/_missing');
 })->throws(ModelNotFoundException::class);
 
 test('model bindings can be enums', function () {
@@ -293,7 +294,7 @@ test('model bindings can be enums', function () {
 
     $router = $this->router();
 
-    $view = $router->match('/categories/posts');
+    $view = $router->match(new Request, '/categories/posts');
 
     $this->assertEquals('posts', $view->data['category']->value);
 

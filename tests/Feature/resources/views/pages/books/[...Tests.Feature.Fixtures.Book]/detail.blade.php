@@ -1,8 +1,8 @@
 <?php
 
-use function Laravel\Folio\page;
+use function Laravel\Folio\middleware;
 
-page(middleware: 'auth');
+middleware('auth');
 
 ?>
 

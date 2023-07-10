@@ -164,9 +164,9 @@ By default, models that have been soft deleted are not retrieved when resolving 
 ```php
 <?php
 
-use function Laravel\Folio\{page};
+use function Laravel\Folio\{withTrashed};
 
-page(withTrashed: true);
+withTrashed();
 
 ?>
 
@@ -183,9 +183,9 @@ You can apply middleware to a specific page by invoking the `page` function with
 ```php
 <?php
 
-use function Laravel\Folio\{page};
+use function Laravel\Folio\{middleware};
 
-page(middleware: ['auth']);
+middleware(['auth']);
 
 ?>
 

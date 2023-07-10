@@ -22,7 +22,7 @@ class Metadata
     }
 
     /**
-     * Get the current compile context instance or create a new one.
+     * Get the current metadata instance or create a new one.
      */
     public static function instance(): static
     {
@@ -30,7 +30,7 @@ class Metadata
     }
 
     /**
-     * Flush the current global instance of the compile context.
+     * Flush the current global instance of the metadata.
      */
     public static function flush(): void
     {

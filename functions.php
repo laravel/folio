@@ -3,6 +3,7 @@
 namespace Laravel\Folio;
 
 use Closure;
+use Illuminate\Container\Container;
 use Illuminate\Support\Arr;
 use Laravel\Folio\Options\PageOptions;
 
@@ -11,7 +12,7 @@ use Laravel\Folio\Options\PageOptions;
  */
 function middleware(Closure|string|array $middleware = []): PageOptions
 {
-    app(InlineMetadataInterceptor::class)->whenListening(
+    Container::getInstance()->make(InlineMetadataInterceptor::class)->whenListening(
         fn () => Metadata::instance()->middleware = Metadata::instance()->middleware->merge(Arr::wrap($middleware)),
     );
 
@@ -23,7 +24,7 @@ function middleware(Closure|string|array $middleware = []): PageOptions
  */
 function withTrashed(bool $withTrashed = true): PageOptions
 {
-    app(InlineMetadataInterceptor::class)->whenListening(
+    Container::getInstance()->make(InlineMetadataInterceptor::class)->whenListening(
         fn () => Metadata::instance()->withTrashed = $withTrashed,
     );
 

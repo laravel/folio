@@ -43,7 +43,7 @@ class InlineMetadataInterceptor
         } finally {
             ob_get_clean();
 
-            $metadata = tap(Metadata::instance(), fn() => Metadata::flush());
+            $metadata = tap(Metadata::instance(), fn () => Metadata::flush());
         }
 
         return $this->cache[$matchedView->path] = $metadata;
@@ -55,7 +55,6 @@ class InlineMetadataInterceptor
     public function listen(callable $callback): void
     {
         $this->listening = true;
-
 
         try {
             $callback();

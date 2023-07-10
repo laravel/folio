@@ -2,6 +2,7 @@
 
 namespace Laravel\Folio;
 
+use Illuminate\Http\Request;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Arr;
 use Laravel\Folio\Pipeline\ContinueIterating;
@@ -37,12 +38,12 @@ class Router
     /**
      * Match the given URI to a view via page based routing.
      */
-    public function match(string $uri): ?MatchedView
+    public function match(Request $request, string $uri): ?MatchedView
     {
         $uri = strlen($uri) > 1 ? trim($uri, '/') : $uri;
 
         foreach ($this->mountPaths as $mountPath) {
-            if ($view = $this->matchAtPath($mountPath, $uri)) {
+            if ($view = $this->matchAtPath($mountPath, $request, $uri)) {
                 return $view;
             }
         }
@@ -53,7 +54,7 @@ class Router
     /**
      * Resolve the given URI via page based routing at the given mount path.
      */
-    protected function matchAtPath(string $mountPath, string $uri): ?MatchedView
+    protected function matchAtPath(string $mountPath, Request $request, string $uri): ?MatchedView
     {
         $state = new State(
             uri: $uri,
@@ -66,7 +67,7 @@ class Router
                 ->send($state->forIteration($i))
                 ->through([
                     new EnsureNoDirectoryTraversal,
-                    new TransformModelBindings,
+                    new TransformModelBindings($request),
                     new SetMountPathOnMatchedView,
                     // ...
                     new MatchRootIndex,

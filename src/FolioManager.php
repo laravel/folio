@@ -76,7 +76,7 @@ class FolioManager
     public function middlewareFor(string $uri): array
     {
         foreach ($this->mountPaths as $mountPath) {
-            if (! $matchedView = (new Router($mountPath->path))->match($uri)) {
+            if (! $matchedView = (new Router($mountPath->path))->match(new Request, $uri)) {
                 continue;
             }
 

@@ -2,7 +2,6 @@
 
 namespace Laravel\Folio;
 
-use Laravel\Folio\Exceptions\MetadataIntercepted;
 use Laravel\Folio\Pipeline\MatchedView;
 
 class InlineMetadataInterceptor
@@ -41,13 +40,13 @@ class InlineMetadataInterceptor
                     require $__path;
                 })();
             });
-        } catch (MetadataIntercepted $e) {
-            return $this->cache[$matchedView->path] = $e->metadata;
         } finally {
             ob_get_clean();
+
+            $metadata = tap(Metadata::instance(), fn() => Metadata::flush());
         }
 
-        return $this->cache[$matchedView->path] = new Metadata;
+        return $this->cache[$matchedView->path] = $metadata;
     }
 
     /**
@@ -57,6 +56,7 @@ class InlineMetadataInterceptor
     {
         $this->listening = true;
 
+
         try {
             $callback();
         } finally {
@@ -65,10 +65,12 @@ class InlineMetadataInterceptor
     }
 
     /**
-     * Determine if the interceptor is listening for metadata.
+     * Execute the callback if the interceptor is listening for metadata.
      */
-    public function listening(): bool
+    public function whenListening(callable $callback): void
     {
-        return $this->listening;
+        if ($this->listening) {
+            $callback();
+        }
     }
 }

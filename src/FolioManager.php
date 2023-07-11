@@ -33,7 +33,7 @@ class FolioManager
      *
      * @throws \InvalidArgumentException
      */
-    public function route(?string $path = null, ?string $uri = '/', array $middleware = []): static
+    public function route(string $path = null, ?string $uri = '/', array $middleware = []): static
     {
         $path = $path ? realpath($path) : config('view.paths')[0].'/pages';
 
@@ -91,7 +91,7 @@ class FolioManager
     /**
      * Get a piece of data from the route / view that was last matched by Folio.
      */
-    public function data(?string $key = null, mixed $default = null): mixed
+    public function data(string $key = null, mixed $default = null): mixed
     {
         return Arr::get($this->lastMatchedView?->data ?: [], $key, $default);
     }

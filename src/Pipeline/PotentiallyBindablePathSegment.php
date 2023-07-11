@@ -17,7 +17,7 @@ class PotentiallyBindablePathSegment
     /**
      * The class name of the binding, if any.
      */
-    protected string|null $class = null;
+    protected ?string $class = null;
 
     /**
      * Create a new potentially bindable path segment instance.
@@ -60,7 +60,7 @@ class PotentiallyBindablePathSegment
      * Resolve the binding or throw a ModelNotFoundException.
      */
     public function resolveOrFail(mixed $value,
-        ?UrlRoutable $parent = null,
+        UrlRoutable $parent = null,
         bool $withTrashed = false): UrlRoutable|BackedEnum
     {
         if (is_null($resolved = $this->resolve($value, $parent, $withTrashed))) {

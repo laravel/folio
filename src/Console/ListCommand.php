@@ -124,7 +124,7 @@ class ListCommand extends RouteListCommand
      * @param  array<string, string>  $route
      * @return array<string, string>|null
      */
-    protected function filterRoute(array $route): array|null
+    protected function filterRoute(array $route): ?array
     {
         if (($this->option('path') && ! Str::contains($route['uri'], $this->option('path')))) {
             return null;

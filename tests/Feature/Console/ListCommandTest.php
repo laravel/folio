@@ -26,6 +26,7 @@ it('may have routes', function () {
     expect($exitCode)->toBe(0)
         ->and($output->fetch())->toBe(<<<'EOF'
 
+          GET       /books ........................................................................................................... books/index.blade.php
           GET       /books/{...book}/detail ........................................................ books/[...Tests.Feature.Fixtures.Book]/detail.blade.php
           GET       /categories/{category} ......................................................... categories/[.Tests.Feature.Fixtures.Category].blade.php
           GET       /deleted-podcasts/{podcast} ............................................... deleted-podcasts/[.Tests.Feature.Fixtures.Podcast].blade.php
@@ -35,9 +36,10 @@ it('may have routes', function () {
           GET       /podcasts/{podcast} ............................................................... podcasts/[.Tests.Feature.Fixtures.Podcast].blade.php
           GET       /podcasts/{podcast}/comments ....................................... podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/index.blade.php
           GET       /podcasts/{podcast}/comments/{comment:id} podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/[.Tests.Feature.Fixtures.Comment:id].blad…
+          GET       /users/nuno ....................................................................................................... users/nuno.blade.php
           GET       /users/{id} ....................................................................................................... users/[id].blade.php
 
-                                                                                                                                         Showing [10] routes
+                                                                                                                                         Showing [12] routes
 
 
         EOF);
@@ -53,7 +55,7 @@ it('has the `--json` option', function () {
 
     expect($exitCode)->toBe(0)
         ->and($output->fetch())->toStartWith(<<<'EOF'
-        [{"method":"GET","uri":"\/books\/{...book}\/detail","view":"books\/[...Tests.Feature.Fixtures.Book]\/detail.blade.php"},{"method":"GET","uri":"\/categories\/{category}","view":"categ
+        [{"method":"GET","uri":"\/books","view":"books\/index.blade.php"},{"method":"GET","uri":"\/books\/{...book}\/detail
         EOF);
 });
 
@@ -91,13 +93,15 @@ it('has the `--except-path` option', function () {
     expect($exitCode)->toBe(0)
         ->and($output->fetch())->toBe(<<<'EOF'
 
+          GET       /books ........................................................................................................... books/index.blade.php
           GET       /books/{...book}/detail ........................................................ books/[...Tests.Feature.Fixtures.Book]/detail.blade.php
           GET       /categories/{category} ......................................................... categories/[.Tests.Feature.Fixtures.Category].blade.php
           GET       /flights ....................................................................................................... flights/index.blade.php
           GET       /non-routables/{nonRoutable} ............................................. non-routables/[.Tests.Feature.Fixtures.NonRoutable].blade.php
+          GET       /users/nuno ....................................................................................................... users/nuno.blade.php
           GET       /users/{id} ....................................................................................................... users/[id].blade.php
 
-                                                                                                                                          Showing [5] routes
+                                                                                                                                          Showing [7] routes
 
 
         EOF);
@@ -180,6 +184,7 @@ test('multiple mounted directories', function () {
     expect($exitCode)->toBe(0)
         ->and($output->fetch())->toBe(<<<'EOF'
 
+          GET       /books ....................................................................... tests/Feature/resources/views/pages/books/index.blade.php
           GET       / ............................................................................. tests/Feature/resources/views/more-pages/index.blade.php
           GET       /books/{...book}/detail .................... tests/Feature/resources/views/pages/books/[...Tests.Feature.Fixtures.Book]/detail.blade.php
           GET       /categories/{category} ..................... tests/Feature/resources/views/pages/categories/[.Tests.Feature.Fixtures.Category].blade.php
@@ -190,11 +195,12 @@ test('multiple mounted directories', function () {
           GET       /podcasts/{podcast} ........................... tests/Feature/resources/views/pages/podcasts/[.Tests.Feature.Fixtures.Podcast].blade.php
           GET       /podcasts/{podcast}/comments ... tests/Feature/resources/views/pages/podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/index.blade.php
           GET       /podcasts/{podcast}/comments/{comment:id} tests/Feature/resources/views/pages/podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/[.Tes…
+          GET       /users/nuno ................................................................... tests/Feature/resources/views/pages/users/nuno.blade.php
           GET       /users/{id} ................................................................... tests/Feature/resources/views/pages/users/[id].blade.php
           GET       /{...user} ................................................................ tests/Feature/resources/views/more-pages/[...User].blade.php
           GET       /{...user}/detail .................................................. tests/Feature/resources/views/more-pages/[...User]/detail.blade.php
 
-                                                                                                                                         Showing [13] routes
+                                                                                                                                         Showing [15] routes
 
 
         EOF);

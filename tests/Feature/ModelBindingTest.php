@@ -30,6 +30,26 @@ test('implicit model bindings are resolved', function () {
     $this->get('/podcasts/'.$podcast->id)->assertSee('test-podcast-name');
 });
 
+test('implicit model bindings are accessible via middleware', function () {
+    $podcast = Podcast::create([
+        'name' => 'test-podcast-name',
+    ]);
+
+    $this->get('/podcasts/'.$podcast->id);
+
+    expect($_SERVER['__folio_podcasts_inline_middleware'])->id->toBe($podcast->id);
+});
+
+test('implicit model bindings are accessible via @php tags', function () {
+    $podcast = Podcast::create([
+        'name' => 'test-podcast-name',
+    ]);
+
+    $this->get('/podcasts/'.$podcast->id);
+
+    expect($_SERVER['__folio_podcasts_php_blade_block'])->id->toBe($podcast->id);
+});
+
 test('not found error is thrown if implicit binding can not be resolved', function () {
     $podcast = Podcast::create([
         'name' => 'test-podcast-name',

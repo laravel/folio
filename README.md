@@ -62,6 +62,8 @@ php artisan folio:install
 
 You may create a Folio route by placing a Blade template in any of your Folio mounted directories. By default, Folio mounts the `resources/views/pages` directory, but you may customize these directories in your Folio service provider's `boot` method.
 
+Once a Blade template has been placed in a Folio mounted directory, you may immediately access it via your browser. For example, a page placed in `pages/schedule.blade.php` may be accessed in your browser at `http://example.com/schedule`.
+
 <a name="nested-routes"></a>
 ### Nested Routes
 
@@ -159,7 +161,7 @@ php artisan folio:make user/[.App.Models.User]
 <a name="soft-deleted-models"></a>
 ### Soft Deleted Models
 
-By default, models that have been soft deleted are not retrieved when resolving implicit model bindings. However, if you wish, you can instruct Folio to retrieve soft deleted models by invoking the `page` function within the page's template:
+By default, models that have been soft deleted are not retrieved when resolving implicit model bindings. However, if you wish, you can instruct Folio to retrieve soft deleted models by invoking the `withTrashed` function within the page's template:
 
 ```php
 <?php
@@ -178,7 +180,7 @@ withTrashed();
 <a name="middleware"></a>
 ## Middleware
 
-You can apply middleware to a specific page by invoking the `page` function within the page's template:
+You can apply middleware to a specific page by invoking the `middleware` function within the page's template:
 
 ```php
 <?php

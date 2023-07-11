@@ -4,7 +4,9 @@ namespace Laravel\Folio\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use Laravel\Folio\FolioServiceProvider;
 
 class InstallCommand extends Command
 {
@@ -55,6 +57,11 @@ class InstallCommand extends Command
      */
     protected function registerFolioServiceProvider(): void
     {
+        if (method_exists(ServiceProvider::class, 'addProviderToBootstrapFile') &&
+            ServiceProvider::addProviderToBootstrapFile(FolioServiceProvider::class)) {
+            return;
+        }
+
         $namespace = Str::replaceLast('\\', '', $this->laravel->getNamespace());
 
         $appConfig = file_get_contents(config_path('app.php'));

@@ -24,6 +24,7 @@
 - [Route Model Binding](#route-model-binding)
     - [Soft Deleted Models](#soft-deleted-models)
 - [Middleware](#middleware)
+- [PHP Blocks](#php-blocks)
 - [Contributing](#contributing)
 - [Code of Conduct](#code-of-conduct)
 - [Security Vulnerabilities](#security-vulnerabilities)
@@ -234,21 +235,13 @@ Folio::route(resource_path('views/pages'), middleware: [
 <a name="php-blocks"></a>
 ## PHP Blocks
 
-When using Folio, the `<?php` and `?>` tags are reserved for the page definition via Folio specific functions such as `middleware` or `withTrashed`.
+When using Folio, the `<?php` and `?>` tags are reserved for the Folio page definition functions such as `middleware` and `withTrashed`.
 
-Therefore, in occasions where you need to write PHP code to be executed within your blade view, you should use the `@php` blade directive:
-
-As an example, if you need to check if a user can view other user's posts, you can do so by using the `@php` directive:
-
-```bash
-php artisan folio:make posts
-
-# pages/users/[User].blade.php → /users/1
-```
+Therefore, if you need to write PHP code that should be executed within your Blade template, you should use the `@php` Blade directive:
 
 ```php
 @php
-    if (! auth()->user()->can('posts-view', $user)) {
+    if (! Auth::user()->can('view-posts', $user)) {
         abort(403);
     }
 

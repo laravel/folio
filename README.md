@@ -24,6 +24,7 @@
 - [Route Model Binding](#route-model-binding)
     - [Soft Deleted Models](#soft-deleted-models)
 - [Middleware](#middleware)
+- [PHP Blocks](#php-blocks)
 - [Contributing](#contributing)
 - [Code of Conduct](#code-of-conduct)
 - [Security Vulnerabilities](#security-vulnerabilities)
@@ -229,6 +230,29 @@ Folio::route(resource_path('views/pages'), middleware: [
         },
     ],
 ]);
+```
+
+<a name="php-blocks"></a>
+## PHP Blocks
+
+When using Folio, the `<?php` and `?>` tags are reserved for the Folio page definition functions such as `middleware` and `withTrashed`.
+
+Therefore, if you need to write PHP code that should be executed within your Blade template, you should use the `@php` Blade directive:
+
+```php
+@php
+    if (! Auth::user()->can('view-posts', $user)) {
+        abort(403);
+    }
+
+    $posts = $user->posts;
+@endphp
+
+@foreach ($posts as $post)
+    <div>
+        {{ $post->title }}
+    </div>
+@endforeach
 ```
 
 ## Contributing

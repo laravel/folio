@@ -154,7 +154,7 @@ Sometimes you may wish to resolve bound Eloquent models using a column other tha
 By default, Folio will search for your model within your application's `app/Models` directory. However, if needed, you may specify the fully-qualified model class name in your template's filename:
 
 ```bash
-php artisan make:folio user/[.App.Models.User]
+php artisan make:folio "user/[.App.Models.User]"
 
 # pages/users/[.App.Models.User].blade.php → /users/1
 ```

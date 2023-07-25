@@ -21,7 +21,7 @@ class State
      */
     public function forIteration(int $iteration): State
     {
-        return new static(
+        return new self(
             $this->uri,
             $this->mountPath,
             $this->segments,
@@ -35,7 +35,7 @@ class State
      */
     public function withData(string $key, mixed $value): State
     {
-        return new static(
+        return new self(
             $this->uri,
             $this->mountPath,
             $this->segments,
@@ -69,7 +69,7 @@ class State
 
         $segments[$this->currentIndex] = $value;
 
-        return new static(
+        return new self(
             $this->uri,
             $this->mountPath,
             $segments,

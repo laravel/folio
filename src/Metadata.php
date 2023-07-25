@@ -26,7 +26,7 @@ class Metadata
      */
     public static function instance(): static
     {
-        return static::$instance ??= new static;
+        return static::$instance ??= new self;
     }
 
     /**

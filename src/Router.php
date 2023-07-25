@@ -69,7 +69,6 @@ class Router
                     new EnsureNoDirectoryTraversal,
                     new TransformModelBindings($request),
                     new SetMountPathOnMatchedView,
-                    // ...
                     new MatchRootIndex,
                     new MatchDirectoryIndexViews,
                     new MatchWildcardViewsThatCaptureMultipleSegments,

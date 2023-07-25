@@ -95,7 +95,7 @@ php artisan make:folio users/index
 Often, you will need to have segments of the incoming request's URL injected into your page so that you can interact with them. For example, you may need to access the "ID" of the user whose profile is being displayed. To accomplish this, you may encapsulate a segment of the page's filename in square brackets:
 
 ```bash
-php artisan make:folio users/[id]
+php artisan make:folio "users/[id]"
 
 # pages/users/[id].blade.php → /users/1
 ```
@@ -111,7 +111,7 @@ Captured segments can be accessed as variables within your Blade template:
 To capture multiple segments, you can prefix the encapsulated segment with three dots `...`:
 
 ```bash
-php artisan make:folio user/[...ids]
+php artisan make:folio "user/[...ids]"
 
 # pages/users/[...ids].blade.php → /users/1/2/3
 ```

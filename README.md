@@ -49,6 +49,7 @@ For example, to create a page that is accessible at the `/greeting` URL, just cr
 To get started, install Folio into your project using the Composer package manager:
 
 ```bash
+composer config minimum-stability beta
 composer require laravel/folio
 ```
 

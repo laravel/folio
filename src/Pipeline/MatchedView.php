@@ -13,7 +13,7 @@ class MatchedView
     public function __construct(
         public string $path,
         public array $data,
-        public ?string $mountPath = null
+        public ?string $mountPath = null,
     ) {
         $this->path = realpath($path) ?: $path;
     }

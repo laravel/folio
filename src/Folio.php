@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Facade;
 class Folio extends Facade
 {
     /**
-     * {@inheritDoc}     .
+     * {@inheritDoc}
      */
     public static function getFacadeAccessor(): string
     {

@@ -12,7 +12,7 @@ class State
         public string $mountPath,
         public array $segments,
         public array $data = [],
-        public int $currentIndex = 0
+        public int $currentIndex = 0,
     ) {
     }
 

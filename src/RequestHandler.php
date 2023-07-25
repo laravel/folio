@@ -15,10 +15,11 @@ class RequestHandler
     /**
      * Create a new request handler instance.
      */
-    public function __construct(protected MountPath $mountPath,
+    public function __construct(
+        protected MountPath $mountPath,
         protected ?Closure $renderUsing = null,
-        protected ?Closure $onViewMatch = null)
-    {
+        protected ?Closure $onViewMatch = null,
+    ) {
     }
 
     /**

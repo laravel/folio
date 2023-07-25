@@ -3,6 +3,7 @@
 namespace Laravel\Folio;
 
 use Closure;
+use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Pipeline;
@@ -29,6 +30,8 @@ class RequestHandler
         $matchedView = (new Router(
             $this->mountPath->path
         ))->match($request, $uri) ?? abort(404);
+
+        app(Dispatcher::class)->dispatch(new Events\ViewMatched($matchedView, $this->mountPath));
 
         return (new Pipeline(app()))
             ->send($request)

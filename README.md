@@ -52,7 +52,7 @@ To get started, install Folio into your project using the Composer package manag
 composer require laravel/folio
 ```
 
-After installing Folio, you may execute the `folio:install` Artisan command, which will install Folio's service provider into your application:
+After installing Folio, you may execute the `folio:install` Artisan command, which will install Folio's service provider into your application. This service provider registers the directory where Folio will search for routes / pages:
 
 ```bash
 php artisan folio:install

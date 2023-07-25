@@ -14,7 +14,7 @@ class FolioManager
     /**
      * The mounted paths that have been registered.
      *
-     * @param  array<int, \Laravel\Folio\MountPath>
+     * @var  array<int, \Laravel\Folio\MountPath>
      */
     protected array $mountPaths = [];
 

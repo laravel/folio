@@ -2,7 +2,7 @@ parameters:
   paths:
     - src
 
-  level: 1
+  level: 0
 
   ignoreErrors:
     - "#Unsafe usage of new static\\(\\)#"

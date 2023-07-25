@@ -13,5 +13,6 @@ class ViewMatched
     public function __construct(
         public MatchedView $matchedView,
         public MountPath $mountPath,
-    ) {}
+    ) {
+    }
 }

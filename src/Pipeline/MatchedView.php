@@ -23,7 +23,7 @@ class MatchedView
      */
     public function withMountPath(string $mountPath): MatchedView
     {
-        return new self(mountPath: $mountPath, path: $this->path, data: $this->data);
+        return new static(mountPath: $mountPath, path: $this->path, data: $this->data);
     }
 
     /**
@@ -71,6 +71,6 @@ class MatchedView
      */
     public function withData(array $data): MatchedView
     {
-        return new self($this->path, $data, $this->mountPath);
+        return new static($this->path, $data, $this->mountPath);
     }
 }

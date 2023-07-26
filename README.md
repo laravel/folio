@@ -65,6 +65,12 @@ You may create a Folio route by placing a Blade template in any of your Folio mo
 
 Once a Blade template has been placed in a Folio mounted directory, you may immediately access it via your browser. For example, a page placed in `pages/schedule.blade.php` may be accessed in your browser at `http://example.com/schedule`.
 
+To quickly view a list of all of your Folio pages / routes, you may invoke the `folio:list` Artisan command:
+
+```bash
+php artisan folio:list
+```
+
 <a name="nested-routes"></a>
 ### Nested Routes
 

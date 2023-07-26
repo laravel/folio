@@ -19,7 +19,7 @@ class EnsureNoDirectoryTraversal
             return $view;
         }
 
-        if (! Str::of(realpath($view->path))->startsWith($state->mountPath . DIRECTORY_SEPARATOR)) {
+        if (! Str::of(realpath($view->path))->startsWith($state->mountPath.DIRECTORY_SEPARATOR)) {
             throw new PossibleDirectoryTraversal;
         }
 

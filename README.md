@@ -95,7 +95,7 @@ php artisan make:folio users/index
 Often, you will need to have segments of the incoming request's URL injected into your page so that you can interact with them. For example, you may need to access the "ID" of the user whose profile is being displayed. To accomplish this, you may encapsulate a segment of the page's filename in square brackets:
 
 ```bash
-php artisan make:folio users/[id]
+php artisan make:folio "users/[id]"
 
 # pages/users/[id].blade.php → /users/1
 ```
@@ -111,7 +111,7 @@ Captured segments can be accessed as variables within your Blade template:
 To capture multiple segments, you can prefix the encapsulated segment with three dots `...`:
 
 ```bash
-php artisan make:folio users/[...ids]
+php artisan make:folio "users/[...ids]"
 
 # pages/users/[...ids].blade.php → /users/1/2/3
 ```
@@ -154,7 +154,7 @@ Sometimes you may wish to resolve bound Eloquent models using a column other tha
 By default, Folio will search for your model within your application's `app/Models` directory. However, if needed, you may specify the fully-qualified model class name in your template's filename:
 
 ```bash
-php artisan make:folio users/[.App.Models.User]
+php artisan make:folio "users/[.App.Models.User]"
 
 # pages/users/[.App.Models.User].blade.php → /users/1
 ```

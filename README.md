@@ -111,7 +111,7 @@ Captured segments can be accessed as variables within your Blade template:
 To capture multiple segments, you can prefix the encapsulated segment with three dots `...`:
 
 ```bash
-php artisan make:folio user/[...ids]
+php artisan make:folio users/[...ids]
 
 # pages/users/[...ids].blade.php → /users/1/2/3
 ```
@@ -132,7 +132,7 @@ When capturing multiple segments, the captured segments will be injected into th
 If a wildcard segment of your page template's filename corresponds one of your application's Eloquent models, Folio will automatically take advantage of Laravel's route model binding capabilities and attempt to inject the resolved model instance into your page:
 
 ```bash
-php artisan make:folio user/[User]
+php artisan make:folio users/[User]
 
 # pages/users/[User].blade.php → /users/1
 ```
@@ -154,7 +154,7 @@ Sometimes you may wish to resolve bound Eloquent models using a column other tha
 By default, Folio will search for your model within your application's `app/Models` directory. However, if needed, you may specify the fully-qualified model class name in your template's filename:
 
 ```bash
-php artisan make:folio user/[.App.Models.User]
+php artisan make:folio users/[.App.Models.User]
 
 # pages/users/[.App.Models.User].blade.php → /users/1
 ```

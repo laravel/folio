@@ -132,7 +132,7 @@ When capturing multiple segments, the captured segments will be injected into th
 If a wildcard segment of your page template's filename corresponds one of your application's Eloquent models, Folio will automatically take advantage of Laravel's route model binding capabilities and attempt to inject the resolved model instance into your page:
 
 ```bash
-php artisan make:folio users/[User]
+php artisan make:folio "users/[User]"
 
 # pages/users/[User].blade.php → /users/1
 ```

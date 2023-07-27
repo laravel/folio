@@ -11,7 +11,7 @@ class Loader
     /**
      * Invoke the route loader.
      */
-    public function __invoke(string $uri = '/', MountPath $mountPath, Closure $handler): void
+    public function __invoke(string $uri, MountPath $mountPath, Closure $handler): void
     {
         if ($uri === '/') {
             Route::fallback($handler)

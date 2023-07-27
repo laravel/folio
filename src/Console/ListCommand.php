@@ -65,37 +65,56 @@ class ListCommand extends RouteListCommand
     protected function routesFromMountPaths(array $mountPaths): Collection
     {
         return collect($mountPaths)->map(function (MountPath $mountPath) {
-            $path = '/'.ltrim($mountPath->path, '/');
-
             $views = Finder::create()->in($mountPath->path)->name('*.blade.php')->files()->getIterator();
+
+            $mountPath = str_replace(
+                DIRECTORY_SEPARATOR,
+                '/',
+                $mountPath->path,
+            );
+            $path = '/'.ltrim($mountPath, '/');
 
             return collect($views)
                 ->map(function (SplFileInfo $view) use ($mountPath) {
-                    $uri = str_replace($mountPath->path, '', (string) $view->getRealPath());
+                    
+                    $viewPath = str_replace(DIRECTORY_SEPARATOR, '/', $view->getRealPath());
+
+                    $uri = str_replace($mountPath, '', $viewPath);
 
                     if (count($this->laravel->make(FolioManager::class)->mountPaths()) === 1) {
-                        $action = str_replace($mountPath->path.'/', '', $view->getRealPath());
+                        $action = str_replace($mountPath.'/', '', $viewPath);
+
                     } else {
-                        $basePath = base_path('/');
+                        $basePath = str_replace(DIRECTORY_SEPARATOR, '/', base_path(DIRECTORY_SEPARATOR));
 
                         if (str_contains($basePath, '/vendor/orchestra/')) {
                             $basePath = Str::before($basePath, '/vendor/orchestra/').'/';
                         }
 
-                        $action = str_replace($basePath, '', $view->getRealPath());
+                        $action = str_replace($basePath, '', $viewPath);
                     }
 
                     $uri = str_replace('.blade.php', '', $uri);
 
                     $uri = collect(explode('/', $uri))
-                        ->map(function (string $segment) {
-                            if (Str::startsWith($segment, '[...')) {
-                                $segment = '[...'.Str::camel(Str::afterLast($segment, '.'));
-                            } elseif (Str::startsWith($segment, '[.')) {
-                                $segment = '['.Str::camel(Str::afterLast($segment, '.'));
+                        ->map(function (string $currentSegment) {
+                            if (Str::startsWith($currentSegment, '[...')) {
+                                $formattedSegment = '[...';
+                            } elseif (Str::startsWith($currentSegment, '[.')) {
+                                $formattedSegment = '[';
+                            } else {
+                                return $currentSegment;
                             }
 
-                            return $segment;
+                            $lastPartOfSegment = str($currentSegment)->afterLast('.');
+
+                            return $formattedSegment . match (true) {
+                                $lastPartOfSegment->contains(':') => $lastPartOfSegment->beforeLast(':')->camel()
+                                    . ':' . $lastPartOfSegment->afterLast(':'),
+                                $lastPartOfSegment->contains('-') => $lastPartOfSegment->beforeLast('-')->camel()
+                                    . ':' . $lastPartOfSegment->afterLast('-'),
+                                default => $lastPartOfSegment->camel(),
+                            };
                         })
                         ->implode('/');
 

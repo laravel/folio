@@ -18,12 +18,15 @@
 - [Introduction](#introduction)
 - [Installation](#installation)
 - [Creating Routes](#creating-routes)
-    - [Nested Routes](#nested-routes)
-    - [Index Routes](#index-routes)
+  - [Nested Routes](#nested-routes)
+  - [Index Routes](#index-routes)
 - [Route Parameters](#route-parameters)
 - [Route Model Binding](#route-model-binding)
-    - [Soft Deleted Models](#soft-deleted-models)
+    - [Customizing The Key](#customizing-the-key)
+    - [Model Location](#model-location)
+  - [Soft Deleted Models](#soft-deleted-models)
 - [Middleware](#middleware)
+- [Loading Routes](#loading-routes)
 - [PHP Blocks](#php-blocks)
 - [Contributing](#contributing)
 - [Code of Conduct](#code-of-conduct)
@@ -237,6 +240,30 @@ Folio::route(resource_path('views/pages'), middleware: [
     ],
 ]);
 ```
+
+<a name="loading-routes"></a>
+## Loading Routes
+
+You may add a custom loader for folio routes using a callback function or a callable class:
+
+```php
+use Laravel\Folio\MountPath;
+
+Folio::route(__DIR__.'/resources/views/pages', loader: function(string $uri, MountPath $mountPath, Closure $handler){
+
+    if ($uri === '/') {
+        Route::fallback($hander)
+            ->name($mountPath->routeName());
+    } else {
+        Route::get(
+            '/'.trim($uri, '/').'/{uri?}',
+            $handler
+        )->name($mountPath->routeName())->where('uri', '.*');
+    }
+});
+
+```
+
 
 <a name="php-blocks"></a>
 ## PHP Blocks

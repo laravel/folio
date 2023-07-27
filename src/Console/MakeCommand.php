@@ -43,7 +43,7 @@ class MakeCommand extends GeneratorCommand
 
         return $mountPath.'/'.preg_replace_callback('/(?:\[.*?\])|(\w+)/', function (array $matches) {
             return empty($matches[1]) ? $matches[0] : Str::lower($matches[1]);
-        }, Str::finish($this->argument('name'), '.blade.php'));
+        }, Str::finish($this->argument('name'), Folio::extension()));
     }
 
     /**

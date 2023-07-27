@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Laravel\Folio\FolioManager renderUsing(\Closure|null $callback = null)
  * @method static array mountPaths()
  * @method static array paths()
+ * @method static string extension(string|null $extension = null)
  *
  * @see \Laravel\Folio\FolioManager
  */

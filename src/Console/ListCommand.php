@@ -5,6 +5,7 @@ namespace Laravel\Folio\Console;
 use Illuminate\Foundation\Console\RouteListCommand;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Laravel\Folio\Folio;
 use Laravel\Folio\FolioManager;
 use Laravel\Folio\MountPath;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -67,7 +68,7 @@ class ListCommand extends RouteListCommand
         return collect($mountPaths)->map(function (MountPath $mountPath) {
             $path = '/'.ltrim($mountPath->path, '/');
 
-            $views = Finder::create()->in($mountPath->path)->name('*.blade.php')->files()->getIterator();
+            $views = Finder::create()->in($mountPath->path)->name('*'.Folio::extension())->files()->getIterator();
 
             return collect($views)
                 ->map(function (SplFileInfo $view) use ($mountPath) {
@@ -85,7 +86,7 @@ class ListCommand extends RouteListCommand
                         $action = str_replace($basePath, '', $view->getRealPath());
                     }
 
-                    $uri = str_replace('.blade.php', '', $uri);
+                    $uri = str_replace(Folio::extension(), '', $uri);
 
                     $uri = collect(explode('/', $uri))
                         ->map(function (string $segment) {

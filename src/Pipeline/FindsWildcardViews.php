@@ -4,6 +4,7 @@ namespace Laravel\Folio\Pipeline;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
+use Laravel\Folio\Folio;
 
 trait FindsWildcardViews
 {
@@ -33,11 +34,11 @@ trait FindsWildcardViews
         return collect($files)->first(function ($file) use ($startsWith, $endsWith) {
             $filename = Str::of($file->getFilename());
 
-            if (! $filename->endsWith('.blade.php')) {
+            if (! $filename->endsWith(Folio::extension())) {
                 return;
             }
 
-            $filename = $filename->before('.blade.php');
+            $filename = $filename->before(Folio::extension());
 
             return $filename->startsWith($startsWith) &&
                    $filename->endsWith($endsWith);

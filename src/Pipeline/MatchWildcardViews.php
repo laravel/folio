@@ -4,6 +4,7 @@ namespace Laravel\Folio\Pipeline;
 
 use Closure;
 use Illuminate\Support\Str;
+use Laravel\Folio\Folio;
 
 class MatchWildcardViews
 {
@@ -18,7 +19,7 @@ class MatchWildcardViews
             $path = $this->findWildcardView($state->currentDirectory())) {
             return new MatchedView($state->currentDirectory().'/'.$path, $state->withData(
                 Str::of($path)
-                    ->before('.blade.php')
+                    ->before(Folio::extension())
                     ->match('/\[(.*)\]/')->value(),
                 $state->currentUriSegment(),
             )->data);

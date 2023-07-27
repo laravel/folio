@@ -11,6 +11,12 @@ use Laravel\Folio\Pipeline\MatchedView;
 
 class FolioManager
 {
+
+    /**
+     * The file extension to use while routing.
+     */
+    public string $pathExtension;
+
     /**
      * The mounted paths that have been registered.
      *
@@ -122,5 +128,13 @@ class FolioManager
     public function paths(): array
     {
         return collect($this->mountPaths)->map->path->all();
+    }
+
+    /**
+     * Register the file extension used while routing.
+     */
+    public function extension(string|null $extension='.blade.php'): string
+    {
+        return $this->pathExtension ??= $extension;
     }
 }

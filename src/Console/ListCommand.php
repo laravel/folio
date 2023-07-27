@@ -76,7 +76,7 @@ class ListCommand extends RouteListCommand
 
             return collect($views)
                 ->map(function (SplFileInfo $view) use ($mountPath) {
-                    
+
                     $viewPath = str_replace(DIRECTORY_SEPARATOR, '/', $view->getRealPath());
 
                     $uri = str_replace($mountPath, '', $viewPath);
@@ -108,11 +108,11 @@ class ListCommand extends RouteListCommand
 
                             $lastPartOfSegment = str($currentSegment)->afterLast('.');
 
-                            return $formattedSegment . match (true) {
+                            return $formattedSegment.match (true) {
                                 $lastPartOfSegment->contains(':') => $lastPartOfSegment->beforeLast(':')->camel()
-                                    . ':' . $lastPartOfSegment->afterLast(':'),
+                                    .':'.$lastPartOfSegment->afterLast(':'),
                                 $lastPartOfSegment->contains('-') => $lastPartOfSegment->beforeLast('-')->camel()
-                                    . ':' . $lastPartOfSegment->afterLast('-'),
+                                    .':'.$lastPartOfSegment->afterLast('-'),
                                 default => $lastPartOfSegment->camel(),
                             };
                         })

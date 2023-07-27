@@ -249,10 +249,10 @@ You may add a custom loader for folio routes using a callback function or a call
 ```php
 use Laravel\Folio\MountPath;
 
-Folio::route(__DIR__.'/resources/views/pages', loader: function(string $uri, MountPath $mountPath, Closure $handler){
+Folio::route(resource_path('views/pages'), loader: function(string $uri, MountPath $mountPath, Closure $handler){
 
     if ($uri === '/') {
-        Route::fallback($hander)
+        Route::fallback($handler)
             ->name($mountPath->routeName());
     } else {
         Route::get(

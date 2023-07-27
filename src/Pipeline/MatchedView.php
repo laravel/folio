@@ -3,7 +3,9 @@
 namespace Laravel\Folio\Pipeline;
 
 use Illuminate\Support\Collection;
+use Laravel\Folio\Folio;
 use Laravel\Folio\InlineMetadataInterceptor;
+use Illuminate\Support\Str;
 
 class MatchedView
 {
@@ -50,6 +52,17 @@ class MatchedView
         $path = str_replace($this->mountPath, '', $this->path);
 
         return '/'.trim(str_replace(DIRECTORY_SEPARATOR, '/', $path), '/');
+    }
+
+    /**
+     * Get the matched relative path without the file extension.
+     */
+    public function componentPath(): string
+    {
+        $path = str_replace($this->mountPath, '', $this->path);
+        return Str::of(str_replace(DIRECTORY_SEPARATOR, '/', $path))
+            ->trim('/')
+            ->before(Folio::extension());
     }
 
     /**

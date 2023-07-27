@@ -249,7 +249,7 @@ use Laravel\Folio\Folio;
 Folio::extension('.vue')
 ```
 
-In concert with Inertia, changing the file extension allows you to render React, Vue, or Svelte files as Folio pages:
+In concert with Inertia, changing the file extension allows you to render React, Vue, or Svelte files as Folio pages where the route parameters are passed as props:
 ```php
 use Illuminate\Http\Request;
 use Laravel\Folio\Folio;
@@ -261,8 +261,8 @@ Folio::extension('.vue');
 Folio::renderUsing(
     function (Request $request, MatchedView $view) {
         return Inertia::render(
-            $matchedView->componentPath(), 
-            $matchedView->data
+            $view->componentPath(), 
+            $view->data
         );
     }
 );

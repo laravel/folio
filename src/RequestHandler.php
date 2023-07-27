@@ -28,6 +28,8 @@ class RequestHandler
      */
     public function __invoke(Request $request, string $uri): mixed
     {
+        Folio::withExtension($this->mountPath->extension());
+
         $matchedView = (new Router(
             $this->mountPath->path
         ))->match($request, $uri) ?? abort(404);

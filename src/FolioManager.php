@@ -49,6 +49,8 @@ class FolioManager
 
         $this->mountPaths[] = $mountPath = new MountPath($path, $uri, $middleware);
 
+        $mountPath->extension($this->extension());
+
         if ($uri === '/') {
             Route::fallback($this->handler($mountPath))
                 ->name($mountPath->routeName());
@@ -136,5 +138,12 @@ class FolioManager
     public function extension(string|null $extension='.blade.php'): string
     {
         return $this->pathExtension ??= $extension;
+    }
+
+    public function withExtension(string $extension): self
+    {
+        return tap($this, function () use ($extension) {
+            $this->pathExtension = $extension;
+        });
     }
 }

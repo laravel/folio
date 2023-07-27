@@ -9,6 +9,11 @@ class MountPath
      */
     public PathBasedMiddlewareList $middleware;
 
+     /**
+     * The file extension to use while routing.
+     */
+    public string $pathExtension;
+
     /**
      * Create a new mounted path instance.
      */
@@ -26,5 +31,13 @@ class MountPath
     public function routeName(): string
     {
         return 'folio-'.substr(sha1($this->baseUri), 0, 10);
+    }
+
+    /**
+     * Register the file extension used while routing.
+     */
+    public function extension(string|null $extension='.blade.php'): string
+    {
+        return $this->pathExtension ??= $extension;
     }
 }

@@ -238,6 +238,36 @@ Folio::route(resource_path('views/pages'), middleware: [
 ]);
 ```
 
+<a name="rendering"></a>
+## Rendering
+You can tap into Folio to create a custom response such as swapping blade files for Inertia pages written with React, Vue, or Svelte.
+
+By default Folio looks for a `.blade.php` extension when validating routes. You may instruct Folio to look for a different file extension:
+```php
+use Laravel\Folio\Folio;
+
+Folio::extension('.vue')
+```
+
+In concert with Inertia, changing the file extension allows you to render React, Vue, or Svelte files as Folio pages:
+```php
+use Illuminate\Http\Request;
+use Laravel\Folio\Folio;
+use Laravel\Folio\Pipeline\MatchedView;
+use Inertia\Inertia;
+
+Folio::extension('.vue');
+
+Folio::renderUsing(
+    function (Request $request, MatchedView $view) {
+        return Inertia::render(
+            $matchedView->componentPath(), 
+            $matchedView->data
+        );
+    }
+);
+```
+
 <a name="php-blocks"></a>
 ## PHP Blocks
 

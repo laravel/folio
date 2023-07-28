@@ -16,6 +16,7 @@ class MountPath
         public string $path,
         public string $baseUri,
         array $middleware = [],
+        public array $names = [],
     ) {
         $this->middleware = new PathBasedMiddlewareList($middleware);
     }

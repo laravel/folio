@@ -30,3 +30,11 @@ function withTrashed(bool $withTrashed = true): PageOptions
 
     return new PageOptions;
 }
+
+/**
+ * Generate the URL to a Folio page.
+ */
+function url(string $name, array $parameters = []): string
+{
+    return Folio::url($name, $parameters);
+}

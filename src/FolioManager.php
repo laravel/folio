@@ -6,7 +6,10 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
+use Laravel\Folio\Exceptions\NameNotFoundException;
+use Laravel\Folio\Exceptions\UrlGenerationException;
 use Laravel\Folio\Pipeline\MatchedView;
 
 class FolioManager
@@ -28,12 +31,16 @@ class FolioManager
      */
     protected ?MatchedView $lastMatchedView = null;
 
+    public function __construct(
+        protected UrlGenerator $urlGenerator,
+    ) {}
+
     /**
      * Register a route to handle page based routing at the given paths.
      *
      * @throws \InvalidArgumentException
      */
-    public function route(string $path = null, ?string $uri = '/', array $middleware = []): static
+    public function route(string $path = null, ?string $uri = '/', array $middleware = [], array $names = []): static
     {
         $path = $path ? realpath($path) : config('view.paths')[0].'/pages';
 
@@ -41,7 +48,7 @@ class FolioManager
             throw new InvalidArgumentException("The given path [{$path}] is not a directory.");
         }
 
-        $this->mountPaths[] = $mountPath = new MountPath($path, $uri, $middleware);
+        $this->mountPaths[] = $mountPath = new MountPath($path, $uri, $middleware, $names);
 
         if ($uri === '/') {
             Route::fallback($this->handler($mountPath))
@@ -94,6 +101,25 @@ class FolioManager
     public function data(string $key = null, mixed $default = null): mixed
     {
         return Arr::get($this->lastMatchedView?->data ?: [], $key, $default);
+    }
+
+    /**
+     * Generate the URL to a Folio page.
+     *
+     * @throws \Laravel\Folio\Exceptions\NameNotFoundException
+     * @throws \Laravel\Folio\Exceptions\UrlGenerationException
+     */
+    public function url(string $name, array $parameters = []): string
+    {
+        foreach ($this->mountPaths as $mountPath) {
+            if (! array_key_exists($name, $mountPath->names)) {
+                continue;
+            }
+
+            return $this->urlGenerator->path($mountPath, $mountPath->names[$name], $parameters);
+        }
+
+        throw new NameNotFoundException("Page [{$name}] not found.");
     }
 
     /**

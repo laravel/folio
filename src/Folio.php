@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static static route(string|null $path = null, string|null $uri = '/', array $middleware = [])
  * @method static array middlewareFor(string $uri)
  * @method static mixed|null data(string|null $key = null, mixed|null $default = null)
+ * @method static string url(string $name, array $parameters = [])
  * @method static \Laravel\Folio\FolioManager renderUsing(\Closure|null $callback = null)
  * @method static array mountPaths()
  * @method static array paths()

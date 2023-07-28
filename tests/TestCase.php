@@ -28,7 +28,7 @@ abstract class TestCase extends OrchestraTestCase
      */
     protected function views(array $views, $directory = null): void
     {
-        $directory ??= __DIR__ . '/tmp/views';
+        $directory ??= __DIR__.'/tmp/views';
 
         foreach ($views as $key => $value) {
             if (is_array($value)) {
@@ -38,7 +38,7 @@ abstract class TestCase extends OrchestraTestCase
 
                 $this->views($value, $directory.$key);
             } else {
-                touch(str_replace('/', DIRECTORY_SEPARATOR,$directory.$value));
+                touch(str_replace('/', DIRECTORY_SEPARATOR, $directory.$value));
             }
         }
     }

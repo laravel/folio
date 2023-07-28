@@ -29,7 +29,6 @@ class TransformModelBindings
             $this->bindablePathSegments($view),
         ];
 
-
         foreach ($pathSegments as $index => $segment) {
             if (! ($segment = new PotentiallyBindablePathSegment($segment))->bindable()) {
                 continue;

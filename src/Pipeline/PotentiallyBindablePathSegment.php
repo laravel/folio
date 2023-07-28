@@ -68,7 +68,6 @@ class PotentiallyBindablePathSegment
                 ->setModel(get_class($this->newClassInstance()), [$value]);
         }
 
-
         return $resolved;
     }
 
@@ -76,7 +75,7 @@ class PotentiallyBindablePathSegment
      * Attempt to resolve the binding.
      */
     protected function resolve(mixed $value, ?UrlRoutable $parent, bool $withTrashed): mixed
-    {        
+    {
         if ($explicitBindingCallback = Route::getBindingCallback($this->variable())) {
             return $explicitBindingCallback($value);
         }
@@ -90,8 +89,6 @@ class PotentiallyBindablePathSegment
         $classInstance = $this->newClassInstance();
 
         $method = $withTrashed ? 'resolveSoftDeletableRouteBinding' : 'resolveRouteBinding';
-
-
 
         return $classInstance->{$method}(
             $value, $this->field() ?: $classInstance->getRouteKeyName()

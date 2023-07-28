@@ -53,11 +53,10 @@ test('implicit model bindings with more than one binding in path', function ($fi
         $this->markTestSkipped();
     }
 
-
     $this->views([
         '/index.blade.php',
         '/users' => [
-            '/[.FolioModelBindingTestClass'. $first . ']' => [
+            '/[.FolioModelBindingTestClass'.$first.']' => [
                 '/posts' => [
                     '/[.FolioModelBindingTestClass'.$second.'].blade.php',
                 ],
@@ -84,7 +83,7 @@ test('implicit model bindings with more than one binding in path', function ($fi
     $this->assertEquals(2, count($view->data));
 })->with([
     ['|first', '|second'],
-    ['-$first', '-$second']
+    ['-$first', '-$second'],
 ]);
 
 test('model bindings can receive a custom binding field with', function (string $pathString) {
@@ -92,7 +91,6 @@ test('model bindings can receive a custom binding field with', function (string 
     if (windows_os() && $pathString === ':slug') {
         $this->markTestSkipped();
     }
-
 
     $this->views([
         '/index.blade.php',
@@ -114,7 +112,6 @@ test('model bindings can receive a custom binding field with', function (string 
 })->with(['-slug', ':slug']);
 
 test('model bindings can receive a custom binding variable', function (string $pathString, string $variable) {
-
 
     if (windows_os() && $pathString === '|foo') {
         $this->markTestSkipped();
@@ -311,11 +308,11 @@ test('explicit model bindings take precedence over implicit scoped child binding
 ]);
 
 test('scoped child model bindings trigger model not found exception if they do not exist', function ($first, $second) {
-    
+
     if (windows_os() && $first === '|first') {
         $this->markTestSkipped();
     }
-    
+
     $this->views([
         '/index.blade.php',
         '/users' => [

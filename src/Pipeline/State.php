@@ -14,6 +14,7 @@ class State
         public array $data = [],
         public int $currentIndex = 0,
     ) {
+        $this->mountPath = str_replace('/', DIRECTORY_SEPARATOR, $mountPath);
     }
 
     /**

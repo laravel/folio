@@ -29,6 +29,7 @@ class TransformModelBindings
             $this->bindablePathSegments($view),
         ];
 
+
         foreach ($pathSegments as $index => $segment) {
             if (! ($segment = new PotentiallyBindablePathSegment($segment))->bindable()) {
                 continue;
@@ -79,10 +80,10 @@ class TransformModelBindings
      */
     protected function bindablePathSegments(MatchedView $view): array
     {
-        return explode('/', (string) Str::of($view->path)
+        return explode(DIRECTORY_SEPARATOR, (string) Str::of($view->path)
             ->replace($view->mountPath, '')
             ->beforeLast('.blade.php')
-            ->trim('/'));
+            ->trim(DIRECTORY_SEPARATOR));
     }
 
     /**

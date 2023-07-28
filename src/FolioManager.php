@@ -33,7 +33,7 @@ class FolioManager
      *
      * @throws \InvalidArgumentException
      */
-    public function route(string $path = null, ?string $uri = '/', array $middleware = [], $loader = null): static
+    public function route(string $path = null, ?string $uri = '/', array $middleware = [], ?callable $loader = null): static
     {
         $path = $path ? realpath($path) : config('view.paths')[0].'/pages';
 
@@ -43,11 +43,11 @@ class FolioManager
 
         $this->mountPaths[] = $mountPath = new MountPath($path, $uri, $middleware);
 
-        if($loader && ! is_callable($loader)) {
-            throw new InvalidArgumentException("The given loader [{$loader}] is not callable.");
+       if($loader) {
+            $loader(uri: $uri, mountPath: $mountPath, handler: $this->handler($mountPath));
+        } else {
+            (new Loader())(uri: $uri, mountPath: $mountPath, handler: $this->handler($mountPath));
         }
-
-       $loader = $loader ? $loader(uri: $uri, mountPath: $mountPath, handler: $this->handler($mountPath)) : (new Loader())(uri: $uri, mountPath: $mountPath, handler: $this->handler($mountPath));
 
         return $this;
     }

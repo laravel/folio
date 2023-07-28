@@ -24,7 +24,7 @@ it('may have routes', function () {
     $exitCode = Artisan::call('folio:list', [], $output);
 
     expect($exitCode)->toBe(0)
-        ->and($output->fetch())->toBe(<<<'EOF'
+        ->and($output->fetch())->toOutput(<<<'EOF'
 
           GET       /books ........................................................................................................... books/index.blade.php
           GET       /books/{...book}/detail ........................................................ books/[...Tests.Feature.Fixtures.Book]/detail.blade.php
@@ -35,7 +35,7 @@ it('may have routes', function () {
           GET       /podcasts/list ................................................................................................. podcasts/list.blade.php
           GET       /podcasts/{podcast} ............................................................... podcasts/[.Tests.Feature.Fixtures.Podcast].blade.php
           GET       /podcasts/{podcast}/comments ....................................... podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/index.blade.php
-          GET       /podcasts/{podcast}/comments/{comment:id} podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/[.Tests.Feature.Fixtures.Comment:id].blad…
+          GET       /podcasts/{podcast}/comments/{comment:id} podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/[.Tests.Feature.Fixtures.Comment-id].blad…
           GET       /users/nuno ....................................................................................................... users/nuno.blade.php
           GET       /users/{id} ....................................................................................................... users/[id].blade.php
 
@@ -68,13 +68,13 @@ it('has the `--path` option', function () {
     ], $output);
 
     expect($exitCode)->toBe(0)
-        ->and($output->fetch())->toBe(<<<'EOF'
+        ->and($output->fetch())->toOutput(<<<'EOF'
 
           GET       /deleted-podcasts/{podcast} ............................................... deleted-podcasts/[.Tests.Feature.Fixtures.Podcast].blade.php
           GET       /podcasts/list ................................................................................................. podcasts/list.blade.php
           GET       /podcasts/{podcast} ............................................................... podcasts/[.Tests.Feature.Fixtures.Podcast].blade.php
           GET       /podcasts/{podcast}/comments ....................................... podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/index.blade.php
-          GET       /podcasts/{podcast}/comments/{comment:id} podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/[.Tests.Feature.Fixtures.Comment:id].blad…
+          GET       /podcasts/{podcast}/comments/{comment:id} podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/[.Tests.Feature.Fixtures.Comment-id].blad…
 
                                                                                                                                           Showing [5] routes
 
@@ -91,7 +91,7 @@ it('has the `--except-path` option', function () {
     ], $output);
 
     expect($exitCode)->toBe(0)
-        ->and($output->fetch())->toBe(<<<'EOF'
+        ->and($output->fetch())->toOutput(<<<'EOF'
 
           GET       /books ........................................................................................................... books/index.blade.php
           GET       /books/{...book}/detail ........................................................ books/[...Tests.Feature.Fixtures.Book]/detail.blade.php
@@ -116,7 +116,7 @@ it('may not find routes with `--path` or `--except-path`', function () {
     ], $output);
 
     expect($exitCode)->toBe(0)
-        ->and($output->fetch())->toBe(<<<'EOF'
+        ->and($output->fetch())->toOutput(<<<'EOF'
 
 
                                                                                                                                           Showing [0] routes
@@ -135,11 +135,11 @@ it('has the `--sort` option', function () {
     ], $output);
 
     expect($exitCode)->toBe(0)
-        ->and($output->fetch())->toBe(<<<'EOF'
+        ->and($output->fetch())->toOutput(<<<'EOF'
 
           GET       /deleted-podcasts/{podcast} ............................................... deleted-podcasts/[.Tests.Feature.Fixtures.Podcast].blade.php
           GET       /podcasts/{podcast} ............................................................... podcasts/[.Tests.Feature.Fixtures.Podcast].blade.php
-          GET       /podcasts/{podcast}/comments/{comment:id} podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/[.Tests.Feature.Fixtures.Comment:id].blad…
+          GET       /podcasts/{podcast}/comments/{comment:id} podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/[.Tests.Feature.Fixtures.Comment-id].blad…
           GET       /podcasts/{podcast}/comments ....................................... podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/index.blade.php
           GET       /podcasts/list ................................................................................................. podcasts/list.blade.php
 
@@ -159,9 +159,9 @@ it('has the `--reverse` option', function () {
     ], $output);
 
     expect($exitCode)->toBe(0)
-        ->and($output->fetch())->toBe(<<<'EOF'
+        ->and($output->fetch())->toOutput(<<<'EOF'
 
-          GET       /podcasts/{podcast}/comments/{comment:id} podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/[.Tests.Feature.Fixtures.Comment:id].blad…
+          GET       /podcasts/{podcast}/comments/{comment:id} podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/[.Tests.Feature.Fixtures.Comment-id].blad…
           GET       /podcasts/{podcast}/comments ....................................... podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/index.blade.php
           GET       /podcasts/{podcast} ............................................................... podcasts/[.Tests.Feature.Fixtures.Podcast].blade.php
           GET       /podcasts/list ................................................................................................. podcasts/list.blade.php
@@ -182,7 +182,7 @@ test('multiple mounted directories', function () {
     $exitCode = Artisan::call('folio:list', [], $output);
 
     expect($exitCode)->toBe(0)
-        ->and($output->fetch())->toBe(<<<'EOF'
+        ->and($output->fetch())->toOutput(<<<'EOF'
 
           GET       /books ....................................................................... tests/Feature/resources/views/pages/books/index.blade.php
           GET       / ............................................................................. tests/Feature/resources/views/more-pages/index.blade.php

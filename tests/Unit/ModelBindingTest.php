@@ -47,13 +47,18 @@ test('missing models trigger model not found exception', function () {
     $router->match(new Request, '/users/_missing');
 })->throws(ModelNotFoundException::class);
 
-test('implicit model bindings with more than one binding in path', function () {
+test('implicit model bindings with more than one binding in path', function ($first, $second) {
+
+    if (windows_os() && $first === '|first') {
+        $this->markTestSkipped();
+    }
+
     $this->views([
         '/index.blade.php',
         '/users' => [
-            '/[.FolioModelBindingTestClass|first]' => [
+            '/[.FolioModelBindingTestClass'.$first.']' => [
                 '/posts' => [
-                    '/[.FolioModelBindingTestClass|second].blade.php',
+                    '/[.FolioModelBindingTestClass'.$second.'].blade.php',
                 ],
             ],
         ],
@@ -76,9 +81,17 @@ test('implicit model bindings with more than one binding in path', function () {
     $this->assertNull($view->data['second']->childType);
 
     $this->assertEquals(2, count($view->data));
-});
+})->with([
+    ['|first', '|second'],
+    ['-$first', '-$second'],
+]);
 
-test('model bindings can receive a custom binding field', function (string $pathString) {
+test('model bindings can receive a custom binding field with', function (string $pathString) {
+
+    if (windows_os() && $pathString === ':slug') {
+        $this->markTestSkipped();
+    }
+
     $this->views([
         '/index.blade.php',
         '/users' => [
@@ -99,6 +112,11 @@ test('model bindings can receive a custom binding field', function (string $path
 })->with(['-slug', ':slug']);
 
 test('model bindings can receive a custom binding variable', function (string $pathString, string $variable) {
+
+    if (windows_os() && $pathString === '|foo') {
+        $this->markTestSkipped();
+    }
+
     $this->views([
         '/index.blade.php',
         '/users' => [
@@ -122,6 +140,11 @@ test('model bindings can receive a custom binding variable', function (string $p
 ]);
 
 test('model bindings can receive a custom binding field and custom binding variable at same time', function (string $pathString, string $field, string $variable) {
+
+    if (windows_os() && $pathString === ':slug|foo') {
+        $this->markTestSkipped();
+    }
+
     $this->views([
         '/index.blade.php',
         '/users' => [
@@ -187,6 +210,11 @@ test('model bindings can span across multiple segments', function () {
 });
 
 test('model bindings can span across multiple segments with custom fields and variables', function (string $pathString, string $field, string $variable) {
+
+    if (windows_os() && $pathString === ':slug|foo') {
+        $this->markTestSkipped();
+    }
+
     $this->views([
         '/index.blade.php',
         '/users' => [
@@ -212,13 +240,18 @@ test('model bindings can span across multiple segments with custom fields and va
     [':slug|foo', 'slug', 'foo'],
 ]);
 
-test('child model bindings are scoped to the parent when field is present on child', function () {
+test('child model bindings are scoped to the parent when field is present on child', function ($first, $second) {
+
+    if (windows_os() && $first === '|first') {
+        $this->markTestSkipped();
+    }
+
     $this->views([
         '/index.blade.php',
         '/users' => [
-            '/[.FolioModelBindingTestClass|first]' => [
+            '/[.FolioModelBindingTestClass'.$first.']' => [
                 '/posts' => [
-                    '/[.FolioModelBindingTestChildClass:slug|second].blade.php',
+                    '/[.FolioModelBindingTestChildClass'.$second.'].blade.php',
                 ],
             ],
         ],
@@ -236,15 +269,23 @@ test('child model bindings are scoped to the parent when field is present on chi
     $this->assertEquals('2', $view->data['second']->value);
 
     $this->assertEquals(2, count($view->data));
-});
+})->with([
+    ['|first', ':slug|second'],
+    ['-$first', '-slug-$second'],
+]);
 
-test('explicit model bindings take precedence over implicit scoped child bindings', function () {
+test('explicit model bindings take precedence over implicit scoped child bindings', function ($first, $second) {
+
+    if (windows_os() && $first === '|first') {
+        $this->markTestSkipped();
+    }
+
     $this->views([
         '/index.blade.php',
         '/users' => [
-            '/[.FolioModelBindingTestClass|first]' => [
+            '/[.FolioModelBindingTestClass'.$first.']' => [
                 '/posts' => [
-                    '/[.FolioModelBindingTestClass:slug|second].blade.php',
+                    '/[.FolioModelBindingTestClass'.$second.'].blade.php',
                 ],
             ],
         ],
@@ -266,15 +307,23 @@ test('explicit model bindings take precedence over implicit scoped child binding
     $this->assertEquals('DEF', $view->data['second']->value);
 
     $this->assertEquals(2, count($view->data));
-});
+})->with([
+    ['|first', ':slug|second'],
+    ['-$first', '-slug-$second'],
+]);
 
-test('scoped child model bindings trigger model not found exception if they do not exist', function () {
+test('scoped child model bindings trigger model not found exception if they do not exist', function ($first, $second) {
+
+    if (windows_os() && $first === '|first') {
+        $this->markTestSkipped();
+    }
+
     $this->views([
         '/index.blade.php',
         '/users' => [
-            '/[.FolioModelBindingTestClass|first]' => [
+            '/[.FolioModelBindingTestClass'.$first.']' => [
                 '/posts' => [
-                    '/[.FolioModelBindingTestClass:slug|second].blade.php',
+                    '/[.FolioModelBindingTestClass'.$second.'].blade.php',
                 ],
             ],
         ],
@@ -283,7 +332,10 @@ test('scoped child model bindings trigger model not found exception if they do n
     $router = $this->router();
 
     $router->match(new Request, '/users/1/posts/_missing');
-})->throws(ModelNotFoundException::class);
+})->with([
+    ['|first', ':slug|second'],
+    ['-$first', '-slug-$second'],
+])->throws(ModelNotFoundException::class);
 
 test('model bindings can be enums', function () {
     $this->views([

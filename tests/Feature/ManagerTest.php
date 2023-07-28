@@ -50,9 +50,12 @@ it('registers routes with custom render callback', function () {
     $response = $this->get('/users/Taylor');
     [$path, $data, $mountPath] = $response->json();
 
-    expect($path)->toBe(__DIR__.'/resources/views/pages/users/[id].blade.php')
+    $path = str_replace(DIRECTORY_SEPARATOR, '/', $path);
+    $mountPath = str_replace(DIRECTORY_SEPARATOR, '/', $mountPath);
+
+    expect($path)->toEndWith('/resources/views/pages/users/[id].blade.php')
         ->and($data)->toBe(['id' => 'Taylor'])
-        ->and($mountPath)->toBe(__DIR__.'/resources/views/pages');
+        ->and($mountPath)->toEndWith('/resources/views/pages');
 });
 
 it('fires view matched event on route', function () {
@@ -65,7 +68,7 @@ it('fires view matched event on route', function () {
     $response->assertOk();
 
     $events->assertDispatched(ViewMatched::class, function ($event) {
-        return $event->matchedView->path === __DIR__.'/resources/views/pages/users/[id].blade.php';
+        return str_ends_with(str_replace(DIRECTORY_SEPARATOR, '/', $event->matchedView->path), '/resources/views/pages/users/[id].blade.php');
     });
 });
 

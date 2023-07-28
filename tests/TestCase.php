@@ -32,7 +32,9 @@ abstract class TestCase extends OrchestraTestCase
 
         foreach ($views as $key => $value) {
             if (is_array($value)) {
-                (new Filesystem)->makeDirectory($directory.$key);
+                (new Filesystem)->ensureDirectoryExists(
+                    $directory.$key,
+                );
 
                 $this->views($value, $directory.$key);
             } else {

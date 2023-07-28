@@ -207,9 +207,14 @@ test('model bindings can span across multiple segments', function () {
     $this->assertEquals('3', $view->data['folioModelBindingTestClasses'][2]->value);
 
     $this->assertEquals(1, count($view->data));
-})->skip(windows_os());
+});
 
 test('model bindings can span across multiple segments with custom fields and variables', function (string $pathString, string $field, string $variable) {
+
+    if (windows_os() && $pathString === ':slug|foo') {
+        $this->markTestSkipped();
+    }
+    
     $this->views([
         '/index.blade.php',
         '/users' => [
@@ -233,7 +238,7 @@ test('model bindings can span across multiple segments with custom fields and va
 })->with([
     ['-slug-$foo', 'slug', 'foo'],
     [':slug|foo', 'slug', 'foo'],
-])->skip(windows_os());
+]);
 
 test('child model bindings are scoped to the parent when field is present on child', function ($first, $second) {
 

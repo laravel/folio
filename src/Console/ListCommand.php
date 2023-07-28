@@ -67,11 +67,8 @@ class ListCommand extends RouteListCommand
         return collect($mountPaths)->map(function (MountPath $mountPath) {
             $views = Finder::create()->in($mountPath->path)->name('*.blade.php')->files()->getIterator();
 
-            $mountPath = str_replace(
-                DIRECTORY_SEPARATOR,
-                '/',
-                $mountPath->path,
-            );
+            $mountPath = str_replace(DIRECTORY_SEPARATOR,'/',$mountPath->path);
+
             $path = '/'.ltrim($mountPath, '/');
 
             return collect($views)

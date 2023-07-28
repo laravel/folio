@@ -214,7 +214,7 @@ test('model bindings can span across multiple segments with custom fields and va
     if (windows_os() && $pathString === ':slug|foo') {
         $this->markTestSkipped();
     }
-    
+
     $this->views([
         '/index.blade.php',
         '/users' => [

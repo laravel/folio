@@ -31,6 +31,7 @@ it('may have routes', function () {
           GET       /categories/{category} ......................................................... categories/[.Tests.Feature.Fixtures.Category].blade.php
           GET       /dashboard ......................................................................................................... dashboard.blade.php
           GET       /deleted-podcasts/{podcast} ............................................... deleted-podcasts/[.Tests.Feature.Fixtures.Podcast].blade.php
+          GET       /domain ............................................................................................................... domain.blade.php
           GET       /flights ....................................................................................................... flights/index.blade.php
           GET       /non-routables/{nonRoutable} ............................................. non-routables/[.Tests.Feature.Fixtures.NonRoutable].blade.php
           GET       /podcasts/list ................................................................................................. podcasts/list.blade.php
@@ -40,7 +41,7 @@ it('may have routes', function () {
           GET       /users/nuno ....................................................................................................... users/nuno.blade.php
           GET       /users/{id} ....................................................................................................... users/[id].blade.php
 
-                                                                                                                                         Showing [13] routes
+                                                                                                                                         Showing [14] routes
 
 
         EOF);
@@ -98,12 +99,13 @@ it('has the `--except-path` option', function () {
           GET       /books/{...book}/detail ........................................................ books/[...Tests.Feature.Fixtures.Book]/detail.blade.php
           GET       /categories/{category} ......................................................... categories/[.Tests.Feature.Fixtures.Category].blade.php
           GET       /dashboard ......................................................................................................... dashboard.blade.php
+          GET       /domain ............................................................................................................... domain.blade.php
           GET       /flights ....................................................................................................... flights/index.blade.php
           GET       /non-routables/{nonRoutable} ............................................. non-routables/[.Tests.Feature.Fixtures.NonRoutable].blade.php
           GET       /users/nuno ....................................................................................................... users/nuno.blade.php
           GET       /users/{id} ....................................................................................................... users/[id].blade.php
 
-                                                                                                                                          Showing [8] routes
+                                                                                                                                          Showing [9] routes
 
 
         EOF);
@@ -192,6 +194,7 @@ test('multiple mounted directories', function () {
           GET       /categories/{category} ..................... tests/Feature/resources/views/pages/categories/[.Tests.Feature.Fixtures.Category].blade.php
           GET       /dashboard ..................................................................... tests/Feature/resources/views/pages/dashboard.blade.php
           GET       /deleted-podcasts/{podcast} ........... tests/Feature/resources/views/pages/deleted-podcasts/[.Tests.Feature.Fixtures.Podcast].blade.php
+          GET       /domain ........................................................................... tests/Feature/resources/views/pages/domain.blade.php
           GET       /flights ................................................................... tests/Feature/resources/views/pages/flights/index.blade.php
           GET       /non-routables/{nonRoutable} ......... tests/Feature/resources/views/pages/non-routables/[.Tests.Feature.Fixtures.NonRoutable].blade.php
           GET       /podcasts/list ............................................................. tests/Feature/resources/views/pages/podcasts/list.blade.php
@@ -203,7 +206,7 @@ test('multiple mounted directories', function () {
           GET       /{...user} ................................................................ tests/Feature/resources/views/more-pages/[...User].blade.php
           GET       /{...user}/detail .................................................. tests/Feature/resources/views/more-pages/[...User]/detail.blade.php
 
-                                                                                                                                         Showing [16] routes
+                                                                                                                                         Showing [17] routes
 
 
         EOF);

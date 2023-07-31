@@ -2,6 +2,8 @@
 
 namespace Laravel\Folio;
 
+use Illuminate\Routing\Route;
+
 class MountPath
 {
     /**
@@ -10,13 +12,20 @@ class MountPath
     public PathBasedMiddlewareList $middleware;
 
     /**
+     * The route instance for the mounted path.
+     */
+    protected ?Route $route = null;
+
+    /**
      * Create a new mounted path instance.
      */
     public function __construct(
         public string $path,
         public string $baseUri,
-        array $middleware = [],
+        array $middleware,
+        public ?string $domain,
     ) {
+        $this->path = str_replace('/', DIRECTORY_SEPARATOR, $path);
         $this->middleware = new PathBasedMiddlewareList($middleware);
     }
 

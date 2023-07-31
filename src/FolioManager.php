@@ -138,7 +138,7 @@ class FolioManager
     }
 
     /**
-     * Dynamically pass methods to a pending route.
+     * Dynamically pass methods to a new pending route registration.
      *
      * @param  array<int, mixed>  $parameters
      */

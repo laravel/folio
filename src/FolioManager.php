@@ -31,6 +31,9 @@ class FolioManager
      */
     protected ?MatchedView $lastMatchedView = null;
 
+    /**
+     * Create a new Folio manager instance.
+     */
     public function __construct(
         protected UrlGenerator $urlGenerator,
     ) {}

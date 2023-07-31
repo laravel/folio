@@ -4,6 +4,7 @@ use Tests\Feature\Fixtures\User;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Laravel\Folio\Exceptions\NameNotFoundException;
+use Laravel\Folio\Exceptions\UrlGenerationException;
 use Laravel\Folio\Folio;
 use Tests\Feature\Fixtures\Book;
 use Tests\Feature\Fixtures\Category;
@@ -107,6 +108,13 @@ test('generate url with variadic segment with custom variable', function () {
 
     expect($url)->toBe('/books/1/2/3');
 });
+
+it('throws exception when a url parameter is missing', function () {
+    url('users.show');
+})->throws(
+    UrlGenerationException::class,
+    'Missing required parameter for [Path: users/[id]] [Missing parameter: id]'
+);
 
 it('throws exception when generating url for unknown name', function () {
     url('non-existent');

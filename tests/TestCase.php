@@ -3,12 +3,23 @@
 namespace Tests;
 
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\View;
 use Laravel\Folio\FolioServiceProvider;
 use Laravel\Folio\Router;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
 abstract class TestCase extends OrchestraTestCase
 {
+    /**
+     * {@inheritDoc}
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        View::addLocation(__DIR__.'/Feature/resources/views');
+    }
+
     /**
      * Get the package providers.
      *

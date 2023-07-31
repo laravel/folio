@@ -129,9 +129,9 @@ class ListCommand extends RouteListCommand
                         'view' => $action,
                     ];
                 });
-        })->flatten(1)->unique(function (array $route) {
-            return $route['uri'];
-        })->values();
+        })->flatten(1)
+            ->unique(fn (array $route) => $route['uri'])
+            ->values();
     }
 
     /**
@@ -175,12 +175,10 @@ class ListCommand extends RouteListCommand
      */
     protected function forCli($routes): array
     {
-        return parent::forCli(collect($routes)->map(function ($route) {
-            return array_merge([
-                'domain' => '',
-                'middleware' => '',
-            ], $route);
-        }));
+        return parent::forCli(collect($routes)->map(fn ($route) => array_merge([
+            'domain' => '',
+            'middleware' => '',
+        ], $route)));
     }
 
     /**

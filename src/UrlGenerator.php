@@ -13,11 +13,6 @@ class UrlGenerator
     /**
      * Generate the URL to a Folio page.
      *
-     * @param  \Laravel\Folio\MountPath  $mountPath
-     * @param  string  $path
-     * @param  array  $parameters
-     * @return string
-     *
      * @throws \Laravel\Folio\Exceptions\UrlGenerationException
      */
     public function path(MountPath $mountPath, string $path, array $parameters = []): string
@@ -46,6 +41,9 @@ class UrlGenerator
         return ltrim($mountPath->baseUri, '/') . '/' . $uri;
     }
 
+    /**
+     * Formats the given URL parameter.
+     */
     protected function formatParameter(mixed $parameter, string|bool $field, bool $variadic): mixed
     {
         if ($parameter instanceof UrlRoutable && $field !== false) {

@@ -106,12 +106,12 @@ class ListCommand extends RouteListCommand
                             $lastPartOfSegment = str($currentSegment)->afterLast('.');
 
                             return $formattedSegment.match (true) {
-                                    $lastPartOfSegment->contains(':') => $lastPartOfSegment->beforeLast(':')->camel()
-                                        .':'.$lastPartOfSegment->afterLast(':'),
-                                    $lastPartOfSegment->contains('-') => $lastPartOfSegment->beforeLast('-')->camel()
-                                        .':'.$lastPartOfSegment->afterLast('-'),
-                                    default => $lastPartOfSegment->camel(),
-                                };
+                                $lastPartOfSegment->contains(':') => $lastPartOfSegment->beforeLast(':')->camel()
+                                    .':'.$lastPartOfSegment->afterLast(':'),
+                                $lastPartOfSegment->contains('-') => $lastPartOfSegment->beforeLast('-')->camel()
+                                    .':'.$lastPartOfSegment->afterLast('-'),
+                                default => $lastPartOfSegment->camel(),
+                            };
                         })
                         ->implode('/');
 

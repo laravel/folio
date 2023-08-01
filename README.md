@@ -203,14 +203,14 @@ middleware(['auth']);
 </div>
 ```
 
-Or, to assign middleware to a group of pages, you may provide the `middleware` argument when invoking the `Folio::route` method.
+Or, to assign middleware to a group of pages, you may chain the `middleware` method after invoking the `Folio::path` method.
 
 To specify which pages the middleware should be applied to, the array of middleware may be keyed using the corresponding URL patterns of the pages they should be applied to. The `*` character may be utilized as a wildcard character:
 
 ```php
 use Laravel\Folio\Folio;
 
-Folio::route(resource_path('views/pages'), middleware: [
+Folio::path(resource_path('views/pages'))->middleware([
     'chirps/*' => [
         'auth',
         // ...
@@ -225,7 +225,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Laravel\Folio\Folio;
 
-Folio::route(resource_path('views/pages'), middleware: [
+Folio::path(resource_path('views/pages'))->middleware([
     'chirps/*' => [
         'auth',
 

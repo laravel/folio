@@ -57,7 +57,7 @@ it('has the `--json` option', function () {
 
     expect($exitCode)->toBe(0)
         ->and($output->fetch())->toStartWith(<<<'EOF'
-        [{"method":"GET","uri":"\/books","view":"books\/index.blade.php"},{"method":"GET","uri":"\/books\/{...book}\/detail
+        [{"method":"GET","domain":null,"uri":"\/books","view":"books\/index.blade.php"},{"method":"GET","domain":null,"uri":"\/books\/{...book}\/detail
         EOF);
 });
 

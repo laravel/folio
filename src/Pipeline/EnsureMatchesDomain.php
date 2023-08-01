@@ -26,16 +26,32 @@ class EnsureMatchesDomain
             return $next($state);
         }
 
-        $route = (new Route(['GET'], $this->mountPath->baseUri, fn () => null))
-            ->domain($this->mountPath->domain)
-            ->bind($this->request);
+        $route = $this->route();
 
-        if (! (new HostValidator)->matches($route, $this->request)) {
+        if ($this->matchesDomain($route) === false) {
             return new StopIterating();
         }
 
-        $state->data = array_merge($state->data, $route->parameters());
+        $state->data = array_merge($route->parameters(), $state->data);
 
         return $next($state);
+    }
+
+    /**
+     * Get the route that should be used to match the request.
+     */
+    protected function route(): Route
+    {
+        return (new Route(['GET'], $this->mountPath->baseUri, fn () => null))
+            ->domain($this->mountPath->domain)
+            ->bind($this->request);
+    }
+
+    /**
+     * Determine if the request matches the domain.
+     */
+    protected function matchesDomain(Route $route): bool
+    {
+        return (bool) (new HostValidator)->matches($route, $this->request);
     }
 }

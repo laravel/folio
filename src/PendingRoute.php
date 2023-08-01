@@ -6,6 +6,8 @@ class PendingRoute
 {
     /**
      * Creates a new pending route instance.
+     *
+     * @param  array<string, array<int, string>>  $middleware
      */
     public function __construct(
         protected FolioManager $manager,

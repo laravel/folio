@@ -31,6 +31,8 @@ class FolioManager
     /**
      * Register a route to handle page based routing at the given paths.
      *
+     * @param  array<string, array<int, string>>  $middleware
+     *
      * @throws \InvalidArgumentException
      */
     public function route(string $path = null, ?string $uri = '/', array $middleware = []): PendingRoute
@@ -42,6 +44,8 @@ class FolioManager
 
     /**
      * Registers the given route.
+     *
+     * @param  array<string, array<int, string>>  $middleware
      */
     public function registerRoute(string $path, string $uri, array $middleware, ?string $domain): void
     {
@@ -83,6 +87,8 @@ class FolioManager
 
     /**
      * Get the middleware that should be applied to the Folio handled URI.
+     *
+     * @return array<int, string>
      */
     public function middlewareFor(string $uri): array
     {

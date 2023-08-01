@@ -4,7 +4,6 @@ namespace Laravel\Folio\Pipeline;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Routing\Matching\HostValidator;
 use Illuminate\Routing\Route;
 use Laravel\Folio\MountPath;
@@ -32,7 +31,7 @@ class EnsureMatchesDomain
             ->bind($this->request);
 
         if (! (new HostValidator)->matches($route, $this->request)) {
-            return new Response(status: 404);
+            return new StopIterating();
         }
 
         $state->data = array_merge($state->data, $route->parameters());

@@ -21,7 +21,7 @@ class PendingRoute
     /**
      * Set the domain for the route.
      */
-    public function domain(?string $domain): static
+    public function domain(string $domain): static
     {
         $this->domain = $domain;
 

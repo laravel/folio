@@ -89,7 +89,12 @@ it('doesn\'t fire view matched event on 404', function () {
 });
 
 it('registers routes with domain', function (?string $domain, string $host, int $status) {
-    Folio::domain($domain)->path(__DIR__.'/resources/views/pages');
+    if ($domain) {
+        Folio::domain($domain)->path(__DIR__.'/resources/views/pages');
+    } else {
+        Folio::route(__DIR__.'/resources/views/pages');
+    }
+
     $response = $this->get("https://$host/users/Taylor");
 
     $response->assertStatus($status);

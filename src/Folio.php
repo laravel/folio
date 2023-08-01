@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Laravel\Folio\PendingRoute route(string|null $path = null, string|null $uri = '/', array $middleware = [])
  * @method static \Laravel\Folio\PendingRoute path(string $path)
  * @method static \Laravel\Folio\PendingRoute uri(string $uri)
- * @method static \Laravel\Folio\PendingRoute domain(?string $domain)
+ * @method static \Laravel\Folio\PendingRoute domain(string $domain)
  * @method static \Laravel\Folio\PendingRoute middleware(array $middleware)
  *
  * @see \Laravel\Folio\FolioManager

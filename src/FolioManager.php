@@ -37,7 +37,7 @@ class FolioManager
      */
     public function route(string $path = null, ?string $uri = '/', array $middleware = []): PendingRoute
     {
-        $path = $path ? realpath($path) : config('view.paths')[0].'/pages';
+        $path = $path ? $path : config('view.paths')[0].'/pages';
 
         return new PendingRoute($this, $path, $uri, $middleware);
     }
@@ -49,6 +49,8 @@ class FolioManager
      */
     public function registerRoute(string $path, string $uri, array $middleware, ?string $domain): void
     {
+        $path = realpath($path);
+
         if (! is_dir($path)) {
             throw new InvalidArgumentException("The given path [{$path}] is not a directory.");
         }

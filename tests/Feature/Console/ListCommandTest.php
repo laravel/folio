@@ -180,8 +180,8 @@ it('has the `--reverse` option', function () {
 test('multiple mounted directories', function () {
     $output = new BufferedOutput();
 
-    Folio::route(__DIR__.'/../resources/views/pages');
-    Folio::route(__DIR__.'/../resources/views/more-pages');
+    Folio::path(__DIR__.'/../resources/views/pages');
+    Folio::path(__DIR__.'/../resources/views/more-pages');
 
     $exitCode = Artisan::call('folio:list', [], $output);
 

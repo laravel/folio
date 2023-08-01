@@ -19,6 +19,10 @@ it('registers routes', function () {
     $response->assertSee('Hello, Taylor');
 });
 
+it('requires a valid path to register routes', function () {
+    Folio::route('non-existent-path');
+})->throws(InvalidArgumentException::class);
+
 it('registers routes with a custom URI', function (string $uri) {
     Folio::route(__DIR__.'/resources/views/pages')->uri($uri);
 

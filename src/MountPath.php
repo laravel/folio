@@ -2,19 +2,12 @@
 
 namespace Laravel\Folio;
 
-use Illuminate\Routing\Route;
-
 class MountPath
 {
     /**
      * The path based middleware for the mounted path.
      */
     public PathBasedMiddlewareList $middleware;
-
-    /**
-     * The route instance for the mounted path.
-     */
-    protected ?Route $route = null;
 
     /**
      * Create a new mounted path instance.

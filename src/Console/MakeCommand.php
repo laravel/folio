@@ -3,6 +3,7 @@
 namespace Laravel\Folio\Console;
 
 use Illuminate\Console\GeneratorCommand;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Str;
 use Laravel\Folio\Folio;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -65,6 +66,20 @@ class MakeCommand extends GeneratorCommand
     {
         return [
             ['force', 'f', InputOption::VALUE_NONE, 'Create the Folio page even if the page already exists'],
+        ];
+    }
+
+    /**
+     * Prompt for missing input arguments using the returned questions.
+     *
+     * @return array
+     */
+    protected function promptForMissingArgumentsUsing()
+    {
+        return [
+            'name' => class_exists(Application::class) && version_compare(Application::VERSION, '10.17.0', '>=')
+                ? ['What should the page be named?', 'E.g. users/index, users/[User]']
+                : 'What should the page be named?',
         ];
     }
 }

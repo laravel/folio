@@ -24,7 +24,7 @@
 - [Route Model Binding](#route-model-binding)
     - [Soft Deleted Models](#soft-deleted-models)
 - [Middleware](#middleware)
-- [Domain Or Subdomain Routing](#domain-or-subdomain-routing)
+- [Subdomain Routing](#subdomain-routing)
 - [PHP Blocks](#php-blocks)
 - [Contributing](#contributing)
 - [Code of Conduct](#code-of-conduct)
@@ -239,26 +239,26 @@ Folio::path(resource_path('views/pages'))->middleware([
 ]);
 ```
 
-<a name="domain-or-subdomain-routing"></a>
-## Domain Or Subdomain Routing
+<a name="subdomain-routing"></a>
+## Subdomain Routing
 
-You may also route pages based on the incoming request's domain or subdomain. For example, you may wish to route requests from `admin.example.com` to a group of pages. You may do so by calling the `domain` method after invoking the `Folio::path` method:
+You may also route to pages based on the incoming request's subdomain. For example, you may wish to route requests from `admin.example.com` to a different page directory than the rest of your Folio pages. You may accomplish this by invoking the `domain` method after invoking the `Folio::path` method:
 
 ```php
 use Laravel\Folio\Folio;
 
-Folio::path(resource_path('views/admin-pages'))->domain('admin.example.com');
+Folio::path(
+    resource_path('views/admin-pages')
+)->domain('admin.example.com');
 ```
 
-Just like in regular Laravel routing, the `domain` method also allows to capture parts of the domain or subdomain:
+The `domain` method also allows you to capture parts of the domain or subdomain as parameters. These parameters will be injected into your page template:
 
 ```php
 use Laravel\Folio\Folio;
 
 Folio::path(resource_path('views/pages'))->domain('{account}.example.com');
 ```
-
-In this example, if you visit `john.example.com`, the `$account` variable will be available in your page template and will contain the string `john`.
 
 <a name="php-blocks"></a>
 ## PHP Blocks

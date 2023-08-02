@@ -5,6 +5,7 @@ namespace Tests;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\View;
 use Laravel\Folio\FolioServiceProvider;
+use Laravel\Folio\MountPath;
 use Laravel\Folio\Router;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
@@ -59,6 +60,8 @@ abstract class TestCase extends OrchestraTestCase
      */
     protected function router(): Router
     {
-        return new Router([__DIR__.'/tmp/views']);
+        return new Router(
+            new MountPath(__DIR__.'/tmp/views', '/', [], null),
+        );
     }
 }

@@ -24,6 +24,7 @@
 - [Route Model Binding](#route-model-binding)
     - [Soft Deleted Models](#soft-deleted-models)
 - [Middleware](#middleware)
+- [Subdomain Routing](#subdomain-routing)
 - [PHP Blocks](#php-blocks)
 - [Contributing](#contributing)
 - [Code of Conduct](#code-of-conduct)
@@ -203,14 +204,14 @@ middleware(['auth']);
 </div>
 ```
 
-Or, to assign middleware to a group of pages, you may provide the `middleware` argument when invoking the `Folio::route` method.
+Or, to assign middleware to a group of pages, you may chain the `middleware` method after invoking the `Folio::path` method.
 
 To specify which pages the middleware should be applied to, the array of middleware may be keyed using the corresponding URL patterns of the pages they should be applied to. The `*` character may be utilized as a wildcard character:
 
 ```php
 use Laravel\Folio\Folio;
 
-Folio::route(resource_path('views/pages'), middleware: [
+Folio::path(resource_path('views/pages'))->middleware([
     'chirps/*' => [
         'auth',
         // ...
@@ -225,7 +226,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Laravel\Folio\Folio;
 
-Folio::route(resource_path('views/pages'), middleware: [
+Folio::path(resource_path('views/pages'))->middleware([
     'chirps/*' => [
         'auth',
 
@@ -236,6 +237,27 @@ Folio::route(resource_path('views/pages'), middleware: [
         },
     ],
 ]);
+```
+
+<a name="subdomain-routing"></a>
+## Subdomain Routing
+
+You may also route to pages based on the incoming request's subdomain. For example, you may wish to route requests from `admin.example.com` to a different page directory than the rest of your Folio pages. You may accomplish this by invoking the `domain` method after invoking the `Folio::path` method:
+
+```php
+use Laravel\Folio\Folio;
+
+Folio::path(
+    resource_path('views/admin-pages')
+)->domain('admin.example.com');
+```
+
+The `domain` method also allows you to capture parts of the domain or subdomain as parameters. These parameters will be injected into your page template:
+
+```php
+use Laravel\Folio\Folio;
+
+Folio::path(resource_path('views/pages'))->domain('{account}.example.com');
 ```
 
 <a name="php-blocks"></a>

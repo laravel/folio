@@ -15,8 +15,11 @@ class MountPath
     public function __construct(
         public string $path,
         public string $baseUri,
-        array $middleware = [],
+        array $middleware,
+        public ?string $domain,
     ) {
+        $this->path = str_replace('/', DIRECTORY_SEPARATOR, $path);
+
         $this->middleware = new PathBasedMiddlewareList($middleware);
     }
 

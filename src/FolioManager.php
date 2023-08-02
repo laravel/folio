@@ -31,17 +31,39 @@ class FolioManager
     /**
      * Register a route to handle page based routing at the given paths.
      *
+     * @param  array<string, array<int, string>>  $middleware
+     *
      * @throws \InvalidArgumentException
      */
-    public function route(string $path = null, ?string $uri = '/', array $middleware = []): static
+    public function route(string $path = null, ?string $uri = '/', array $middleware = []): PendingRoute
     {
-        $path = $path ? realpath($path) : config('view.paths')[0].'/pages';
+        return new PendingRoute(
+            $this,
+            $path ? $path : config('view.paths')[0].'/pages',
+            $uri,
+            $middleware
+        );
+    }
+
+    /**
+     * Registers the given route.
+     *
+     * @param  array<string, array<int, string>>  $middleware
+     */
+    public function registerRoute(string $path, string $uri, array $middleware, ?string $domain): void
+    {
+        $path = realpath($path);
 
         if (! is_dir($path)) {
             throw new InvalidArgumentException("The given path [{$path}] is not a directory.");
         }
 
-        $this->mountPaths[] = $mountPath = new MountPath($path, $uri, $middleware);
+        $this->mountPaths[] = $mountPath = new MountPath(
+            $path,
+            $uri,
+            $middleware,
+            $domain,
+        );
 
         if ($uri === '/') {
             Route::fallback($this->handler($mountPath))
@@ -52,8 +74,6 @@ class FolioManager
                 $this->handler($mountPath)
             )->name($mountPath->routeName())->where('uri', '.*');
         }
-
-        return $this;
     }
 
     /**
@@ -72,11 +92,13 @@ class FolioManager
 
     /**
      * Get the middleware that should be applied to the Folio handled URI.
+     *
+     * @return array<int, string>
      */
     public function middlewareFor(string $uri): array
     {
         foreach ($this->mountPaths as $mountPath) {
-            if (! $matchedView = (new Router($mountPath->path))->match(new Request, $uri)) {
+            if (! $matchedView = (new Router($mountPath))->match(new Request, $uri)) {
                 continue;
             }
 
@@ -99,7 +121,7 @@ class FolioManager
     /**
      * Specify the callback that should be used to render matched views.
      */
-    public function renderUsing(Closure $callback = null): self
+    public function renderUsing(Closure $callback = null): static
     {
         $this->renderUsing = $callback;
 
@@ -108,6 +130,8 @@ class FolioManager
 
     /**
      * Get the array of mounted paths that have been registered.
+     *
+     * @return  array<int, \Laravel\Folio\MountPath>
      */
     public function mountPaths(): array
     {
@@ -122,5 +146,15 @@ class FolioManager
     public function paths(): array
     {
         return collect($this->mountPaths)->map->path->all();
+    }
+
+    /**
+     * Dynamically pass methods to a new pending route registration.
+     *
+     * @param  array<int, mixed>  $parameters
+     */
+    public function __call(string $method, array $parameters): PendingRoute
+    {
+        return $this->route()->$method(...$parameters);
     }
 }

@@ -29,7 +29,7 @@ class RequestHandler
     public function __invoke(Request $request, string $uri): mixed
     {
         $matchedView = (new Router(
-            $this->mountPath->path
+            $this->mountPath
         ))->match($request, $uri) ?? abort(404);
 
         app(Dispatcher::class)->dispatch(new Events\ViewMatched($matchedView, $this->mountPath));

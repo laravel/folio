@@ -27,7 +27,7 @@ class ListCommand extends RouteListCommand
      *
      * @var array<int, string>
      */
-    protected $headers = ['Method', 'URI', 'View'];
+    protected $headers = ['Domain', 'Method', 'URI', 'View'];
 
     /**
      * Execute the console command.
@@ -67,20 +67,18 @@ class ListCommand extends RouteListCommand
         return collect($mountPaths)->map(function (MountPath $mountPath) {
             $views = Finder::create()->in($mountPath->path)->name('*.blade.php')->files()->getIterator();
 
+            $domain = $mountPath->domain;
             $mountPath = str_replace(DIRECTORY_SEPARATOR, '/', $mountPath->path);
 
             $path = '/'.ltrim($mountPath, '/');
 
             return collect($views)
-                ->map(function (SplFileInfo $view) use ($mountPath) {
-
+                ->map(function (SplFileInfo $view) use ($domain, $mountPath) {
                     $viewPath = str_replace(DIRECTORY_SEPARATOR, '/', $view->getRealPath());
-
                     $uri = str_replace($mountPath, '', $viewPath);
 
                     if (count($this->laravel->make(FolioManager::class)->mountPaths()) === 1) {
                         $action = str_replace($mountPath.'/', '', $viewPath);
-
                     } else {
                         $basePath = str_replace(DIRECTORY_SEPARATOR, '/', base_path(DIRECTORY_SEPARATOR));
 
@@ -123,6 +121,7 @@ class ListCommand extends RouteListCommand
 
                     return [
                         'method' => 'GET',
+                        'domain' => $domain,
                         'uri' => $uri === '' ? '/' : $uri,
                         'name' => '',
                         'action' => $action,
@@ -143,6 +142,10 @@ class ListCommand extends RouteListCommand
     protected function filterRoute(array $route): ?array
     {
         if (($this->option('path') && ! Str::contains($route['uri'], $this->option('path')))) {
+            return null;
+        }
+
+        if (($this->option('domain') && ! Str::contains((string) $route['domain'], $this->option('domain')))) {
             return null;
         }
 
@@ -176,7 +179,6 @@ class ListCommand extends RouteListCommand
     protected function forCli($routes): array
     {
         return parent::forCli(collect($routes)->map(fn ($route) => array_merge([
-            'domain' => '',
             'middleware' => '',
         ], $route)));
     }
@@ -228,7 +230,7 @@ class ListCommand extends RouteListCommand
             }
 
             if ($second->startsWith($first)) {
-                return $first->explode('/')->count() >= $second->explode('/')->count() ? 1 : -1;
+                return $first->explode('/')->count() > $second->explode('/')->count() ? 1 : -1;
             }
 
             return $first->value() <=> $second->value();
@@ -246,6 +248,7 @@ class ListCommand extends RouteListCommand
     {
         return [
             ['json', null, InputOption::VALUE_NONE, 'Output the route list as JSON'],
+            ['domain', null, InputOption::VALUE_OPTIONAL, 'Filter the routes by domain'],
             ['path', null, InputOption::VALUE_OPTIONAL, 'Only show routes matching the given path pattern'],
             ['except-path', null, InputOption::VALUE_OPTIONAL, 'Do not display the routes matching the given path pattern'],
             ['reverse', 'r', InputOption::VALUE_NONE, 'Reverse the ordering of the routes'],

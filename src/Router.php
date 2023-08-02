@@ -4,8 +4,8 @@ namespace Laravel\Folio;
 
 use Illuminate\Http\Request;
 use Illuminate\Pipeline\Pipeline;
-use Illuminate\Support\Arr;
 use Laravel\Folio\Pipeline\ContinueIterating;
+use Laravel\Folio\Pipeline\EnsureMatchesDomain;
 use Laravel\Folio\Pipeline\EnsureNoDirectoryTraversal;
 use Laravel\Folio\Pipeline\MatchDirectoryIndexViews;
 use Laravel\Folio\Pipeline\MatchedView;
@@ -23,16 +23,10 @@ use Laravel\Folio\Pipeline\TransformModelBindings;
 class Router
 {
     /**
-     * The array of mount paths that contain routable pages.
-     */
-    protected array $mountPaths;
-
-    /**
      * Create a new router instance.
      */
-    public function __construct(array|string $mountPaths)
+    public function __construct(protected MountPath $mountPath)
     {
-        $this->mountPaths = Arr::wrap($mountPaths);
     }
 
     /**
@@ -42,10 +36,8 @@ class Router
     {
         $uri = strlen($uri) > 1 ? trim($uri, '/') : $uri;
 
-        foreach ($this->mountPaths as $mountPath) {
-            if ($view = $this->matchAtPath($mountPath, $request, $uri)) {
-                return $view;
-            }
+        if ($view = $this->matchAtPath($request, $uri)) {
+            return $view;
         }
 
         return null;
@@ -54,11 +46,11 @@ class Router
     /**
      * Resolve the given URI via page based routing at the given mount path.
      */
-    protected function matchAtPath(string $mountPath, Request $request, string $uri): ?MatchedView
+    protected function matchAtPath(Request $request, string $uri): ?MatchedView
     {
         $state = new State(
             uri: $uri,
-            mountPath: $mountPath,
+            mountPath: $this->mountPath->path,
             segments: explode('/', $uri)
         );
 
@@ -66,6 +58,7 @@ class Router
             $value = (new Pipeline)
                 ->send($state->forIteration($i))
                 ->through([
+                    new EnsureMatchesDomain($request, $this->mountPath),
                     new EnsureNoDirectoryTraversal,
                     new TransformModelBindings($request),
                     new SetMountPathOnMatchedView,

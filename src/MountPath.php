@@ -19,6 +19,7 @@ class MountPath
         public ?string $domain,
     ) {
         $this->path = str_replace('/', DIRECTORY_SEPARATOR, $path);
+
         $this->middleware = new PathBasedMiddlewareList($middleware);
     }
 

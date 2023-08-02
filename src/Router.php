@@ -36,7 +36,7 @@ class Router
     {
         $uri = strlen($uri) > 1 ? trim($uri, '/') : $uri;
 
-        if ($view = $this->matchAtPath($this->mountPath, $request, $uri)) {
+        if ($view = $this->matchAtPath($request, $uri)) {
             return $view;
         }
 
@@ -46,11 +46,11 @@ class Router
     /**
      * Resolve the given URI via page based routing at the given mount path.
      */
-    protected function matchAtPath(MountPath $mountPath, Request $request, string $uri): ?MatchedView
+    protected function matchAtPath(Request $request, string $uri): ?MatchedView
     {
         $state = new State(
             uri: $uri,
-            mountPath: $mountPath->path,
+            mountPath: $this->mountPath->path,
             segments: explode('/', $uri)
         );
 
@@ -58,7 +58,7 @@ class Router
             $value = (new Pipeline)
                 ->send($state->forIteration($i))
                 ->through([
-                    new EnsureMatchesDomain($request, $mountPath),
+                    new EnsureMatchesDomain($request, $this->mountPath),
                     new EnsureNoDirectoryTraversal,
                     new TransformModelBindings($request),
                     new SetMountPathOnMatchedView,

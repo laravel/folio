@@ -37,9 +37,12 @@ class FolioManager
      */
     public function route(string $path = null, ?string $uri = '/', array $middleware = []): PendingRoute
     {
-        $path = $path ? $path : config('view.paths')[0].'/pages';
-
-        return new PendingRoute($this, $path, $uri, $middleware);
+        return new PendingRoute(
+            $this,
+            $path ? $path : config('view.paths')[0].'/pages',
+            $uri,
+            $middleware
+        );
     }
 
     /**

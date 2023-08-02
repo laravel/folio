@@ -5,7 +5,7 @@ namespace Laravel\Folio;
 class PendingRoute
 {
     /**
-     * Creates a new pending route instance.
+     * Create a new pending route instance.
      *
      * @param  array<string, array<int, string>>  $middleware
      */

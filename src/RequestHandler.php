@@ -34,17 +34,25 @@ class RequestHandler
 
         app(Dispatcher::class)->dispatch(new Events\ViewMatched($matchedView, $this->mountPath));
 
+        $middlewares = collect($this->middleware($matchedView));
+
         return (new Pipeline(app()))
             ->send($request)
-            ->through($this->middleware($matchedView))
-            ->then(function (Request $request) use ($matchedView) {
+            ->through($middlewares->all())
+            ->then(function (Request $request) use ($matchedView, $middlewares) {
                 if ($this->onViewMatch) {
                     ($this->onViewMatch)($matchedView);
                 }
 
-                return $this->renderUsing
+                $response = $this->renderUsing
                     ? ($this->renderUsing)($request, $matchedView)
                     : $this->toResponse($matchedView);
+
+                $middlewares->filter(fn ($middleware) => is_string($middleware) && class_exists($middleware) && method_exists($middleware, 'terminate'))
+                    ->map(fn ($middleware) => app()->make($middleware))
+                    ->each(fn ($middleware) => app()->call([$middleware, 'terminate'], [$request, $response]));
+
+                return $response;
             });
     }
 

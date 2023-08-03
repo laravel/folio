@@ -4,6 +4,7 @@ namespace Laravel\Folio;
 
 use Closure;
 use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Pipeline;
@@ -17,6 +18,7 @@ class RequestHandler
      * Create a new request handler instance.
      */
     public function __construct(
+        protected FolioManager $manager,
         protected MountPath $mountPath,
         protected ?Closure $renderUsing = null,
         protected ?Closure $onViewMatch = null,
@@ -48,9 +50,11 @@ class RequestHandler
                     ? ($this->renderUsing)($request, $matchedView)
                     : $this->toResponse($matchedView);
 
-                $middlewares->filter(fn ($middleware) => is_string($middleware) && class_exists($middleware) && method_exists($middleware, 'terminate'))
-                    ->map(fn ($middleware) => app()->make($middleware))
-                    ->each(fn ($middleware) => app()->call([$middleware, 'terminate'], [$request, $response]));
+                $this->manager->terminateUsing(
+                    fn (Application $app) => $middlewares->filter(fn ($middleware) => is_string($middleware) && class_exists($middleware) && method_exists($middleware, 'terminate'))
+                        ->map(fn (string $middleware) => $app->make($middleware))
+                        ->each(fn (object $middleware) => $app->call([$middleware, 'terminate'], ['request' => $request, 'response' => $response]))
+                );
 
                 return $response;
             });

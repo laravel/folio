@@ -23,6 +23,8 @@ class FolioServiceProvider extends ServiceProvider
         $this->registerCommands();
 
         $this->registerPublishing();
+
+        $this->registerTerminableCallback();
     }
 
     /**
@@ -42,12 +44,20 @@ class FolioServiceProvider extends ServiceProvider
     /**
      * Register the package's publishable resources.
      */
-    private function registerPublishing(): void
+    protected function registerPublishing(): void
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__.'/../stubs/FolioServiceProvider.stub' => app_path('Providers/FolioServiceProvider.php'),
             ], 'folio-provider');
         }
+    }
+
+    /**
+     * Register the package's terminable callback.
+     */
+    private function registerTerminableCallback(): void
+    {
+        $this->app->terminating(fn (FolioManager $manager) => $manager->terminate());
     }
 }

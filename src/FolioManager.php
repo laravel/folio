@@ -90,30 +90,6 @@ class FolioManager
     }
 
     /**
-     * Executes the pending termination callback.
-     */
-    public function terminate(): void
-    {
-        if ($this->terminateUsing) {
-            try {
-                ($this->terminateUsing)($this->app);
-            } finally {
-                $this->terminateUsing = null;
-            }
-        }
-    }
-
-    /**
-     * Specify the callback that should be used when terminating the application.
-     */
-    public function terminateUsing(Closure $callback = null): static
-    {
-        $this->terminateUsing = $callback;
-
-        return $this;
-    }
-
-    /**
      * Get the Folio request handler function.
      */
     protected function handler(MountPath $mountPath): Closure
@@ -164,6 +140,30 @@ class FolioManager
     public function renderUsing(Closure $callback = null): static
     {
         $this->renderUsing = $callback;
+
+        return $this;
+    }
+
+    /**
+     * Execute the pending termination callback.
+     */
+    public function terminate(): void
+    {
+        if ($this->terminateUsing) {
+            try {
+                ($this->terminateUsing)($this->app);
+            } finally {
+                $this->terminateUsing = null;
+            }
+        }
+    }
+
+    /**
+     * Specify the callback that should be used when terminating the application.
+     */
+    public function terminateUsing(Closure $callback = null): static
+    {
+        $this->terminateUsing = $callback;
 
         return $this;
     }

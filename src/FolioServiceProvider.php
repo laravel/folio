@@ -21,10 +21,8 @@ class FolioServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerCommands();
-
         $this->registerPublishing();
-
-        $this->registerTerminableCallback();
+        $this->registerTerminationCallback();
     }
 
     /**
@@ -54,9 +52,9 @@ class FolioServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the package's terminable callback.
+     * Register the package's terminating callback.
      */
-    private function registerTerminableCallback(): void
+    protected function registerTerminationCallback(): void
     {
         $this->app->terminating(fn (FolioManager $manager) => $manager->terminate());
     }

@@ -36,12 +36,12 @@ class RequestHandler
 
         app(Dispatcher::class)->dispatch(new Events\ViewMatched($matchedView, $this->mountPath));
 
-        $middlewares = collect($this->middleware($matchedView));
+        $middleware = collect($this->middleware($matchedView));
 
         return (new Pipeline(app()))
             ->send($request)
-            ->through($middlewares->all())
-            ->then(function (Request $request) use ($matchedView, $middlewares) {
+            ->through($middleware->all())
+            ->then(function (Request $request) use ($matchedView, $middleware) {
                 if ($this->onViewMatch) {
                     ($this->onViewMatch)($matchedView);
                 }
@@ -51,7 +51,7 @@ class RequestHandler
                     : $this->toResponse($matchedView);
 
                 $this->manager->terminateUsing(
-                    fn (Application $app) => $middlewares->filter(fn ($middleware) => is_string($middleware) && class_exists($middleware) && method_exists($middleware, 'terminate'))
+                    fn (Application $app) => $middleware->filter(fn ($middleware) => is_string($middleware) && class_exists($middleware) && method_exists($middleware, 'terminate'))
                         ->map(fn (string $middleware) => $app->make($middleware))
                         ->each(fn (object $middleware) => $app->call([$middleware, 'terminate'], ['request' => $request, 'response' => $response]))
                 );

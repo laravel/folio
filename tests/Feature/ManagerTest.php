@@ -163,10 +163,10 @@ describe('precedence of domains does not matter', function () {
     });
 
     test('declaring "domain.com" last', function () {
-        Folio::domain('another-domain.com')->path(__DIR__.'/resources/views/pages');
-        Folio::domain('domain.com')->path(__DIR__.'/resources/views/pages');
+        Folio::domain('another-domain.com')->uri('/app')->path(__DIR__.'/resources/views/pages');
+        Folio::domain('domain.com')->uri('/app')->path(__DIR__.'/resources/views/pages');
 
-        $response = $this->get('https://domain.com/dashboard');
+        $response = $this->get('https://domain.com/app/dashboard');
 
         $response->assertStatus(200);
     });

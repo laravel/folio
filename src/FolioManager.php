@@ -66,6 +66,7 @@ class FolioManager
     public function registerRoute(string $path, string $uri, array $middleware, ?string $domain): void
     {
         $path = realpath($path);
+        $uri = '/'.ltrim($uri, '/');
 
         if (! is_dir($path)) {
             throw new InvalidArgumentException("The given path [{$path}] is not a directory.");

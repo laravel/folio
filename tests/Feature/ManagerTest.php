@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Folio\Events\ViewMatched;
 use Laravel\Folio\Folio;
 use Laravel\Folio\Pipeline\MatchedView;
+use Tests\Feature\Fixtures\Http\Middleware\WithTerminableMiddleware;
 
 afterEach(function () {
     Folio::renderUsing(null);
@@ -16,7 +17,7 @@ it('registers routes', function () {
 
     $response = $this->get('/users/Taylor');
 
-    $response->assertSee('Hello, Taylor');
+    $response->assertStatus(200)->assertSee('Hello, Taylor');
 });
 
 it('requires a valid path to register routes', function () {
@@ -131,3 +132,126 @@ it('registers routes with segments in domain', function (?string $domain, string
     ['sub.{domain}.com', 'sub.domain-value.com', 'domain-value', 'none'],
     ['{subDomain}.{domain}.com', 'sub-domain-value.domain-value.com', 'domain-value', 'sub-domain-value'],
 ]);
+
+describe('precedence of routes does not matter', function () {
+    test('declaring path that matches first', function () {
+        Folio::path(__DIR__.'/resources/views/even-more-pages');
+        Folio::path(__DIR__.'/resources/views/pages');
+
+        $response = $this->get('/profile');
+
+        $response->assertStatus(200)->assertSee('My profile');
+    });
+
+    test('declaring path that matches last', function () {
+        Folio::path(__DIR__.'/resources/views/pages');
+        Folio::path(__DIR__.'/resources/views/even-more-pages');
+
+        $response = $this->get('/profile');
+
+        $response->assertStatus(200)->assertSee('My profile');
+    });
+});
+
+describe('precedence of domains does not matter', function () {
+    test('declaring "domain.com" first', function () {
+        Folio::domain('domain.com')->path(__DIR__.'/resources/views/pages');
+        Folio::domain('another-domain.com')->path(__DIR__.'/resources/views/pages');
+
+        $response = $this->get('https://domain.com/dashboard');
+
+        $response->assertStatus(200);
+    });
+
+    test('declaring "domain.com" last', function () {
+        Folio::domain('another-domain.com')->uri('/app')->path(__DIR__.'/resources/views/pages');
+        Folio::domain('domain.com')->uri('/app')->path(__DIR__.'/resources/views/pages');
+
+        $response = $this->get('https://domain.com/app/dashboard');
+
+        $response->assertStatus(200);
+    });
+});
+
+test('only the middleware of match mount path gets used on duplicate mount paths', function () {
+    $_SERVER['__folio_middleware'] = 0;
+
+    $middleware = ['*' => [
+        function ($request, $next) {
+            $_SERVER['__folio_middleware']++;
+
+            return $next($request);
+        },
+    ]];
+
+    Folio::path(__DIR__.'/resources/views/pages')->middleware($middleware);
+    Folio::path(__DIR__.'/resources/views/pages')->middleware($middleware);
+    Folio::path(__DIR__.'/resources/views/pages')->middleware($middleware);
+
+    $response = $this->get('dashboard');
+
+    $response->assertStatus(200);
+
+    expect($_SERVER['__folio_middleware'])->toBe(1);
+
+    $response = $this->get('dashboard');
+
+    $response->assertStatus(200);
+
+    expect($_SERVER['__folio_middleware'])->toBe(2);
+});
+
+test('only the terminable middleware of match mount path gets used on duplicate mount paths', function () {
+    $_SERVER['__folio_*_middleware.terminate'] = 0;
+    $_SERVER['__folio_*_middleware.terminate.should_fail'] = false;
+
+    $middleware = ['*' => [WithTerminableMiddleware::class]];
+
+    Folio::path(__DIR__.'/resources/views/pages')->middleware($middleware);
+    Folio::path(__DIR__.'/resources/views/pages')->middleware($middleware);
+    Folio::path(__DIR__.'/resources/views/pages')->middleware($middleware);
+
+    $response = $this->get('dashboard');
+
+    $response->assertStatus(200);
+
+    expect($_SERVER['__folio_*_middleware.terminate'])->toBe(1);
+
+    $response = $this->get('dashboard');
+
+    $response->assertStatus(200);
+
+    expect($_SERVER['__folio_*_middleware.terminate'])->toBe(2);
+});
+
+test('middleware of non matched domain does not get executed', function () {
+    $_SERVER['__folio_middleware'] = 0;
+
+    $middleware = ['*' => [
+        function ($request, $next) {
+            $_SERVER['__folio_middleware']++;
+
+            return $next($request);
+        },
+    ]];
+
+    Folio::domain('another-domain.com')->path(__DIR__.'/resources/views/pages')->middleware($middleware);
+    Folio::path(__DIR__.'/resources/views/pages')->middleware($middleware);
+
+    $response = $this->get('https://domain.com/dashboard');
+
+    $response->assertStatus(200);
+
+    expect($_SERVER['__folio_middleware'])->toBe(1);
+});
+
+test('sub domain matching does not get effected by root domain matching', function () {
+    Folio::domain('domain.com')->path(__DIR__.'/resources/views/pages')
+        ->middleware(['*' => [fn () => abort(404)]]);
+
+    Folio::domain('sub.domain.com')->path(__DIR__.'/resources/views/pages');
+
+    $response = $this->get('https://sub.domain.com/dashboard');
+
+    $response->assertStatus(200);
+});

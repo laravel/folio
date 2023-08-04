@@ -95,6 +95,7 @@ class FolioManager
 
             return (new RequestHandler(
                 $this,
+                $mountPaths,
                 $this->renderUsing,
                 fn (MatchedView $matchedView) => $this->lastMatchedView = $matchedView,
             ))($request);

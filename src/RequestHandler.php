@@ -16,10 +16,12 @@ class RequestHandler
 {
     /**
      * Create a new request handler instance.
+     *
+     * @param  array<int, \Laravel\Folio\MountPath>  $mountPaths
      */
     public function __construct(
         protected FolioManager $manager,
-        protected MountPath $mountPath,
+        protected array $mountPaths,
         protected ?Closure $renderUsing = null,
         protected ?Closure $onViewMatch = null,
     ) {
@@ -28,15 +30,23 @@ class RequestHandler
     /**
      * Handle the incoming request using Folio.
      */
-    public function __invoke(Request $request, string $uri): mixed
+    public function __invoke(Request $request): mixed
     {
-        $matchedView = (new Router(
-            $this->mountPath
-        ))->match($request, $uri) ?? abort(404);
+        foreach ($this->mountPaths as $mountPath) {
+            $requestPath = '/'.ltrim($request->path(), '/');
 
-        app(Dispatcher::class)->dispatch(new Events\ViewMatched($matchedView, $this->mountPath));
+            $uri = '/'.ltrim(substr($requestPath, strlen($mountPath->baseUri)), '/');
 
-        $middleware = collect($this->middleware($matchedView));
+            if ($matchedView = (new Router($mountPath))->match($request, $uri)) {
+                break;
+            }
+        }
+
+        abort_unless($matchedView ?? null, 404);
+
+        app(Dispatcher::class)->dispatch(new Events\ViewMatched($matchedView, $mountPath));
+
+        $middleware = collect($this->middleware($mountPath, $matchedView));
 
         return (new Pipeline(app()))
             ->send($request)
@@ -63,10 +73,10 @@ class RequestHandler
     /**
      * Get the middleware that should be applied to the matched view.
      */
-    protected function middleware(MatchedView $matchedView): array
+    protected function middleware(MountPath $mountPath, MatchedView $matchedView): array
     {
         return Route::resolveMiddleware(
-            $this->mountPath
+            $mountPath
                 ->middleware
                 ->match($matchedView)
                 ->prepend('web')

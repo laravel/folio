@@ -78,31 +78,26 @@ class FolioManager
             $domain,
         );
 
-        if ($uri === '/') {
-            Route::fallback($this->handler($mountPath))
-                ->name($mountPath->routeName());
-        } else {
-            Route::get(
-                '/'.trim($uri, '/').'/{uri?}',
-                $this->handler($mountPath)
-            )->name($mountPath->routeName())->where('uri', '.*');
-        }
+        Route::fallback($this->handler())->name($mountPath->routeName());
     }
 
     /**
      * Get the Folio request handler function.
      */
-    protected function handler(MountPath $mountPath): Closure
+    protected function handler(): Closure
     {
-        return function (Request $request, string $uri = '/') use ($mountPath) {
+        return function (Request $request) {
             $this->terminateUsing = null;
+
+            $mountPaths = collect($this->mountPaths)->filter(
+                fn (MountPath $mountPath) => str_starts_with(mb_strtolower('/'.$request->path()), $mountPath->baseUri)
+            )->all();
 
             return (new RequestHandler(
                 $this,
-                $mountPath,
                 $this->renderUsing,
                 fn (MatchedView $matchedView) => $this->lastMatchedView = $matchedView,
-            ))($request, $uri);
+            ))($request);
         };
     }
 

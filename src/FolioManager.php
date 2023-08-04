@@ -3,6 +3,7 @@
 namespace Laravel\Folio;
 
 use Closure;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
@@ -24,9 +25,21 @@ class FolioManager
     protected ?Closure $renderUsing = null;
 
     /**
+     * The callback that should be used when terminating the manager.
+     */
+    protected ?Closure $terminateUsing = null;
+
+    /**
      * The view that was last matched by Folio.
      */
     protected ?MatchedView $lastMatchedView = null;
+
+    /**
+     * Create a new Folio manager instance.
+     */
+    public function __construct(protected Application $app)
+    {
+    }
 
     /**
      * Register a route to handle page based routing at the given paths.
@@ -82,7 +95,10 @@ class FolioManager
     protected function handler(MountPath $mountPath): Closure
     {
         return function (Request $request, string $uri = '/') use ($mountPath) {
+            $this->terminateUsing = null;
+
             return (new RequestHandler(
+                $this,
                 $mountPath,
                 $this->renderUsing,
                 fn (MatchedView $matchedView) => $this->lastMatchedView = $matchedView,
@@ -124,6 +140,30 @@ class FolioManager
     public function renderUsing(Closure $callback = null): static
     {
         $this->renderUsing = $callback;
+
+        return $this;
+    }
+
+    /**
+     * Execute the pending termination callback.
+     */
+    public function terminate(): void
+    {
+        if ($this->terminateUsing) {
+            try {
+                ($this->terminateUsing)($this->app);
+            } finally {
+                $this->terminateUsing = null;
+            }
+        }
+    }
+
+    /**
+     * Specify the callback that should be used when terminating the application.
+     */
+    public function terminateUsing(Closure $callback = null): static
+    {
+        $this->terminateUsing = $callback;
 
         return $this;
     }

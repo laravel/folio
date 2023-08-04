@@ -220,3 +220,14 @@ test('middleware of non matched domain does not get executed', function () {
 
     expect($_SERVER['__folio_middleware'])->toBe(1);
 });
+
+test('sub domain matching does not get effected by root domain matching', function () {
+    Folio::domain('domain.com')->path(__DIR__.'/resources/views/pages')
+        ->middleware(['*' => [fn () => abort(404)]]);
+
+    Folio::domain('sub.domain.com')->path(__DIR__.'/resources/views/pages');
+
+    $response = $this->get('https://sub.domain.com/dashboard');
+
+    $response->assertStatus(200);
+});

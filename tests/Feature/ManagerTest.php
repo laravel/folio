@@ -173,11 +173,11 @@ describe('precedence of domains does not matter', function () {
 });
 
 test('only the middleware of match mount path gets used on duplicate mount paths', function () {
-    $_SERVER['__folio_precedence_middleware'] = 0;
+    $_SERVER['__folio_middleware'] = 0;
 
     $middleware = ['*' => [
         function ($request, $next) {
-            $_SERVER['__folio_precedence_middleware']++;
+            $_SERVER['__folio_middleware']++;
 
             return $next($request);
         },
@@ -191,11 +191,32 @@ test('only the middleware of match mount path gets used on duplicate mount paths
 
     $response->assertStatus(200);
 
-    expect($_SERVER['__folio_precedence_middleware'])->toBe(1);
+    expect($_SERVER['__folio_middleware'])->toBe(1);
 
     $response = $this->get('dashboard');
 
     $response->assertStatus(200);
 
-    expect($_SERVER['__folio_precedence_middleware'])->toBe(2);
+    expect($_SERVER['__folio_middleware'])->toBe(2);
+});
+
+test('middleware of non matched domain does not get executed', function () {
+    $_SERVER['__folio_middleware'] = 0;
+
+    $middleware = ['*' => [
+        function ($request, $next) {
+            $_SERVER['__folio_middleware']++;
+
+            return $next($request);
+        },
+    ]];
+
+    Folio::domain('another-domain.com')->path(__DIR__.'/resources/views/pages')->middleware($middleware);
+    Folio::path(__DIR__.'/resources/views/pages')->middleware($middleware);
+
+    $response = $this->get('https://domain.com/dashboard');
+
+    $response->assertStatus(200);
+
+    expect($_SERVER['__folio_middleware'])->toBe(1);
 });

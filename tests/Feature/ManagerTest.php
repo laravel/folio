@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Folio\Events\ViewMatched;
 use Laravel\Folio\Folio;
 use Laravel\Folio\Pipeline\MatchedView;
+use Tests\Feature\Fixtures\Http\Middleware\WithTerminableMiddleware;
 
 afterEach(function () {
     Folio::renderUsing(null);
@@ -198,6 +199,29 @@ test('only the middleware of match mount path gets used on duplicate mount paths
     $response->assertStatus(200);
 
     expect($_SERVER['__folio_middleware'])->toBe(2);
+});
+
+test('only the terminable middleware of match mount path gets used on duplicate mount paths', function () {
+    $_SERVER['__folio_*_middleware.terminate'] = 0;
+    $_SERVER['__folio_*_middleware.terminate.should_fail'] = false;
+
+    $middleware = ['*' => [WithTerminableMiddleware::class]];
+
+    Folio::path(__DIR__.'/resources/views/pages')->middleware($middleware);
+    Folio::path(__DIR__.'/resources/views/pages')->middleware($middleware);
+    Folio::path(__DIR__.'/resources/views/pages')->middleware($middleware);
+
+    $response = $this->get('dashboard');
+
+    $response->assertStatus(200);
+
+    expect($_SERVER['__folio_*_middleware.terminate'])->toBe(1);
+
+    $response = $this->get('dashboard');
+
+    $response->assertStatus(200);
+
+    expect($_SERVER['__folio_*_middleware.terminate'])->toBe(2);
 });
 
 test('middleware of non matched domain does not get executed', function () {

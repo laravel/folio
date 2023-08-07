@@ -195,7 +195,7 @@ You can apply middleware to a specific page by invoking the `middleware` functio
 
 use function Laravel\Folio\{middleware};
 
-middleware(['auth']);
+middleware(['auth', 'verified']);
 
 ?>
 
@@ -212,8 +212,10 @@ To specify which pages the middleware should be applied to, the array of middlew
 use Laravel\Folio\Folio;
 
 Folio::path(resource_path('views/pages'))->middleware([
-    'chirps/*' => [
+    'admin/*' => [
         'auth',
+        'verified',
+
         // ...
     ],
 ]);
@@ -227,14 +229,35 @@ use Illuminate\Http\Request;
 use Laravel\Folio\Folio;
 
 Folio::path(resource_path('views/pages'))->middleware([
-    'chirps/*' => [
+    'admin/*' => [
         'auth',
+        'verified',
 
         function (Request $request, Closure $next) {
             // ...
 
             return $next($request);
         },
+    ],
+]);
+```
+
+<a name="route-paths-uris"></a>
+## Route Paths / URIs
+
+Sometimes, it may be convenient to specify multiple Folio paths in the same Laravel application. For example, you may wish to have a separate set of Folio pages for your application's "admin" area. You may do so using the `Folio::path` and `Folio::uri` methods:
+
+```php
+use Laravel\Folio\Folio;
+
+Folio::path(resource_path('views/pages/guest'))->uri('/');
+
+Folio::path(resource_path('views/pages/admin'))->uri('/admin')->middleware([
+    '*' => [
+        'auth',
+        'verified',
+
+        // ...
     ],
 ]);
 ```
@@ -247,9 +270,9 @@ You may also route to pages based on the incoming request's subdomain. For examp
 ```php
 use Laravel\Folio\Folio;
 
-Folio::path(
-    resource_path('views/admin-pages')
-)->domain('admin.example.com');
+Folio::path(resource_path('views/pages/guest'))->uri('/');
+
+Folio::domain('admin.example.com')->path(/* ...
 ```
 
 The `domain` method also allows you to capture parts of the domain or subdomain as parameters. These parameters will be injected into your page template:
@@ -257,7 +280,7 @@ The `domain` method also allows you to capture parts of the domain or subdomain 
 ```php
 use Laravel\Folio\Folio;
 
-Folio::path(resource_path('views/pages'))->domain('{account}.example.com');
+Folio::domain('{account}.example.com')->path(/* ...
 ```
 
 <a name="php-blocks"></a>

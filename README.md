@@ -17,6 +17,8 @@
 
 - [Introduction](#introduction)
 - [Installation](#installation)
+    - [Page Paths / URIs](#page-paths-uris)
+    - [Subdomain Routing](#subdomain-routing)
 - [Creating Routes](#creating-routes)
     - [Nested Routes](#nested-routes)
     - [Index Routes](#index-routes)
@@ -24,7 +26,6 @@
 - [Route Model Binding](#route-model-binding)
     - [Soft Deleted Models](#soft-deleted-models)
 - [Middleware](#middleware)
-- [Subdomain Routing](#subdomain-routing)
 - [PHP Blocks](#php-blocks)
 - [Contributing](#contributing)
 - [Code of Conduct](#code-of-conduct)
@@ -57,6 +58,53 @@ After installing Folio, you may execute the `folio:install` Artisan command, whi
 
 ```bash
 php artisan folio:install
+```
+
+<a name="page-paths-uris"></a>
+### Page Paths / URIs
+
+By default, Folio serves pages from your application's `resources/views/pages` directory, but you may customize these directories in your Folio service provider's `boot` method.
+
+For example, sometimes it may be convenient to specify multiple Folio paths in the same Laravel application. You may wish to have a separate directory of Folio pages for your application's "admin" area, while using another directory for the rest of your application's pages.
+
+You may accomplish this using the `Folio::path` and `Folio::uri` methods. The `path` method registers a directory that Folio will scan for pages when routing incoming HTTP requests, while the `uri` method specifies the "base URI" for that directory of pages:
+
+```php
+use Laravel\Folio\Folio;
+
+Folio::path(resource_path('views/pages/guest'))->uri('/');
+
+Folio::path(resource_path('views/pages/admin'))
+    ->uri('/admin')
+    ->middleware([
+        '*' => [
+            'auth',
+            'verified',
+
+            // ...
+        ],
+    ]);
+```
+
+<a name="subdomain-routing"></a>
+### Subdomain Routing
+
+You may also route to pages based on the incoming request's subdomain. For example, you may wish to route requests from `admin.example.com` to a different page directory than the rest of your Folio pages. You may accomplish this by invoking the `domain` method after invoking the `Folio::path` method:
+
+```php
+use Laravel\Folio\Folio;
+
+Folio::domain('admin.example.com')
+    ->path(resource_path('views/pages/admin'));
+```
+
+The `domain` method also allows you to capture parts of the domain or subdomain as parameters. These parameters will be injected into your page template:
+
+```php
+use Laravel\Folio\Folio;
+
+Folio::domain('{account}.example.com')
+    ->path(resource_path('views/pages/admin'));
 ```
 
 <a name="creating-routes"></a>
@@ -240,47 +288,6 @@ Folio::path(resource_path('views/pages'))->middleware([
         },
     ],
 ]);
-```
-
-<a name="route-paths-uris"></a>
-## Route Paths / URIs
-
-Sometimes, it may be convenient to specify multiple Folio paths in the same Laravel application. For example, you may wish to have a separate set of Folio pages for your application's "admin" area. You may do so using the `Folio::path` and `Folio::uri` methods:
-
-```php
-use Laravel\Folio\Folio;
-
-Folio::path(resource_path('views/pages/guest'))->uri('/');
-
-Folio::path(resource_path('views/pages/admin'))->uri('/admin')->middleware([
-    '*' => [
-        'auth',
-        'verified',
-
-        // ...
-    ],
-]);
-```
-
-<a name="subdomain-routing"></a>
-## Subdomain Routing
-
-You may also route to pages based on the incoming request's subdomain. For example, you may wish to route requests from `admin.example.com` to a different page directory than the rest of your Folio pages. You may accomplish this by invoking the `domain` method after invoking the `Folio::path` method:
-
-```php
-use Laravel\Folio\Folio;
-
-Folio::path(resource_path('views/pages/guest'))->uri('/');
-
-Folio::domain('admin.example.com')->path(/* ...
-```
-
-The `domain` method also allows you to capture parts of the domain or subdomain as parameters. These parameters will be injected into your page template:
-
-```php
-use Laravel\Folio\Folio;
-
-Folio::domain('{account}.example.com')->path(/* ...
 ```
 
 <a name="php-blocks"></a>

@@ -4,7 +4,6 @@ namespace Laravel\Folio;
 
 use Closure;
 use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Pipeline;
@@ -20,7 +19,6 @@ class RequestHandler
      * @param  array<int, \Laravel\Folio\MountPath>  $mountPaths
      */
     public function __construct(
-        protected FolioManager $manager,
         protected array $mountPaths,
         protected ?Closure $renderUsing = null,
         protected ?Closure $onViewMatch = null,
@@ -60,10 +58,12 @@ class RequestHandler
                     ? ($this->renderUsing)($request, $matchedView)
                     : $this->toResponse($matchedView);
 
-                $this->manager->terminateUsing(
-                    fn (Application $app) => $middleware->filter(fn ($middleware) => is_string($middleware) && class_exists($middleware) && method_exists($middleware, 'terminate'))
+                $app = app();
+
+                $app->make(FolioManager::class)->terminateUsing(
+                    fn () => $middleware->filter(fn ($middleware) => is_string($middleware) && class_exists($middleware) && method_exists($middleware, 'terminate'))
                         ->map(fn (string $middleware) => $app->make($middleware))
-                        ->each(fn (object $middleware) => $app->call([$middleware, 'terminate'], ['request' => $request, 'response' => $response]))
+                        ->each(fn (object $middleware) => $app->call([$middleware, 'terminate'], ['request' => $request, 'response' => $response])),
                 );
 
                 return $response;

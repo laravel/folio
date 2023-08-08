@@ -3,7 +3,6 @@
 namespace Laravel\Folio;
 
 use Closure;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
@@ -33,13 +32,6 @@ class FolioManager
      * The view that was last matched by Folio.
      */
     protected ?MatchedView $lastMatchedView = null;
-
-    /**
-     * Create a new Folio manager instance.
-     */
-    public function __construct(protected Application $app)
-    {
-    }
 
     /**
      * Register a route to handle page based routing at the given paths.
@@ -95,7 +87,6 @@ class FolioManager
             )->all();
 
             return (new RequestHandler(
-                $this,
                 $mountPaths,
                 $this->renderUsing,
                 fn (MatchedView $matchedView) => $this->lastMatchedView = $matchedView,
@@ -148,7 +139,7 @@ class FolioManager
     {
         if ($this->terminateUsing) {
             try {
-                ($this->terminateUsing)($this->app);
+                ($this->terminateUsing)();
             } finally {
                 $this->terminateUsing = null;
             }

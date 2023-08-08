@@ -2,9 +2,9 @@
 
 namespace Workbench\Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Orchestra\Testbench\Factories\UserFactory;
+use Tests\Feature\Fixtures\Book;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,11 +15,9 @@ class DatabaseSeeder extends Seeder
     {
         $user = UserFactory::new()->create();
 
-        // \App\Models\User::factory(10)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        Book::create([
+            'title' => 'test-book-title',
+            'user_id' => $user->id,
+        ]);
     }
 }

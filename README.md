@@ -51,7 +51,7 @@ For example, to create a page that is accessible at the `/greeting` URL, just cr
 To get started, install Folio into your project using the Composer package manager:
 
 ```bash
-composer require laravel/folio:^1.0@beta
+composer require laravel/folio:"^1.0@beta"
 ```
 
 After installing Folio, you may execute the `folio:install` Artisan command, which will install Folio's service provider into your application. This service provider registers the directory where Folio will search for routes / pages:

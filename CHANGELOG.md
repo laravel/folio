@@ -2,11 +2,11 @@
 
 ## [Unreleased](https://github.com/laravel/folio/compare/v1.0.0-beta.4...master)
 
-## [v1.0.0-beta.4](https://github.com/laravel/folio/compare/v1.0.0-beta.1...v1.0.0-beta.4) - 2023-08-08
+## [v1.0.0-beta.4](https://github.com/laravel/folio/compare/v1.0.0-beta.3...v1.0.0-beta.4) - 2023-08-08
 
 - Fixes `route:cache` command by [@nunomaduro](https://github.com/nunomaduro) in https://github.com/laravel/folio/pull/76
 
-## v1.0.0-beta.3 - 2023-08-07
+## [v1.0.0-beta.3](https://github.com/laravel/folio/compare/v1.0.0-beta.2...v1.0.0-beta.3) - 2023-08-07
 
 ### Added
 
@@ -14,7 +14,7 @@
 - Terminable middleware support ([#66](https://github.com/laravel/folio/pull/66))
 - Multiple Folio mounted paths support ([#67](https://github.com/laravel/folio/pull/67))
 
-## v1.0.0-beta.2 - 2023-07-31
+## [v1.0.0-beta.2](https://github.com/laravel/folio/compare/v1.0.0-beta.1...v1.0.0-beta.2) - 2023-07-31
 
 ### Added
 

@@ -2,8 +2,8 @@
 
 use Illuminate\Support\Facades\Schema;
 use Laravel\Folio\Folio;
-use Tests\Feature\Fixtures\Podcast;
 use function Orchestra\Testbench\workbench_path;
+use Tests\Feature\Fixtures\Podcast;
 
 beforeEach(function () {
     Schema::create('podcasts', function ($table) {

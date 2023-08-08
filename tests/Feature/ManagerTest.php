@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Folio\Events\ViewMatched;
 use Laravel\Folio\Folio;
 use Laravel\Folio\Pipeline\MatchedView;
-use Tests\Feature\Fixtures\Http\Middleware\WithTerminableMiddleware;
 use function Orchestra\Testbench\workbench_path;
+use Tests\Feature\Fixtures\Http\Middleware\WithTerminableMiddleware;
 
 afterEach(function () {
     Folio::renderUsing(null);

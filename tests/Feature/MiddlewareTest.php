@@ -1,9 +1,9 @@
 <?php
 
 use Laravel\Folio\Folio;
+use function Orchestra\Testbench\workbench_path;
 use Tests\Feature\Fixtures\Dependency;
 use Tests\Feature\Fixtures\Http\Middleware\WithTerminableMiddleware;
-use function Orchestra\Testbench\workbench_path;
 
 beforeEach(function () {
     $_SERVER['__folio_*_middleware'] = false;

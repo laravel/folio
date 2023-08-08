@@ -3,9 +3,9 @@
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
 use Laravel\Folio\Folio;
+use function Orchestra\Testbench\workbench_path;
 use Tests\Feature\Fixtures\Book;
 use Tests\Feature\Fixtures\User;
-use function Orchestra\Testbench\workbench_path;
 
 it('may have blade php blocks', function () {
     Folio::route(workbench_path('/resources/views/pages'));

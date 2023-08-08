@@ -3,8 +3,8 @@
 use Illuminate\Support\Facades\Artisan;
 use Laravel\Folio\Console\ListCommand;
 use Laravel\Folio\Folio;
-use Symfony\Component\Console\Output\BufferedOutput;
 use function Orchestra\Testbench\workbench_path;
+use Symfony\Component\Console\Output\BufferedOutput;
 
 beforeEach(fn () => ListCommand::resolveTerminalWidthUsing(function () {
     return 150;

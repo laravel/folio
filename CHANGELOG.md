@@ -2,6 +2,10 @@
 
 ## [Unreleased](https://github.com/laravel/folio/compare/v1.0.0-beta.4...master)
 
+## [v1.0.0-beta.4](https://github.com/laravel/folio/compare/v1.0.0-beta.1...v1.0.0-beta.4) - 2023-08-08
+
+- Fixes `route:cache` command by [@nunomaduro](https://github.com/nunomaduro) in https://github.com/laravel/folio/pull/76
+
 ## v1.0.0-beta.3 - 2023-08-07
 
 ### Added
@@ -19,10 +23,6 @@
 ### Fixed
 
 - Windows support ([#47](https://github.com/laravel/folio/pull/47), [#46](https://github.com/laravel/folio/pull/46))
-
-## [v1.0.0-beta.4](https://github.com/laravel/folio/compare/v1.0.0-beta.1...v1.0.0-beta.4) - 2023-08-08
-
-- Fixes `route:cache` command by [@nunomaduro](https://github.com/nunomaduro) in https://github.com/laravel/folio/pull/76
 
 ## v1.0.0-beta.1 - 2023-07-25
 

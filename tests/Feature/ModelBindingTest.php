@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Schema;
 use Laravel\Folio\Folio;
-use function Orchestra\Testbench\workbench_path;
 use Tests\Feature\Fixtures\Podcast;
 
 beforeEach(function () {

@@ -1,5 +1,3 @@
 providers:
   - Workbench\App\Providers\FolioServiceProvider
 
-workbench:
-  start: /dashbaord

@@ -15,6 +15,7 @@ class PendingRoute
         protected string $uri,
         protected array $middleware,
         protected ?string $domain = null,
+        protected array $allowedMethods = ['GET'],
     ) {
     }
 
@@ -59,6 +60,16 @@ class PendingRoute
     }
 
     /**
+     * Set the allowed methods for the route.
+     */
+    public function allowedMethods(array $methods): static
+    {
+        $this->allowedMethods = $methods;
+
+        return $this;
+    }
+
+    /**
      * Register the route upon instance destruction.
      */
     public function __destruct()
@@ -68,6 +79,7 @@ class PendingRoute
             $this->uri,
             $this->middleware,
             $this->domain,
+            $this->allowedMethods
         );
     }
 }

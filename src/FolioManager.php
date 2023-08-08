@@ -63,7 +63,7 @@ class FolioManager
      *
      * @param  array<string, array<int, string>>  $middleware
      */
-    public function registerRoute(string $path, string $uri, array $middleware, ?string $domain): void
+    public function registerRoute(string $path, string $uri, array $middleware, ?string $domain, array $allowedMethods): void
     {
         $path = realpath($path);
         $uri = '/'.ltrim($uri, '/');
@@ -79,7 +79,10 @@ class FolioManager
             $domain,
         );
 
-        Route::fallback($this->handler())->name($mountPath->routeName());
+        $placeholder = 'fallbackPlaceholder';
+        Route::addRoute(
+            $allowedMethods, "{{$placeholder}}", $this->handler()
+        )->where($placeholder, '.*')->fallback()->name($mountPath->routeName());
     }
 
     /**

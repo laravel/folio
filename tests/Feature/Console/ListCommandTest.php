@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Artisan;
 use Laravel\Folio\Console\ListCommand;
 use Laravel\Folio\Folio;
 use Symfony\Component\Console\Output\BufferedOutput;
+use function Orchestra\Testbench\workbench_path;
 
 beforeEach(fn () => ListCommand::resolveTerminalWidthUsing(function () {
     return 150;
@@ -20,7 +21,7 @@ it('may not have routes', function () {
 it('may have routes', function () {
     $output = new BufferedOutput();
 
-    Folio::route(__DIR__.'/../resources/views/pages');
+    Folio::route(workbench_path('/resources/views/pages'));
     $exitCode = Artisan::call('folio:list', [], $output);
 
     expect($exitCode)->toBe(0)
@@ -50,7 +51,7 @@ it('may have routes', function () {
 it('has the `--json` option', function () {
     $output = new BufferedOutput();
 
-    Folio::route(__DIR__.'/../resources/views/pages');
+    Folio::route(workbench_path('/resources/views/pages'));
     $exitCode = Artisan::call('folio:list', [
         '--json' => true,
     ], $output);
@@ -64,7 +65,7 @@ it('has the `--json` option', function () {
 it('has the `--path` option', function () {
     $output = new BufferedOutput();
 
-    Folio::route(__DIR__.'/../resources/views/pages');
+    Folio::route(workbench_path('/resources/views/pages'));
     $exitCode = Artisan::call('folio:list', [
         '--path' => 'podcasts',
     ], $output);
@@ -87,7 +88,7 @@ it('has the `--path` option', function () {
 it('has the `--except-path` option', function () {
     $output = new BufferedOutput();
 
-    Folio::route(__DIR__.'/../resources/views/pages');
+    Folio::route(workbench_path('/resources/views/pages'));
     $exitCode = Artisan::call('folio:list', [
         '--except-path' => 'podcasts',
     ], $output);
@@ -114,7 +115,7 @@ it('has the `--except-path` option', function () {
 it('may not find routes with `--path` or `--except-path`', function () {
     $output = new BufferedOutput();
 
-    Folio::route(__DIR__.'/../resources/views/pages');
+    Folio::route(workbench_path('/resources/views/pages'));
     $exitCode = Artisan::call('folio:list', [
         '--path' => 'sylvie',
     ], $output);
@@ -132,7 +133,7 @@ it('may not find routes with `--path` or `--except-path`', function () {
 it('has the `--sort` option', function () {
     $output = new BufferedOutput();
 
-    Folio::route(__DIR__.'/../resources/views/pages');
+    Folio::route(workbench_path('/resources/views/pages'));
     $exitCode = Artisan::call('folio:list', [
         '--path' => 'podcasts',
         '--sort' => 'view',
@@ -156,7 +157,7 @@ it('has the `--sort` option', function () {
 it('has the `--reverse` option', function () {
     $output = new BufferedOutput();
 
-    Folio::route(__DIR__.'/../resources/views/pages');
+    Folio::route(workbench_path('/resources/views/pages'));
     $exitCode = Artisan::call('folio:list', [
         '--path' => 'podcasts',
         '--reverse' => true,
@@ -180,31 +181,31 @@ it('has the `--reverse` option', function () {
 test('multiple mounted directories', function () {
     $output = new BufferedOutput();
 
-    Folio::path(__DIR__.'/../resources/views/pages');
-    Folio::path(__DIR__.'/../resources/views/more-pages');
+    Folio::path(workbench_path('/resources/views/pages'));
+    Folio::path(workbench_path('/resources/views/more-pages'));
 
     $exitCode = Artisan::call('folio:list', [], $output);
 
     expect($exitCode)->toBe(0)
         ->and($output->fetch())->toOutput(<<<'EOF'
 
-          GET       / ............................................................................. tests/Feature/resources/views/more-pages/index.blade.php
-          GET       /books ....................................................................... tests/Feature/resources/views/pages/books/index.blade.php
-          GET       /books/{...book}/detail .................... tests/Feature/resources/views/pages/books/[...Tests.Feature.Fixtures.Book]/detail.blade.php
-          GET       /categories/{category} ..................... tests/Feature/resources/views/pages/categories/[.Tests.Feature.Fixtures.Category].blade.php
-          GET       /dashboard ..................................................................... tests/Feature/resources/views/pages/dashboard.blade.php
-          GET       /deleted-podcasts/{podcast} ........... tests/Feature/resources/views/pages/deleted-podcasts/[.Tests.Feature.Fixtures.Podcast].blade.php
-          GET       /domain ........................................................................... tests/Feature/resources/views/pages/domain.blade.php
-          GET       /flights ................................................................... tests/Feature/resources/views/pages/flights/index.blade.php
-          GET       /non-routables/{nonRoutable} ......... tests/Feature/resources/views/pages/non-routables/[.Tests.Feature.Fixtures.NonRoutable].blade.php
-          GET       /podcasts/list ............................................................. tests/Feature/resources/views/pages/podcasts/list.blade.php
-          GET       /podcasts/{podcast} ........................... tests/Feature/resources/views/pages/podcasts/[.Tests.Feature.Fixtures.Podcast].blade.php
-          GET       /podcasts/{podcast}/comments ... tests/Feature/resources/views/pages/podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/index.blade.php
-          GET       /podcasts/{podcast}/comments/{comment:id} tests/Feature/resources/views/pages/podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/[.Tes…
-          GET       /users/nuno ................................................................... tests/Feature/resources/views/pages/users/nuno.blade.php
-          GET       /users/{id} ................................................................... tests/Feature/resources/views/pages/users/[id].blade.php
-          GET       /{...user} ................................................................ tests/Feature/resources/views/more-pages/[...User].blade.php
-          GET       /{...user}/detail .................................................. tests/Feature/resources/views/more-pages/[...User]/detail.blade.php
+          GET       / ................................................................................. workbench/resources/views/more-pages/index.blade.php
+          GET       /books ........................................................................... workbench/resources/views/pages/books/index.blade.php
+          GET       /books/{...book}/detail ........................ workbench/resources/views/pages/books/[...Tests.Feature.Fixtures.Book]/detail.blade.php
+          GET       /categories/{category} ......................... workbench/resources/views/pages/categories/[.Tests.Feature.Fixtures.Category].blade.php
+          GET       /dashboard ......................................................................... workbench/resources/views/pages/dashboard.blade.php
+          GET       /deleted-podcasts/{podcast} ............... workbench/resources/views/pages/deleted-podcasts/[.Tests.Feature.Fixtures.Podcast].blade.php
+          GET       /domain ............................................................................... workbench/resources/views/pages/domain.blade.php
+          GET       /flights ....................................................................... workbench/resources/views/pages/flights/index.blade.php
+          GET       /non-routables/{nonRoutable} ............. workbench/resources/views/pages/non-routables/[.Tests.Feature.Fixtures.NonRoutable].blade.php
+          GET       /podcasts/list ................................................................. workbench/resources/views/pages/podcasts/list.blade.php
+          GET       /podcasts/{podcast} ............................... workbench/resources/views/pages/podcasts/[.Tests.Feature.Fixtures.Podcast].blade.php
+          GET       /podcasts/{podcast}/comments ....... workbench/resources/views/pages/podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/index.blade.php
+          GET       /podcasts/{podcast}/comments/{comment:id} workbench/resources/views/pages/podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/[.Tests.F…
+          GET       /users/nuno ....................................................................... workbench/resources/views/pages/users/nuno.blade.php
+          GET       /users/{id} ....................................................................... workbench/resources/views/pages/users/[id].blade.php
+          GET       /{...user} .................................................................... workbench/resources/views/more-pages/[...User].blade.php
+          GET       /{...user}/detail ...................................................... workbench/resources/views/more-pages/[...User]/detail.blade.php
 
                                                                                                                                          Showing [17] routes
 

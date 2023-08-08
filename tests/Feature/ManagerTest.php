@@ -7,13 +7,14 @@ use Laravel\Folio\Events\ViewMatched;
 use Laravel\Folio\Folio;
 use Laravel\Folio\Pipeline\MatchedView;
 use Tests\Feature\Fixtures\Http\Middleware\WithTerminableMiddleware;
+use function Orchestra\Testbench\workbench_path;
 
 afterEach(function () {
     Folio::renderUsing(null);
 });
 
 it('registers routes', function () {
-    Folio::route(__DIR__.'/resources/views/pages');
+    Folio::route(workbench_path('/resources/views/pages'));
 
     $response = $this->get('/users/Taylor');
 
@@ -25,7 +26,7 @@ it('requires a valid path to register routes', function () {
 })->throws(InvalidArgumentException::class);
 
 it('registers routes with a custom URI', function (string $uri) {
-    Folio::route(__DIR__.'/resources/views/pages')->uri($uri);
+    Folio::route(workbench_path('/resources/views/pages'))->uri($uri);
 
     $response = $this->get("$uri/users/Taylor");
 
@@ -34,7 +35,7 @@ it('registers routes with a custom URI', function (string $uri) {
 
 it('registers routes with middleware', function () {
     Route::get('login', fn () => 'login')->name('login');
-    Folio::route(__DIR__.'/resources/views/pages')->middleware(['*' => ['auth']]);
+    Folio::route(workbench_path('/resources/views/pages'))->middleware(['*' => ['auth']]);
 
     $response = $this->get('/users/Taylor');
 
@@ -50,7 +51,7 @@ it('registers routes with custom render callback', function () {
         ]);
     });
 
-    Folio::route(__DIR__.'/resources/views/pages');
+    Folio::route(workbench_path('/resources/views/pages'));
 
     $response = $this->get('/users/Taylor');
     [$path, $data, $mountPath] = $response->json();
@@ -64,7 +65,7 @@ it('registers routes with custom render callback', function () {
 });
 
 it('fires view matched event on route', function () {
-    Folio::route(__DIR__.'/resources/views/pages');
+    Folio::route(workbench_path('/resources/views/pages'));
 
     $events = Event::fake(ViewMatched::class);
 
@@ -78,7 +79,7 @@ it('fires view matched event on route', function () {
 });
 
 it('doesn\'t fire view matched event on 404', function () {
-    Folio::route(__DIR__.'/resources/views/pages');
+    Folio::route(workbench_path('/resources/views/pages'));
 
     $events = Event::fake(ViewMatched::class);
 
@@ -91,9 +92,9 @@ it('doesn\'t fire view matched event on 404', function () {
 
 it('registers routes with domain', function (?string $domain, string $host, int $status) {
     if ($domain) {
-        Folio::domain($domain)->path(__DIR__.'/resources/views/pages');
+        Folio::domain($domain)->path(workbench_path('/resources/views/pages'));
     } else {
-        Folio::route(__DIR__.'/resources/views/pages');
+        Folio::route(workbench_path('/resources/views/pages'));
     }
 
     $response = $this->get("https://$host/users/Taylor");
@@ -117,7 +118,7 @@ it('registers routes with domain', function (?string $domain, string $host, int 
 ]);
 
 it('registers routes with segments in domain', function (?string $domain, string $host, string $domainValue, string $subDomainValue) {
-    Folio::domain($domain)->path(__DIR__.'/resources/views/pages');
+    Folio::domain($domain)->path(workbench_path('/resources/views/pages'));
 
     $response = $this->get("https://$host/domain");
 
@@ -135,8 +136,8 @@ it('registers routes with segments in domain', function (?string $domain, string
 
 describe('precedence of routes does not matter', function () {
     test('declaring path that matches first', function () {
-        Folio::path(__DIR__.'/resources/views/even-more-pages');
-        Folio::path(__DIR__.'/resources/views/pages');
+        Folio::path(workbench_path('/resources/views/even-more-pages'));
+        Folio::path(workbench_path('/resources/views/pages'));
 
         $response = $this->get('/profile');
 
@@ -144,8 +145,8 @@ describe('precedence of routes does not matter', function () {
     });
 
     test('declaring path that matches last', function () {
-        Folio::path(__DIR__.'/resources/views/pages');
-        Folio::path(__DIR__.'/resources/views/even-more-pages');
+        Folio::path(workbench_path('/resources/views/pages'));
+        Folio::path(workbench_path('/resources/views/even-more-pages'));
 
         $response = $this->get('/profile');
 
@@ -155,8 +156,8 @@ describe('precedence of routes does not matter', function () {
 
 describe('precedence of domains does not matter', function () {
     test('declaring "domain.com" first', function () {
-        Folio::domain('domain.com')->path(__DIR__.'/resources/views/pages');
-        Folio::domain('another-domain.com')->path(__DIR__.'/resources/views/pages');
+        Folio::domain('domain.com')->path(workbench_path('/resources/views/pages'));
+        Folio::domain('another-domain.com')->path(workbench_path('/resources/views/pages'));
 
         $response = $this->get('https://domain.com/dashboard');
 
@@ -164,8 +165,8 @@ describe('precedence of domains does not matter', function () {
     });
 
     test('declaring "domain.com" last', function () {
-        Folio::domain('another-domain.com')->uri('/app')->path(__DIR__.'/resources/views/pages');
-        Folio::domain('domain.com')->uri('/app')->path(__DIR__.'/resources/views/pages');
+        Folio::domain('another-domain.com')->uri('/app')->path(workbench_path('/resources/views/pages'));
+        Folio::domain('domain.com')->uri('/app')->path(workbench_path('/resources/views/pages'));
 
         $response = $this->get('https://domain.com/app/dashboard');
 
@@ -184,9 +185,9 @@ test('only the middleware of match mount path gets used on duplicate mount paths
         },
     ]];
 
-    Folio::path(__DIR__.'/resources/views/pages')->middleware($middleware);
-    Folio::path(__DIR__.'/resources/views/pages')->middleware($middleware);
-    Folio::path(__DIR__.'/resources/views/pages')->middleware($middleware);
+    Folio::path(workbench_path('/resources/views/pages'))->middleware($middleware);
+    Folio::path(workbench_path('/resources/views/pages'))->middleware($middleware);
+    Folio::path(workbench_path('/resources/views/pages'))->middleware($middleware);
 
     $response = $this->get('dashboard');
 
@@ -207,9 +208,9 @@ test('only the terminable middleware of match mount path gets used on duplicate 
 
     $middleware = ['*' => [WithTerminableMiddleware::class]];
 
-    Folio::path(__DIR__.'/resources/views/pages')->middleware($middleware);
-    Folio::path(__DIR__.'/resources/views/pages')->middleware($middleware);
-    Folio::path(__DIR__.'/resources/views/pages')->middleware($middleware);
+    Folio::path(workbench_path('/resources/views/pages'))->middleware($middleware);
+    Folio::path(workbench_path('/resources/views/pages'))->middleware($middleware);
+    Folio::path(workbench_path('/resources/views/pages'))->middleware($middleware);
 
     $response = $this->get('dashboard');
 
@@ -235,8 +236,8 @@ test('middleware of non matched domain does not get executed', function () {
         },
     ]];
 
-    Folio::domain('another-domain.com')->path(__DIR__.'/resources/views/pages')->middleware($middleware);
-    Folio::path(__DIR__.'/resources/views/pages')->middleware($middleware);
+    Folio::domain('another-domain.com')->path(workbench_path('/resources/views/pages'))->middleware($middleware);
+    Folio::path(workbench_path('/resources/views/pages'))->middleware($middleware);
 
     $response = $this->get('https://domain.com/dashboard');
 
@@ -246,10 +247,10 @@ test('middleware of non matched domain does not get executed', function () {
 });
 
 test('sub domain matching does not get effected by root domain matching', function () {
-    Folio::domain('domain.com')->path(__DIR__.'/resources/views/pages')
+    Folio::domain('domain.com')->path(workbench_path('/resources/views/pages'))
         ->middleware(['*' => [fn () => abort(404)]]);
 
-    Folio::domain('sub.domain.com')->path(__DIR__.'/resources/views/pages');
+    Folio::domain('sub.domain.com')->path(workbench_path('/resources/views/pages'));
 
     $response = $this->get('https://sub.domain.com/dashboard');
 

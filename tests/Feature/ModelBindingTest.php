@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Laravel\Folio\Folio;
 use Tests\Feature\Fixtures\Podcast;
+use function Orchestra\Testbench\workbench_path;
 
 beforeEach(function () {
     Schema::create('podcasts', function ($table) {
@@ -19,7 +20,7 @@ beforeEach(function () {
         $table->timestamps();
     });
 
-    Folio::route(__DIR__.'/resources/views/pages');
+    Folio::route(workbench_path('/resources/views/pages'));
 });
 
 test('implicit model bindings are resolved', function () {

@@ -4,7 +4,7 @@ use Laravel\Folio\Folio;
 use function Orchestra\Testbench\workbench_path;
 
 it('may use component props', function () {
-    Folio::route(workbench_path('resources/views/pages'));
+    Folio::route(workbench_path('/resources/views/pages'));
 
     $this->withoutExceptionHandling();
 

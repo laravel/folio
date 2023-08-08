@@ -16,9 +16,9 @@ abstract class TestCase extends OrchestraTestCase
      */
     protected function setUp(): void
     {
-        parent::setUp();
+        $this->afterApplicationCreated(fn () => View::addLocation(__DIR__.'/Feature/resources/views'));
 
-        View::addLocation(__DIR__.'/Feature/resources/views');
+        parent::setUp();
     }
 
     /**

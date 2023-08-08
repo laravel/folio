@@ -1,0 +1,7 @@
+providers:
+  - Workbench\App\Providers\FolioServiceProvider
+
+migrations: true
+
+seeders:
+  - Workbench\Database\Seeders\DatabaseSeeder

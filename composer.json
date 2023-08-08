@@ -27,7 +27,7 @@
         "spatie/once": "^3.1"
     },
     "require-dev": {
-        "orchestra/testbench": "^8.5.10",
+        "orchestra/testbench": "^8.6.0",
         "pestphp/pest": "^2.5",
         "phpstan/phpstan": "^1.10"
     },
@@ -41,7 +41,9 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Tests\\": "tests/",
+            "Workbench\\App\\": "workbench/app",
+            "Workbench\\Database\\": "workbench/database"
         }
     },
     "extra": {
@@ -59,6 +61,19 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true
         }
+    },
+    "scripts": {
+        "post-autoload-dump": "@composer run prepare",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
+        "build": [
+            "@composer run prepare",
+            "@php ./vendor/bin/testbench package:create-sqlite-db",
+            "@php ./vendor/bin/testbench migrate:refresh"
+        ],
+        "start": [
+            "@composer run prepare",
+            "@php ./vendor/bin/testbench serve"
+        ]
     },
     "minimum-stability": "dev",
     "prefer-stable": true

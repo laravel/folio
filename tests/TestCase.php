@@ -8,7 +8,6 @@ use Laravel\Folio\FolioServiceProvider;
 use Laravel\Folio\MountPath;
 use Laravel\Folio\Router;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
-use function Orchestra\Testbench\workbench_path;
 
 abstract class TestCase extends OrchestraTestCase
 {
@@ -17,7 +16,7 @@ abstract class TestCase extends OrchestraTestCase
      */
     protected function setUp(): void
     {
-        $this->afterApplicationCreated(fn () => View::addLocation(workbench_path('/resources/views')));
+        $this->afterApplicationCreated(fn () => View::addLocation(__DIR__.'/Feature/resources/views'));
 
         parent::setUp();
     }

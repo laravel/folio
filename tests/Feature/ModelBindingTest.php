@@ -20,7 +20,7 @@ beforeEach(function () {
         $table->timestamps();
     });
 
-    Folio::route(workbench_path('/resources/views/pages'));
+    Folio::route(__DIR__.'/resources/views/pages');
 });
 
 test('implicit model bindings are resolved', function () {

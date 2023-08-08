@@ -1,7 +1,6 @@
 <?php
 
 use Laravel\Folio\Folio;
-use function Orchestra\Testbench\workbench_path;
 use Tests\Feature\Fixtures\Dependency;
 use Tests\Feature\Fixtures\Http\Middleware\WithTerminableMiddleware;
 
@@ -14,7 +13,7 @@ beforeEach(function () {
     $_SERVER['__folio_*_middleware.terminate.should_fail'] = false;
     $_SERVER['__folio_*_middleware.terminate.dependency'] = false;
 
-    Folio::route(workbench_path('/resources/views/pages'), middleware: [
+    Folio::route(__DIR__.'/resources/views/pages', middleware: [
         '*' => [
             WithTerminableMiddleware::class,
         ],

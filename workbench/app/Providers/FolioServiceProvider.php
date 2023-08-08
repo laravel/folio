@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Folio\Folio;
-use function Orchestra\Testbench\workbench_path;
 
 class FolioServiceProvider extends ServiceProvider
 {
@@ -25,9 +24,9 @@ class FolioServiceProvider extends ServiceProvider
     {
         Route::view('/', 'welcome');
 
-        View::addLocation(workbench_path('/resources/views'));
+        View::addLocation(__DIR__.'/../../../tests/Feature/resources/views');
 
-        Folio::path(workbench_path('/resources/views/pages'))->middleware([
+        Folio::path(__DIR__.'/../../../tests/Feature/resources/views/pages')->middleware([
             '*' => [
                 //
             ],

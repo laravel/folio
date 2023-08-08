@@ -3,7 +3,6 @@
 namespace Laravel\Folio;
 
 use Closure;
-use Illuminate\Container\Container;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -59,7 +58,7 @@ class RequestHandler
                     ? ($this->renderUsing)($request, $matchedView)
                     : $this->toResponse($matchedView);
 
-                $app = Container::getInstance();
+                $app = app();
 
                 $app->make(FolioManager::class)->terminateUsing(
                     fn () => $middleware->filter(fn ($middleware) => is_string($middleware) && class_exists($middleware) && method_exists($middleware, 'terminate'))

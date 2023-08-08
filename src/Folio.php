@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Laravel\Folio\FolioManager renderUsing(\Closure|null $callback = null)
  * @method static array mountPaths()
  * @method static array paths()
- * @method static \Laravel\Folio\PendingRoute route(string|null $path = null, string|null $uri = '/', array $middleware = [])
+ * @method static \Laravel\Folio\PendingRoute route(string|null $path = null, string|null $uri = '/', array $middleware = [], string|null $domain = null, array $extensions = [])
  * @method static \Laravel\Folio\PendingRoute path(string $path)
  * @method static \Laravel\Folio\PendingRoute uri(string $uri)
  * @method static \Laravel\Folio\PendingRoute domain(string $domain)

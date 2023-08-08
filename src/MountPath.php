@@ -17,6 +17,7 @@ class MountPath
         public string $baseUri,
         array $middleware,
         public ?string $domain,
+        public array $extensions,
     ) {
         $this->path = str_replace('/', DIRECTORY_SEPARATOR, $path);
 

@@ -10,16 +10,27 @@ class MatchWildcardViews
     use FindsWildcardViews;
 
     /**
+     * Create a new pipeline step instance.
+     */
+    public function __construct(protected array $extensions) {
+
+    }
+
+    /**
      * Invoke the routing pipeline handler.
      */
     public function __invoke(State $state, Closure $next): mixed
     {
         if ($state->onLastUriSegment() &&
-            $path = $this->findWildcardView($state->currentDirectory())) {
+            $path = $this->findWildcardView($state->currentDirectory(), $this->extensions)) {
+            $str = Str::of($path);
+
+            foreach ($this->extensions as $extension) {
+                $str->before($extension);
+            }
+
             return new MatchedView($state->currentDirectory().'/'.$path, $state->withData(
-                Str::of($path)
-                    ->before('.blade.php')
-                    ->match('/\[(.*)\]/')->value(),
+                $str->match('/\[(.*)\]/')->value(),
                 $state->currentUriSegment(),
             )->data);
         }

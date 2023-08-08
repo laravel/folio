@@ -8,6 +8,7 @@ class PendingRoute
      * Create a new pending route instance.
      *
      * @param  array<string, array<int, string>>  $middleware
+     * @param  array<string>  $extensions
      */
     public function __construct(
         protected FolioManager $manager,
@@ -15,6 +16,7 @@ class PendingRoute
         protected string $uri,
         protected array $middleware,
         protected ?string $domain = null,
+        protected array $extensions = [],
     ) {
     }
 
@@ -58,6 +60,13 @@ class PendingRoute
         return $this;
     }
 
+    public function extensions(array $extensions): static
+    {
+        $this->extensions = $extensions;
+
+        return $this;
+    }
+
     /**
      * Register the route upon instance destruction.
      */
@@ -68,6 +77,7 @@ class PendingRoute
             $this->uri,
             $this->middleware,
             $this->domain,
+            $this->extensions,
         );
     }
 }

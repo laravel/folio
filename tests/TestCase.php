@@ -58,10 +58,10 @@ abstract class TestCase extends OrchestraTestCase
     /**
      * Create a new router instance.
      */
-    protected function router(): Router
+    protected function router($extensions = ['.blade.php']): Router
     {
         return new Router(
-            new MountPath(__DIR__.'/tmp/views', '/', [], null),
+            new MountPath(__DIR__.'/tmp/views', '/', [], null, $extensions),
         );
     }
 }

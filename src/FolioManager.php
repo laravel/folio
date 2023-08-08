@@ -48,13 +48,15 @@ class FolioManager
      *
      * @throws \InvalidArgumentException
      */
-    public function route(string $path = null, ?string $uri = '/', array $middleware = []): PendingRoute
+    public function route(string $path = null, ?string $uri = '/', array $middleware = [], ?string $domain = null, array $extensions = ['.blade.php']): PendingRoute
     {
         return new PendingRoute(
             $this,
-            $path ? $path : config('view.paths')[0].'/pages',
+            $path ?: config('view.paths')[0].'/pages',
             $uri,
-            $middleware
+            $middleware,
+            $domain,
+            $extensions,
         );
     }
 
@@ -63,7 +65,7 @@ class FolioManager
      *
      * @param  array<string, array<int, string>>  $middleware
      */
-    public function registerRoute(string $path, string $uri, array $middleware, ?string $domain): void
+    public function registerRoute(string $path, string $uri, array $middleware, ?string $domain, ?array $extensions): void
     {
         $path = realpath($path);
         $uri = '/'.ltrim($uri, '/');
@@ -77,6 +79,7 @@ class FolioManager
             $uri,
             $middleware,
             $domain,
+            $extensions,
         );
 
         Route::fallback($this->handler())->name($mountPath->routeName());

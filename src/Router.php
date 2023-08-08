@@ -62,22 +62,26 @@ class Router
                     new EnsureNoDirectoryTraversal,
                     new TransformModelBindings($request),
                     new SetMountPathOnMatchedView,
-                    new MatchRootIndex,
-                    new MatchDirectoryIndexViews,
-                    new MatchWildcardViewsThatCaptureMultipleSegments,
+                    new MatchRootIndex($this->mountPath->extensions),
+                    new MatchDirectoryIndexViews($this->mountPath->extensions),
+                    new MatchWildcardViewsThatCaptureMultipleSegments($this->mountPath->extensions),
                     new MatchLiteralDirectories,
                     new MatchWildcardDirectories,
-                    new MatchLiteralViews,
-                    new MatchWildcardViews,
+                    new MatchLiteralViews($this->mountPath->extensions),
+                    new MatchWildcardViews($this->mountPath->extensions),
                 ])->then(fn () => new StopIterating);
 
             if ($value instanceof MatchedView) {
                 return $value;
-            } elseif ($value instanceof ContinueIterating) {
+            }
+
+            if ($value instanceof ContinueIterating) {
                 $state = $value->state;
 
                 continue;
-            } elseif ($value instanceof StopIterating) {
+            }
+
+            if ($value instanceof StopIterating) {
                 break;
             }
         }

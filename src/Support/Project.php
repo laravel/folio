@@ -13,6 +13,8 @@ class Project
     {
         $basePath = base_path();
 
+        $basePath = str_replace(DIRECTORY_SEPARATOR, '/', $basePath);
+
         if (str_contains($basePath, '/vendor/orchestra/')) {
             $basePath = Str::before($basePath, '/vendor/orchestra/').'/';
         }
@@ -26,6 +28,8 @@ class Project
     public static function relativePathOf(string $path): string
     {
         $basePath = static::basePath();
+
+        $path = str_replace(DIRECTORY_SEPARATOR, '/', $path);
 
         return substr($path, mb_strlen($basePath));
     }

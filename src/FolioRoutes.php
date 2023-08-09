@@ -25,6 +25,7 @@ class FolioRoutes
         protected array $routes = [],
         protected bool $loaded = false,
     ) {
+        $this->cachedFolioRoutesPath = str_replace(DIRECTORY_SEPARATOR, '/', $this->cachedFolioRoutesPath);
     }
 
     /**

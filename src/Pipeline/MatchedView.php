@@ -35,6 +35,14 @@ class MatchedView
     }
 
     /**
+     * Get the matched view's name, if any.
+     */
+    public function name(): ?string
+    {
+        return app(InlineMetadataInterceptor::class)->intercept($this)->name;
+    }
+
+    /**
      * Determine if the matched view resolves soft deleted model bindings.
      */
     public function allowsTrashedBindings(): bool

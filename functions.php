@@ -20,6 +20,18 @@ function middleware(Closure|string|array $middleware = []): PageOptions
 }
 
 /**
+ * Sets the name of the current page.
+ */
+function name(string $name): PageOptions
+{
+    Container::getInstance()->make(InlineMetadataInterceptor::class)->whenListening(
+        fn () => Metadata::instance()->name = $name,
+    );
+
+    return new PageOptions;
+}
+
+/**
  * Indicates that the current page should include trashed models.
  */
 function withTrashed(bool $withTrashed = true): PageOptions

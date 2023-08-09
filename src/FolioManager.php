@@ -71,7 +71,7 @@ class FolioManager
             $domain,
         );
 
-        Route::fallback($this->handler())->name($mountPath->routeName());
+        Route::fallback($this->handler())->name('laravel-folio');
     }
 
     /**

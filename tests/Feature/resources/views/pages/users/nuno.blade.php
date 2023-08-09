@@ -1,7 +1,16 @@
-@php
-$title = 'Nuno Maduro';
+<?php
 
-$renderedCount = $_SERVER['__folio_rendered_count'] = ($_SERVER['__folio_rendered_count'] ?? 0) + 1;
+use function Laravel\Folio\name;
+
+name('users.nuno');
+
+?>
+
+
+@php
+    $title = 'Nuno Maduro';
+
+    $renderedCount = $_SERVER['__folio_rendered_count'] = ($_SERVER['__folio_rendered_count'] ?? 0) + 1;
 @endphp
 
 <div>Hello, {{ $title }} from PHP block.</div>

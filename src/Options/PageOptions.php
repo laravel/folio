@@ -4,6 +4,7 @@ namespace Laravel\Folio\Options;
 
 use Closure;
 use function Laravel\Folio\middleware;
+use function Laravel\Folio\name;
 use function Laravel\Folio\withTrashed;
 
 class PageOptions
@@ -14,6 +15,14 @@ class PageOptions
     public function middleware(Closure|string|array $middleware = []): static
     {
         return middleware($middleware);
+    }
+
+    /**
+     * Sets the name of the current page.
+     */
+    public function name(string $name): static
+    {
+        return name($name);
     }
 
     /**

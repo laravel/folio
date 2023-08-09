@@ -16,6 +16,7 @@ class Metadata
      */
     protected function __construct(
         public Collection $middleware = new Collection,
+        public ?string $name = null,
         public bool $withTrashed = false
     ) {
         //

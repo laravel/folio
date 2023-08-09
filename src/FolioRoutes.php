@@ -17,7 +17,9 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 class FolioRoutes
 {
     /**
-     * Create a new route names instance.
+     * Create a new folio routes instance.
+     *
+     * @param  array<string, array{string, string}>  $routes
      */
     public function __construct(
         protected FolioManager $manager,
@@ -39,7 +41,7 @@ class FolioRoutes
     }
 
     /**
-     * Get the path to the given route name.
+     * Get the route URL for the given route name and arguments.
      */
     public function get(string $name, array $arguments, bool $absolute): string
     {
@@ -51,7 +53,7 @@ class FolioRoutes
 
         [$mountPath, $path] = $this->routes[$name];
 
-        return with($this->path($mountPath, $path, $arguments, $absolute), function (string $path) use ($absolute) {
+        return with($this->path($mountPath, $path, $arguments), function (string $path) use ($absolute) {
             return $absolute ? url($path) : $path;
         });
     }
@@ -115,7 +117,7 @@ class FolioRoutes
     }
 
     /**
-     * Determine if the routes have been loaded.
+     * Ensure the routes are loaded.
      */
     protected function ensureLoaded(): void
     {
@@ -127,11 +129,11 @@ class FolioRoutes
     }
 
     /**
-     * Get the path to the given route.
+     * Get the relative route URL for the given route name and arguments.
      *
      * @param  array<string, mixed>  $parameters
      */
-    protected function path(string $mountPath, string $path, array $parameters, bool $absolute): string
+    protected function path(string $mountPath, string $path, array $parameters): string
     {
         $uri = str_replace('.blade.php', '', $path);
 
@@ -142,9 +144,8 @@ class FolioRoutes
                 }
 
                 $segment = new PotentiallyBindablePathSegment($segment);
-                $name = $segment->variable();
 
-                if (! isset($parameters[$name])) {
+                if (! isset($parameters[$name = $segment->variable()])) {
                     throw UrlGenerationException::forMissingParameter($uri, $name);
                 }
 
@@ -153,13 +154,11 @@ class FolioRoutes
 
         $uri = str_replace(['/index', '/index/'], ['', '/'], $uri);
 
-        // if
-
         return '/'.ltrim(substr($uri, strlen($mountPath)), '/');
     }
 
     /**
-     * Formats the given URL parameter.
+     * Formats the given parameter for the route URL.
      */
     protected function formatParameter(mixed $parameter, string|bool $field, bool $variadic): mixed
     {

@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Artisan;
 use Laravel\Folio\Folio;
 
 test('routes may be cached', function () {

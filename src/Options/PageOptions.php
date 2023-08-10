@@ -10,7 +10,7 @@ use function Laravel\Folio\withTrashed;
 class PageOptions
 {
     /**
-     * Sets the name of the current page.
+     * Specify the name of the current page.
      */
     public function name(string $name): static
     {

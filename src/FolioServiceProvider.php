@@ -54,7 +54,7 @@ class FolioServiceProvider extends ServiceProvider
                     }
                 });
 
-                $events->listen(CommandFinished::class, function (CommandStarting $event) {
+                $events->listen(CommandFinished::class, function (CommandFinished $event) {
                     if ($event->command === 'route:cache') {
                         $this->app->make(FolioRoutes::class)->persist();
                     }

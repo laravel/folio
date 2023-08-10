@@ -28,6 +28,7 @@
     - [Soft Deleted Models](#soft-deleted-models)
 - [Middleware](#middleware)
 - [PHP Blocks](#php-blocks)
+- [Route Caching](#route-caching)
 - [Contributing](#contributing)
 - [Code of Conduct](#code-of-conduct)
 - [Security Vulnerabilities](#security-vulnerabilities)
@@ -334,6 +335,11 @@ Therefore, if you need to write PHP code that should be executed within your Bla
     </div>
 @endforeach
 ```
+
+<a name="route-caching"></a>
+## Route Caching
+
+When using Folio, it is advisable to use [Laravel's route caching](https://laravel.com/docs/routing#route-caching), as Folio internally hooks into the `route:cache` Artisan command to ensure that some elements of the Folio pages definition, such as route names, are properly cached.
 
 ## Contributing
 <a name="contributing"></a>

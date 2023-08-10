@@ -23,6 +23,7 @@
     - [Nested Routes](#nested-routes)
     - [Index Routes](#index-routes)
 - [Route Parameters](#route-parameters)
+- [Named Routes](#named-routes)
 - [Route Model Binding](#route-model-binding)
     - [Soft Deleted Models](#soft-deleted-models)
 - [Middleware](#middleware)
@@ -51,7 +52,7 @@ For example, to create a page that is accessible at the `/greeting` URL, just cr
 To get started, install Folio into your project using the Composer package manager:
 
 ```bash
-composer require laravel/folio:"^1.0@beta"
+composer require laravel/folio:^1.0@beta
 ```
 
 After installing Folio, you may execute the `folio:install` Artisan command, which will install Folio's service provider into your application. This service provider registers the directory where Folio will search for routes / pages:
@@ -179,6 +180,27 @@ When capturing multiple segments, the captured segments will be injected into th
         <li>User {{ $id }}</li>
     @endforeach
 </ul>
+```
+
+<a name="named-routes"></a>
+## Named Routes
+
+You may specify a name for a given page's route by using the `name` function:
+
+```php
+<?php
+
+use function Laravel\Folio\name;
+
+name('users.index');
+```
+
+Just like Laravel's named routes, you may use the `route` helper to generate URLs to Folio pages:
+
+```php
+<a href="{{ route('users.index') }}">
+    All Users
+</a>
 ```
 
 <a name="route-model-binding"></a>

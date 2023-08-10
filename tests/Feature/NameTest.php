@@ -109,7 +109,7 @@ test('model route binding wrong column', function () {
     $route = route('user.articles', $parameters, false);
 })->throws(
     UrlGenerationException::class,
-    'Missing required parameter for [Path: tests/Feature/resources/views/pages/users/articles/[User-wrong_column]] [Missing parameter: user]',
+    'Missing required parameter [user] for path [tests/Feature/resources/views/pages/users/articles/[User-wrong_column]].',
 );
 
 test('routes may not have a name', function () {

@@ -82,5 +82,5 @@ it('can not have missing parameters', function () {
     ], true);
 
     expect(fn () => $names->get('podcasts.show', [], false))
-        ->toThrow(UrlGenerationException::class, 'Missing required parameter for [Path: resources/views/pages/podcasts/[id]] [Missing parameter: id]');
+        ->toThrow(UrlGenerationException::class, 'Missing required parameter [id] for path [resources/views/pages/podcasts/[id]].');
 });

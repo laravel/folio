@@ -10,14 +10,6 @@ use function Laravel\Folio\withTrashed;
 class PageOptions
 {
     /**
-     * Adds one or more middleware to the current page.
-     */
-    public function middleware(Closure|string|array $middleware = []): static
-    {
-        return middleware($middleware);
-    }
-
-    /**
      * Sets the name of the current page.
      */
     public function name(string $name): static
@@ -26,7 +18,15 @@ class PageOptions
     }
 
     /**
-     * Indicates that the current page should include trashed models.
+     * Add one or more middleware to the current page.
+     */
+    public function middleware(Closure|string|array $middleware = []): static
+    {
+        return middleware($middleware);
+    }
+
+    /**
+     * Indicate that the current page should include trashed models.
      */
     public function withTrashed(bool $withTrashed = true): static
     {

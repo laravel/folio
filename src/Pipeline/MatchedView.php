@@ -27,19 +27,19 @@ class MatchedView
     }
 
     /**
-     * Get the matched view's inline middleware.
-     */
-    public function inlineMiddleware(): Collection
-    {
-        return app(InlineMetadataInterceptor::class)->intercept($this)->middleware;
-    }
-
-    /**
      * Get the matched view's name, if any.
      */
     public function name(): ?string
     {
         return app(InlineMetadataInterceptor::class)->intercept($this)->name;
+    }
+
+    /**
+     * Get the matched view's inline middleware.
+     */
+    public function inlineMiddleware(): Collection
+    {
+        return app(InlineMetadataInterceptor::class)->intercept($this)->middleware;
     }
 
     /**

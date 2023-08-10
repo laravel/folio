@@ -38,10 +38,12 @@ it('may have routes', function () {
           GET       /podcasts/{podcast} ............................................................... podcasts/[.Tests.Feature.Fixtures.Podcast].blade.php
           GET       /podcasts/{podcast}/comments ....................................... podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/index.blade.php
           GET       /podcasts/{podcast}/comments/{comment:id} podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/[.Tests.Feature.Fixtures.Comment-id].blad…
+          GET       /posts/{lowerCase}/{upperCase}/{podcast}/{user:email}/show ......... posts/[lowerCase]/[UpperCase]/[Podcast]/[User:email]/show.blade.php
+          GET       /users/articles/{user:wrongColumn} ........................................................ users/articles/[User:wrong_column].blade.php
           GET       /users/nuno ....................................................................................................... users/nuno.blade.php
           GET       /users/{id} ....................................................................................................... users/[id].blade.php
 
-                                                                                                                                         Showing [14] routes
+                                                                                                                                         Showing [16] routes
 
 
         EOF);
@@ -102,10 +104,12 @@ it('has the `--except-path` option', function () {
           GET       /domain ............................................................................................................... domain.blade.php
           GET       /flights ....................................................................................................... flights/index.blade.php
           GET       /non-routables/{nonRoutable} ............................................. non-routables/[.Tests.Feature.Fixtures.NonRoutable].blade.php
+          GET       /posts/{lowerCase}/{upperCase}/{podcast}/{user:email}/show ......... posts/[lowerCase]/[UpperCase]/[Podcast]/[User:email]/show.blade.php
+          GET       /users/articles/{user:wrongColumn} ........................................................ users/articles/[User:wrong_column].blade.php
           GET       /users/nuno ....................................................................................................... users/nuno.blade.php
           GET       /users/{id} ....................................................................................................... users/[id].blade.php
 
-                                                                                                                                          Showing [9] routes
+                                                                                                                                         Showing [11] routes
 
 
         EOF);
@@ -201,12 +205,14 @@ test('multiple mounted directories', function () {
           GET       /podcasts/{podcast} ........................... tests/Feature/resources/views/pages/podcasts/[.Tests.Feature.Fixtures.Podcast].blade.php
           GET       /podcasts/{podcast}/comments ... tests/Feature/resources/views/pages/podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/index.blade.php
           GET       /podcasts/{podcast}/comments/{comment:id} tests/Feature/resources/views/pages/podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/[.Tes…
+          GET       /posts/{lowerCase}/{upperCase}/{podcast}/{user:email}/show tests/Feature/resources/views/pages/posts/[lowerCase]/[UpperCase]/[Podcast]/…
+          GET       /users/articles/{user:wrongColumn} .................... tests/Feature/resources/views/pages/users/articles/[User:wrong_column].blade.php
           GET       /users/nuno ................................................................... tests/Feature/resources/views/pages/users/nuno.blade.php
           GET       /users/{id} ................................................................... tests/Feature/resources/views/pages/users/[id].blade.php
           GET       /{...user} ................................................................ tests/Feature/resources/views/more-pages/[...User].blade.php
           GET       /{...user}/detail .................................................. tests/Feature/resources/views/more-pages/[...User]/detail.blade.php
 
-                                                                                                                                         Showing [17] routes
+                                                                                                                                         Showing [19] routes
 
 
         EOF);

@@ -145,11 +145,15 @@ class FolioRoutes
 
                 $segment = new PotentiallyBindablePathSegment($segment);
 
-                if (! isset($parameters[$name = $segment->variable()])) {
+                $parameters = collect($parameters)->mapWithKeys(function (mixed $value, string $key) {
+                    return [Str::camel($key) => $value];
+                })->all();
+
+                if (! isset($parameters[$name = $segment->variable()]) || $parameters[$name] === null) {
                     throw UrlGenerationException::forMissingParameter($uri, $name);
                 }
 
-                return $this->formatParameter($parameters[$name], $segment->field(), $segment->capturesMultipleSegments());
+                return $this->formatParameter($uri, $name, $parameters[$name], $segment->field(), $segment->capturesMultipleSegments());
             })->implode('/');
 
         $uri = str_replace(['/index', '/index/'], ['', '/'], $uri);
@@ -159,30 +163,28 @@ class FolioRoutes
 
     /**
      * Formats the given parameter for the route URL.
+     *
+     * @throws \Laravel\Folio\Exceptions\UrlGenerationException
      */
-    protected function formatParameter(mixed $parameter, string|bool $field, bool $variadic): mixed
+    protected function formatParameter(string $uri, string $name, mixed $parameter, string|bool $field, bool $variadic): mixed
     {
-        if ($parameter instanceof UrlRoutable && $field !== false) {
-            return $parameter->{$field};
-        }
-
-        if ($parameter instanceof UrlRoutable) {
-            return $parameter->getRouteKey();
-        }
-
-        if ($parameter instanceof BackedEnum) {
-            return $parameter->value;
-        }
-
-        if ($variadic) {
-            return implode(
+        $value = match (true) {
+            $parameter instanceof UrlRoutable && $field !== false => $parameter->{$field},
+            $parameter instanceof UrlRoutable => $parameter->getRouteKey(),
+            $parameter instanceof BackedEnum => $parameter->value,
+            $variadic => implode(
                 '/',
                 collect($parameter)
-                    ->map(fn (mixed $value) => $this->formatParameter($value, $field, false))
+                    ->map(fn (mixed $value) => $this->formatParameter($uri, $name, $value, $field, false))
                     ->all()
-            );
+            ),
+            default => $parameter,
+        };
+
+        if (is_null($value)) {
+            throw UrlGenerationException::forMissingParameter($uri, $name);
         }
 
-        return $parameter;
+        return $value;
     }
 }

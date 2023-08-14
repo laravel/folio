@@ -44,7 +44,7 @@ it('may have routes', function () {
           GET       /users/nuno ....................................................................................................... users/nuno.blade.php
           GET       /users/{id} ....................................................................................................... users/[id].blade.php
 
-                                                                                                                                         Showing [16] routes
+                                                                                                                                         Showing [17] routes
 
 
         EOF);
@@ -111,8 +111,8 @@ it('has the `--except-path` option', function () {
           GET       /users/nuno ....................................................................................................... users/nuno.blade.php
           GET       /users/{id} ....................................................................................................... users/[id].blade.php
 
+                                                                                                                                         Showing [12] routes
 
-                                                                                                                                         Showing [11] routes
 
         EOF);
 });
@@ -215,7 +215,7 @@ test('multiple mounted directories', function () {
           GET       /{...user} ................................................................ tests/Feature/resources/views/more-pages/[...User].blade.php
           GET       /{...user}/detail .................................................. tests/Feature/resources/views/more-pages/[...User]/detail.blade.php
 
-                                                                                                                                         Showing [19] routes
+                                                                                                                                         Showing [20] routes
 
 
         EOF);

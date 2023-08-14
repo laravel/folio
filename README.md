@@ -186,7 +186,7 @@ When capturing multiple segments, the captured segments will be injected into th
 <a name="named-routes"></a>
 ## Named Routes
 
-You may specify a name for a given page's route by using the `name` function:
+You may specify a name for a given page's route using the `name` function:
 
 ```php
 <?php
@@ -196,12 +196,18 @@ use function Laravel\Folio\name;
 name('users.index');
 ```
 
-Just like Laravel's named routes, you may use the `route` helper to generate URLs to Folio pages:
+Just like Laravel's named routes, you may use the `route` function to generate URLs to Folio pages that have been assigned a name:
 
 ```php
 <a href="{{ route('users.index') }}">
     All Users
 </a>
+```
+
+If the page has parameters, you may simply pass their values to the `route` function:
+
+```php
+route('users.show', ['user' => $user]);
 ```
 
 <a name="route-model-binding"></a>
@@ -339,7 +345,7 @@ Therefore, if you need to write PHP code that should be executed within your Bla
 <a name="route-caching"></a>
 ## Route Caching
 
-When using Folio, it is advisable to use [Laravel's route caching](https://laravel.com/docs/routing#route-caching), as Folio internally hooks into the `route:cache` Artisan command to ensure that some elements of the Folio pages definition, such as route names, are properly cached.
+When using Folio, you should always take advantage of [Laravel's route caching capabilities](https://laravel.com/docs/routing#route-caching). Folio listens for the `rotue:cache` Artisan command to ensure that Folio page definitions and route names are properly cached for maximum performance.
 
 ## Contributing
 <a name="contributing"></a>

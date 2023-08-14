@@ -32,6 +32,7 @@ it('may have routes', function () {
           GET       /dashboard ......................................................................................................... dashboard.blade.php
           GET       /deleted-podcasts/{podcast} ............................................... deleted-podcasts/[.Tests.Feature.Fixtures.Podcast].blade.php
           GET       /domain ............................................................................................................... domain.blade.php
+          GET       /events/{event} ............................................................................................... events/[Event].blade.php
           GET       /flights ....................................................................................................... flights/index.blade.php
           GET       /non-routables/{nonRoutable} ............................................. non-routables/[.Tests.Feature.Fixtures.NonRoutable].blade.php
           GET       /podcasts/list ................................................................................................. podcasts/list.blade.php
@@ -102,6 +103,7 @@ it('has the `--except-path` option', function () {
           GET       /categories/{category} ......................................................... categories/[.Tests.Feature.Fixtures.Category].blade.php
           GET       /dashboard ......................................................................................................... dashboard.blade.php
           GET       /domain ............................................................................................................... domain.blade.php
+          GET       /events/{event} ............................................................................................... events/[Event].blade.php
           GET       /flights ....................................................................................................... flights/index.blade.php
           GET       /non-routables/{nonRoutable} ............................................. non-routables/[.Tests.Feature.Fixtures.NonRoutable].blade.php
           GET       /posts/{lowerCase}/{upperCase}/{podcast}/{user:email}/show ......... posts/[lowerCase]/[UpperCase]/[Podcast]/[User-email]/show.blade.php
@@ -109,8 +111,8 @@ it('has the `--except-path` option', function () {
           GET       /users/nuno ....................................................................................................... users/nuno.blade.php
           GET       /users/{id} ....................................................................................................... users/[id].blade.php
 
-                                                                                                                                         Showing [11] routes
 
+                                                                                                                                         Showing [11] routes
 
         EOF);
 });
@@ -199,6 +201,7 @@ test('multiple mounted directories', function () {
           GET       /dashboard ..................................................................... tests/Feature/resources/views/pages/dashboard.blade.php
           GET       /deleted-podcasts/{podcast} ........... tests/Feature/resources/views/pages/deleted-podcasts/[.Tests.Feature.Fixtures.Podcast].blade.php
           GET       /domain ........................................................................... tests/Feature/resources/views/pages/domain.blade.php
+          GET       /events/{event} ........................................................... tests/Feature/resources/views/pages/events/[Event].blade.php
           GET       /flights ................................................................... tests/Feature/resources/views/pages/flights/index.blade.php
           GET       /non-routables/{nonRoutable} ......... tests/Feature/resources/views/pages/non-routables/[.Tests.Feature.Fixtures.NonRoutable].blade.php
           GET       /podcasts/list ............................................................. tests/Feature/resources/views/pages/podcasts/list.blade.php

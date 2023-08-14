@@ -3,6 +3,7 @@
 namespace Laravel\Folio\Pipeline;
 
 use BackedEnum;
+use Closure;
 use Exception;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Routing\UrlRoutable;
@@ -10,7 +11,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Routing\Exceptions\BackedEnumCaseNotFoundException;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
-use Illuminate\Support\Stringable;
 
 class PotentiallyBindablePathSegment
 {
@@ -18,6 +18,13 @@ class PotentiallyBindablePathSegment
      * The class name of the binding, if any.
      */
     protected ?string $class = null;
+
+    /**
+     * The closure to use to resolve url routable namespaces.
+     *
+     * @var (\Closure(): array<int, string>)|null
+     */
+    protected static ?Closure $resolveUrlRoutableNamespacesUsing = null;
 
     /**
      * Create a new potentially bindable path segment instance.
@@ -127,6 +134,8 @@ class PotentiallyBindablePathSegment
 
     /**
      * Get the class name contained by the bindable segment.
+     *
+     * @throws \Exception
      */
     public function class(): string
     {
@@ -134,19 +143,23 @@ class PotentiallyBindablePathSegment
             return $this->class;
         }
 
-        $this->class = (string) Str::of($this->value)
+        $class = Str::of($this->value)
             ->trim('[]')
             ->after('...')
             ->before('-')
             ->before('|')
             ->before(':')
-            ->replace('.', '\\')
-            ->unless(
-                fn (Stringable $s) => $s->contains('\\') || class_exists($s->value()),
-                fn (Stringable $s) => $s->prepend('App\\Models\\')
-            )->trim('\\');
+            ->replace('.', '\\');
 
-        return $this->class;
+        if (! $class->contains('\\')) {
+            $namespaces = value(static::$resolveUrlRoutableNamespacesUsing) ?? ['\\App\\Models', '\\App', ''];
+
+            $namespace = collect($namespaces)->first(fn (string $namespace) => class_exists("$namespace\\$class"), $namespaces[0]);
+
+            $class = $class->prepend($namespace.'\\');
+        }
+
+        return $this->class = $class->trim('\\')->value();
     }
 
     /**
@@ -204,5 +217,15 @@ class PotentiallyBindablePathSegment
     public function trimmed(): string
     {
         return Str::of($this->value)->trim('[]')->after('...')->value();
+    }
+
+    /**
+     * Set the callback to be used to resolve URL routable namespaces.
+     *
+     * @param  (\Closure(): array<int, string>)|null  $callback
+     */
+    public static function resolveUrlRoutableNamespacesUsing(?Closure $callback): void
+    {
+        static::$resolveUrlRoutableNamespacesUsing = $callback;
     }
 }

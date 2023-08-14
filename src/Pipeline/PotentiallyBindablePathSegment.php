@@ -135,7 +135,7 @@ class PotentiallyBindablePathSegment
     /**
      * Get the class name contained by the bindable segment.
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function class(): string
     {

@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 class FolioRoutes
 {
     /**
-     * Create a new folio routes instance.
+     * Create a new Folio routes instance.
      *
      * @param  array<string, array{string, string}>  $routes
      */
@@ -31,45 +31,7 @@ class FolioRoutes
     }
 
     /**
-     * Whether the given route name exists.
-     */
-    public function has(string $name): bool
-    {
-        $this->ensureLoaded();
-
-        return isset($this->routes[$name]);
-    }
-
-    /**
-     * Get the route URL for the given route name and arguments.
-     */
-    public function get(string $name, array $arguments, bool $absolute): string
-    {
-        $this->ensureLoaded();
-
-        if (! isset($this->routes[$name])) {
-            throw new RouteNotFoundException("Route [{$name}] not found.");
-        }
-
-        [$mountPath, $path] = $this->routes[$name];
-
-        return with($this->path($mountPath, $path, $arguments), function (string $path) use ($absolute) {
-            return $absolute ? url($path) : $path;
-        });
-    }
-
-    /**
-     * Flushes the routes from the cache.
-     */
-    public function flush(): void
-    {
-        File::delete($this->cachedFolioRoutesPath);
-
-        $this->loaded = false;
-    }
-
-    /**
-     * Persists the routes to the cache.
+     * Persist the loaded routes into the cache.
      */
     public function persist(): void
     {
@@ -84,7 +46,19 @@ class FolioRoutes
     }
 
     /**
-     * Loads the routes from the manager's mount paths.
+     * Ensure the routes have been loaded into memory.
+     */
+    protected function ensureLoaded(): void
+    {
+        if (! $this->loaded) {
+            $this->load();
+        }
+
+        $this->loaded = true;
+    }
+
+    /**
+     * Load the routes into memory.
      */
     protected function load(): void
     {
@@ -117,15 +91,31 @@ class FolioRoutes
     }
 
     /**
-     * Ensure the routes are loaded.
+     * Determine if a route with the given name exists.
      */
-    protected function ensureLoaded(): void
+    public function has(string $name): bool
     {
-        if (! $this->loaded) {
-            $this->load();
+        $this->ensureLoaded();
+
+        return isset($this->routes[$name]);
+    }
+
+    /**
+     * Get the route URL for the given route name and arguments.
+     */
+    public function get(string $name, array $arguments, bool $absolute): string
+    {
+        $this->ensureLoaded();
+
+        if (! isset($this->routes[$name])) {
+            throw new RouteNotFoundException("Route [{$name}] not found.");
         }
 
-        $this->loaded = true;
+        [$mountPath, $path] = $this->routes[$name];
+
+        return with($this->path($mountPath, $path, $arguments), function (string $path) use ($absolute) {
+            return $absolute ? url($path) : $path;
+        });
     }
 
     /**
@@ -153,7 +143,13 @@ class FolioRoutes
                     throw UrlGenerationException::forMissingParameter($uri, $name);
                 }
 
-                return $this->formatParameter($uri, $name, $parameters[$name], $segment->field(), $segment->capturesMultipleSegments());
+                return $this->formatParameter(
+                    $uri,
+                    $name,
+                    $parameters[$name],
+                    $segment->field(),
+                    $segment->capturesMultipleSegments()
+                );
             })->implode('/');
 
         $uri = str_replace(['/index', '/index/'], ['', '/'], $uri);
@@ -162,7 +158,7 @@ class FolioRoutes
     }
 
     /**
-     * Formats the given parameter for the route URL.
+     * Format the given parameter for placement in the route URL.
      *
      * @throws \Laravel\Folio\Exceptions\UrlGenerationException
      */
@@ -186,5 +182,15 @@ class FolioRoutes
         }
 
         return $value;
+    }
+
+    /**
+     * Flush the cached routes.
+     */
+    public function flush(): void
+    {
+        File::delete($this->cachedFolioRoutesPath);
+
+        $this->loaded = false;
     }
 }

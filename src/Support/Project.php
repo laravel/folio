@@ -7,6 +7,14 @@ use Illuminate\Support\Str;
 class Project
 {
     /**
+     * Get the path to the given file relative to the project's base path.
+     */
+    public static function relativePathOf(string $path): string
+    {
+        return substr(str_replace(DIRECTORY_SEPARATOR, '/', $path), mb_strlen(static::basePath()));
+    }
+
+    /**
      * Get the project's base path.
      */
     public static function basePath(): string
@@ -15,22 +23,8 @@ class Project
 
         $basePath = str_replace(DIRECTORY_SEPARATOR, '/', $basePath);
 
-        if (str_contains($basePath, '/vendor/orchestra/')) {
-            $basePath = Str::before($basePath, '/vendor/orchestra/').'/';
-        }
-
-        return $basePath;
-    }
-
-    /**
-     * Get the relative path to the given path.
-     */
-    public static function relativePathOf(string $path): string
-    {
-        $basePath = static::basePath();
-
-        $path = str_replace(DIRECTORY_SEPARATOR, '/', $path);
-
-        return substr($path, mb_strlen($basePath));
+        return str_contains($basePath, '/vendor/orchestra/')
+            ? Str::before($basePath, '/vendor/orchestra/').'/'
+            : $basePath;
     }
 }

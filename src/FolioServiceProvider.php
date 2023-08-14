@@ -6,7 +6,6 @@ use Illuminate\Console\Events\CommandFinished;
 use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class FolioServiceProvider extends ServiceProvider

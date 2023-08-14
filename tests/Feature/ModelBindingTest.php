@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Schema;
 use Laravel\Folio\Folio;
+use Laravel\Folio\Pipeline\PotentiallyBindablePathSegment;
+use Tests\Feature\Fixtures\Event;
 use Tests\Feature\Fixtures\Podcast;
 
 beforeEach(function () {
@@ -19,7 +21,16 @@ beforeEach(function () {
         $table->timestamps();
     });
 
+    Schema::create('events', function ($table) {
+        $table->id();
+        $table->timestamps();
+    });
+
     Folio::route(__DIR__.'/resources/views/pages');
+});
+
+afterEach(function () {
+    PotentiallyBindablePathSegment::resolveUrlRoutableNamespacesUsing(null);
 });
 
 test('implicit model bindings are resolved', function () {
@@ -28,6 +39,16 @@ test('implicit model bindings are resolved', function () {
     ]);
 
     $this->get('/podcasts/'.$podcast->id)->assertSee('test-podcast-name');
+});
+
+test('implicit model bindings are resolved even if model base class conflicts with facade name', function () {
+    PotentiallyBindablePathSegment::resolveUrlRoutableNamespacesUsing(function () {
+        return ['\Tests\Feature\Fixtures'];
+    });
+
+    $event = Event::create();
+
+    $this->get('/events/'.$event->id)->assertSee('Tests\Feature\Fixtures\Event: 1.');
 });
 
 test('implicit model bindings are accessible via middleware', function () {

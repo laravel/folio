@@ -21,7 +21,7 @@ class FolioServiceProvider extends ServiceProvider
 
         $this->app->when(FolioRoutes::class)
             ->needs('$cachedFolioRoutesPath')
-            ->give(fn () => dirname($this->app->getCachedRoutesPath()).DIRECTORY_SEPARATOR.'folio-routes.php');
+            ->give(fn () => dirname($this->app->getCachedRoutesPath()) . DIRECTORY_SEPARATOR . 'folio-routes.php');
     }
 
     /**
@@ -57,7 +57,7 @@ class FolioServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../stubs/FolioServiceProvider.stub' => app_path('Providers/FolioServiceProvider.php'),
+                __DIR__ . '/../stubs/FolioServiceProvider.stub' => app_path('Providers/FolioServiceProvider.php'),
             ], 'folio-provider');
         }
     }

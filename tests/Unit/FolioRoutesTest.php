@@ -31,7 +31,7 @@ it('may have routes', function (string $name, array $scenario) {
     $arguments = collect($arguments)->map(fn ($argument) => value($argument))->all();
 
     $names = new FolioRoutes(Mockery::mock(FolioManager::class), '', [
-        $name => [$mountPath, $viewPath],
+        $name => [$mountPath, $viewPath, '/'],
     ], true);
 
     expect($names->has($name))->toBeTrue()
@@ -64,7 +64,7 @@ it('may have routes', function (string $name, array $scenario) {
 
     [$viewRelativePath, $arguments, $expectedRoute] = $value;
 
-    return [$mountPath, $mountPath.'/'.$viewRelativePath, $arguments, $expectedRoute];
+    return [$mountPath, $mountPath . '/' . $viewRelativePath, $arguments, $expectedRoute];
 })->mapWithKeys(fn (array $value, string $key) => [$key => [$key, $value]])->toArray());
 
 it('may not have routes', function () {
@@ -78,7 +78,7 @@ it('may not have routes', function () {
 
 it('can not have missing parameters', function () {
     $names = new FolioRoutes(Mockery::mock(FolioManager::class), '', [
-        'podcasts.show' => ['resources/views/pages', 'resources/views/pages/podcasts/[id].blade.php'],
+        'podcasts.show' => ['resources/views/pages', 'resources/views/pages/podcasts/[id].blade.php', '/'],
     ], true);
 
     expect(fn () => $names->get('podcasts.show', [], false))

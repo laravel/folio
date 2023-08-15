@@ -123,8 +123,7 @@ test('route names may be used when the Folio `uri` is not the default one', func
         uri: '/user'
     );
 
-    $expected = '/user/profile';
-    $route = route('profile', [], false);
-
-    expect($route)->toBe($expected);
+    expect(
+        route('profile', [], false)
+    )->toBe('/user/profile');
 });

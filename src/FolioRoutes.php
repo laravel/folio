@@ -7,6 +7,7 @@ use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Illuminate\Support\Stringable;
 use Laravel\Folio\Exceptions\UrlGenerationException;
 use Laravel\Folio\Pipeline\MatchedView;
 use Laravel\Folio\Pipeline\PotentiallyBindablePathSegment;
@@ -41,7 +42,7 @@ class FolioRoutes
 
         File::put(
             $this->cachedFolioRoutesPath,
-            '<?php return '.var_export($this->routes, true).';',
+            '<?php return ' . var_export($this->routes, true) . ';',
         );
     }
 
@@ -50,7 +51,7 @@ class FolioRoutes
      */
     protected function ensureLoaded(): void
     {
-        if (! $this->loaded) {
+        if (!$this->loaded) {
             $this->load();
         }
 
@@ -82,6 +83,7 @@ class FolioRoutes
                     $this->routes[$name] = [
                         Project::relativePathOf($matchedView->mountPath),
                         Project::relativePathOf($matchedView->path),
+                        $mountPath->baseUri
                     ];
                 }
             }
@@ -107,13 +109,13 @@ class FolioRoutes
     {
         $this->ensureLoaded();
 
-        if (! isset($this->routes[$name])) {
+        if (!isset($this->routes[$name])) {
             throw new RouteNotFoundException("Route [{$name}] not found.");
         }
 
-        [$mountPath, $path] = $this->routes[$name];
+        [$mountPath, $path, $baseUri] = $this->routes[$name];
 
-        return with($this->path($mountPath, $path, $arguments), function (string $path) use ($absolute) {
+        return with($this->path($mountPath, $path, $baseUri, $arguments), function (string $path) use ($absolute) {
             return $absolute ? url($path) : $path;
         });
     }
@@ -123,13 +125,13 @@ class FolioRoutes
      *
      * @param  array<string, mixed>  $parameters
      */
-    protected function path(string $mountPath, string $path, array $parameters): string
+    protected function path(string $mountPath, string $path, string $baseUri, array $parameters): string
     {
         $uri = str_replace('.blade.php', '', $path);
 
         $uri = collect(explode('/', $uri))
             ->map(function (string $segment) use ($parameters, $uri) {
-                if (! Str::startsWith($segment, '[')) {
+                if (!Str::startsWith($segment, '[')) {
                     return $segment;
                 }
 
@@ -139,7 +141,7 @@ class FolioRoutes
                     return [Str::camel($key) => $value];
                 })->all();
 
-                if (! isset($parameters[$name = $segment->variable()]) || $parameters[$name] === null) {
+                if (!isset($parameters[$name = $segment->variable()]) || $parameters[$name] === null) {
                     throw UrlGenerationException::forMissingParameter($uri, $name);
                 }
 
@@ -154,7 +156,11 @@ class FolioRoutes
 
         $uri = str_replace(['/index', '/index/'], ['', '/'], $uri);
 
-        return '/'.ltrim(substr($uri, strlen($mountPath)), '/');
+        $baseUri = str($baseUri)
+            ->whenNotExactly('/', fn (Stringable $string) => $string->append('/'))
+            ->toString();
+
+        return $baseUri . ltrim(substr($uri, strlen($mountPath)), '/');
     }
 
     /**

@@ -119,16 +119,6 @@ class FolioRoutes
     }
 
     /**
-     * Get all the registered routes.
-     */
-    public function routes(): array
-    {
-        $this->ensureLoaded();
-
-        return $this->routes;
-    }
-
-    /**
      * Get the relative route URL for the given route name and arguments.
      *
      * @param  array<string, mixed>  $parameters
@@ -192,6 +182,16 @@ class FolioRoutes
         }
 
         return $value;
+    }
+
+    /**
+     * Get all of the registered routes.
+     */
+    public function routes(): array
+    {
+        $this->ensureLoaded();
+
+        return $this->routes;
     }
 
     /**

@@ -5,6 +5,7 @@ namespace Laravel\Folio\Console;
 use Illuminate\Foundation\Console\RouteListCommand;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Illuminate\Support\Stringable;
 use Laravel\Folio\FolioManager;
 use Laravel\Folio\MountPath;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -95,13 +96,17 @@ class ListCommand extends RouteListCommand
                         ->map(function (string $currentSegment) {
                             if (Str::startsWith($currentSegment, '[...')) {
                                 $formattedSegment = '[...';
-                            } elseif (Str::startsWith($currentSegment, '[.')) {
+                            } elseif (Str::startsWith($currentSegment, '[')) {
                                 $formattedSegment = '[';
                             } else {
                                 return $currentSegment;
                             }
 
-                            $lastPartOfSegment = str($currentSegment)->afterLast('.');
+                            $lastPartOfSegment = str($currentSegment)->whenContains(
+                                '.',
+                                fn (Stringable $string) => $string->afterLast('.'),
+                                fn (Stringable $string) => $string->afterLast('['),
+                            );
 
                             return $formattedSegment.match (true) {
                                 $lastPartOfSegment->contains(':') => $lastPartOfSegment->beforeLast(':')->camel()

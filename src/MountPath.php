@@ -22,12 +22,4 @@ class MountPath
 
         $this->middleware = new PathBasedMiddlewareList($middleware);
     }
-
-    /**
-     * Get the route name assigned to the route at this mount path.
-     */
-    public function routeName(): string
-    {
-        return 'folio-'.substr(sha1($this->baseUri), 0, 10);
-    }
 }

@@ -9,8 +9,8 @@ use Tests\Feature\Fixtures\Podcast;
 use Tests\Feature\Fixtures\User;
 
 beforeEach(function () {
-    Folio::route(__DIR__.'/resources/views/pages');
-    Folio::path(__DIR__.'/resources/views/more-pages');
+    Folio::route(__DIR__ . '/resources/views/pages');
+    Folio::path(__DIR__ . '/resources/views/more-pages');
 
     app(FolioRoutes::class)->flush();
 
@@ -74,7 +74,8 @@ test('feature parity', function () {
         string $id,
         string $upperCase,
         Podcast $podcast,
-        User $user) {
+        User $user
+    ) {
         //
     })->name('users.regular');
 
@@ -115,3 +116,15 @@ test('model route binding wrong column', function () {
 test('routes may not have a name', function () {
     route('users.index');
 })->throws(RouteNotFoundException::class, 'Route [users.index] not defined.');
+
+test('route names may be used when the Folio `uri` is not the default one', function () {
+    Folio::route(
+        path: __DIR__ . '/resources/views/even-more-pages',
+        uri: '/user'
+    );
+
+    $expected = '/user/profile';
+    $route = route('profile', [], false);
+
+    expect($route)->toBe($expected);
+});

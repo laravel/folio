@@ -23,10 +23,12 @@
     - [Nested Routes](#nested-routes)
     - [Index Routes](#index-routes)
 - [Route Parameters](#route-parameters)
+- [Named Routes](#named-routes)
 - [Route Model Binding](#route-model-binding)
     - [Soft Deleted Models](#soft-deleted-models)
 - [Middleware](#middleware)
 - [PHP Blocks](#php-blocks)
+- [Route Caching](#route-caching)
 - [Contributing](#contributing)
 - [Code of Conduct](#code-of-conduct)
 - [Security Vulnerabilities](#security-vulnerabilities)
@@ -181,6 +183,33 @@ When capturing multiple segments, the captured segments will be injected into th
 </ul>
 ```
 
+<a name="named-routes"></a>
+## Named Routes
+
+You may specify a name for a given page's route using the `name` function:
+
+```php
+<?php
+
+use function Laravel\Folio\name;
+
+name('users.index');
+```
+
+Just like Laravel's named routes, you may use the `route` function to generate URLs to Folio pages that have been assigned a name:
+
+```php
+<a href="{{ route('users.index') }}">
+    All Users
+</a>
+```
+
+If the page has parameters, you may simply pass their values to the `route` function:
+
+```php
+route('users.show', ['user' => $user]);
+```
+
 <a name="route-model-binding"></a>
 ## Route Model Binding
 
@@ -312,6 +341,11 @@ Therefore, if you need to write PHP code that should be executed within your Bla
     </div>
 @endforeach
 ```
+
+<a name="route-caching"></a>
+## Route Caching
+
+When using Folio, you should always take advantage of [Laravel's route caching capabilities](https://laravel.com/docs/routing#route-caching). Folio listens for the `rotue:cache` Artisan command to ensure that Folio page definitions and route names are properly cached for maximum performance.
 
 ## Contributing
 <a name="contributing"></a>

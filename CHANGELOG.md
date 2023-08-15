@@ -1,6 +1,13 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/folio/compare/v1.0.0-beta.4...master)
+## [Unreleased](https://github.com/laravel/folio/compare/v1.0.0-beta.5...master)
+
+## [v1.0.0-beta.5](https://github.com/laravel/folio/compare/v1.0.0-beta.4...v1.0.0-beta.5) - 2023-08-15
+
+- Adds `name` function ([#79](https://github.com/laravel/folio/pull/79))
+- Improves testbench development workflow ([#74](https://github.com/laravel/folio/pull/74))
+- Improves `folio:install` command ([#78](https://github.com/laravel/folio/pull/78))
+- Fixes potencial collision with facade names ([#84](https://github.com/laravel/folio/pull/84))
 
 ## [v1.0.0-beta.4](https://github.com/laravel/folio/compare/v1.0.0-beta.3...v1.0.0-beta.4) - 2023-08-08
 

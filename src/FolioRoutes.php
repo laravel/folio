@@ -185,6 +185,16 @@ class FolioRoutes
     }
 
     /**
+     * Get all of the registered routes.
+     */
+    public function routes(): array
+    {
+        $this->ensureLoaded();
+
+        return $this->routes;
+    }
+
+    /**
      * Flush the cached routes.
      */
     public function flush(): void

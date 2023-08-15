@@ -7,7 +7,9 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Stringable;
 use Laravel\Folio\FolioManager;
+use Laravel\Folio\FolioRoutes;
 use Laravel\Folio\MountPath;
+use Laravel\Folio\Support\Project;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Finder\Finder;
@@ -28,7 +30,7 @@ class ListCommand extends RouteListCommand
      *
      * @var array<int, string>
      */
-    protected $headers = ['Domain', 'Method', 'URI', 'View'];
+    protected $headers = ['Domain', 'Method', 'URI', 'Name', 'View'];
 
     /**
      * Execute the console command.
@@ -55,7 +57,13 @@ class ListCommand extends RouteListCommand
      */
     protected function formatActionForCli($route): string
     {
-        return $route['view'];
+        $action = $route['view'];
+
+        if (is_string($route['name'])) {
+            $action = $route['name'].' › '.$action;
+        }
+
+        return $action;
     }
 
     /**
@@ -128,7 +136,7 @@ class ListCommand extends RouteListCommand
                         'method' => 'GET',
                         'domain' => $domain,
                         'uri' => $uri === '' ? '/' : $uri,
-                        'name' => '',
+                        'name' => $this->routeName($mountPath, $viewPath),
                         'action' => $action,
                         'view' => $action,
                     ];
@@ -139,30 +147,16 @@ class ListCommand extends RouteListCommand
     }
 
     /**
-     * Filter the route by URI and / or name.
-     *
-     * @param  array<string, string>  $route
-     * @return array<string, string>|null
+     * Get the route name for the given mount path and view path.
      */
-    protected function filterRoute(array $route): ?array
+    protected function routeName(string $mountPath, string $viewPath): ?string
     {
-        if (($this->option('path') && ! Str::contains($route['uri'], $this->option('path')))) {
-            return null;
-        }
+        return collect($this->laravel->make(FolioRoutes::class)->routes())->search(function (array $route) use ($mountPath, $viewPath) {
+            [$routeRelativeMountPath, $routeRelativeViewPath] = $route;
 
-        if (($this->option('domain') && ! Str::contains((string) $route['domain'], $this->option('domain')))) {
-            return null;
-        }
-
-        if ($this->option('except-path')) {
-            foreach (explode(',', $this->option('except-path')) as $path) {
-                if (str_contains($route['uri'], $path)) {
-                    return null;
-                }
-            }
-        }
-
-        return $route;
+            return $routeRelativeMountPath === Project::relativePathOf($mountPath)
+                && $routeRelativeViewPath === Project::relativePathOf($viewPath);
+        }) ?: null;
     }
 
     /**
@@ -212,6 +206,37 @@ class ListCommand extends RouteListCommand
     }
 
     /**
+     * Filter the route by URI and / or name.
+     *
+     * @param  array<string, string>  $route
+     * @return array<string, string>|null
+     */
+    protected function filterRoute(array $route): ?array
+    {
+        if ($this->option('name') && ! Str::contains((string) $route['name'], $this->option('name'))) {
+            return null;
+        }
+
+        if (($this->option('path') && ! Str::contains($route['uri'], $this->option('path')))) {
+            return null;
+        }
+
+        if (($this->option('domain') && ! Str::contains((string) $route['domain'], $this->option('domain')))) {
+            return null;
+        }
+
+        if ($this->option('except-path')) {
+            foreach (explode(',', $this->option('except-path')) as $path) {
+                if (str_contains($route['uri'], $path)) {
+                    return null;
+                }
+            }
+        }
+
+        return $route;
+    }
+
+    /**
      * Sort the routes by a given element.
      *
      * @param  string  $sort
@@ -253,11 +278,12 @@ class ListCommand extends RouteListCommand
     {
         return [
             ['json', null, InputOption::VALUE_NONE, 'Output the route list as JSON'],
+            ['name', null, InputOption::VALUE_OPTIONAL, 'Filter the routes by name'],
             ['domain', null, InputOption::VALUE_OPTIONAL, 'Filter the routes by domain'],
             ['path', null, InputOption::VALUE_OPTIONAL, 'Only show routes matching the given path pattern'],
             ['except-path', null, InputOption::VALUE_OPTIONAL, 'Do not display the routes matching the given path pattern'],
             ['reverse', 'r', InputOption::VALUE_NONE, 'Reverse the ordering of the routes'],
-            ['sort', null, InputOption::VALUE_OPTIONAL, 'The column (uri, view) to sort by', 'uri'],
+            ['sort', null, InputOption::VALUE_OPTIONAL, 'The column (domain, name, uri, view) to sort by', 'uri'],
         ];
     }
 }

@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 class FolioRoutes
 {
     /**
-     * The current version of the persisted routes.
+     * The current version of the persisted route cache.
      */
     protected static int $version = 1;
 

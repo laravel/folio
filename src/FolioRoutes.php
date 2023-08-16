@@ -174,16 +174,20 @@ class FolioRoutes
 
                 $name = $segment->variable();
 
-                $value = $parameters->first(function (mixed $value, string $key) use ($name) {
+                $key = $parameters->search(function (mixed $value, string $key) use ($name) {
                     return Str::camel($key) === $name && $value !== null;
-                }, fn () => throw UrlGenerationException::forMissingParameter($uri, $name));
+                });
 
-                $usedParameters->put($name, $value);
+                if ($key === false) {
+                    throw UrlGenerationException::forMissingParameter($uri, $name);
+                }
+
+                $usedParameters->add($key);
 
                 return $this->formatParameter(
                     $uri,
-                    $name,
-                    $value,
+                    Str::camel($key),
+                    $parameters->get($key),
                     $segment->field(),
                     $segment->capturesMultipleSegments()
                 );
@@ -193,7 +197,7 @@ class FolioRoutes
 
         return [
             '/'.ltrim(substr($uri, strlen($mountPath)), '/'),
-            $parameters->except($usedParameters->keys()->all())->all(),
+            $parameters->except($usedParameters->all())->all(),
         ];
     }
 

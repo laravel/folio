@@ -17,6 +17,11 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 class FolioRoutes
 {
     /**
+     * The current version of the persisted route cache.
+     */
+    protected static int $version = 1;
+
+    /**
      * Create a new Folio routes instance.
      *
      * @param  array<string, array{string, string}>  $routes
@@ -41,7 +46,10 @@ class FolioRoutes
 
         File::put(
             $this->cachedFolioRoutesPath,
-            '<?php return '.var_export($this->routes, true).';',
+            '<?php return '.var_export([
+                'version' => static::$version,
+                'routes' => $this->routes,
+            ], true).';',
         );
     }
 
@@ -67,9 +75,15 @@ class FolioRoutes
         }
 
         if (File::exists($this->cachedFolioRoutesPath)) {
-            $this->routes = File::getRequire($this->cachedFolioRoutesPath);
+            $cache = File::getRequire($this->cachedFolioRoutesPath);
 
-            return;
+            if (isset($cache['version']) && (int) $cache['version'] === static::$version) {
+                $this->routes = $cache['routes'];
+
+                $this->loaded = true;
+
+                return;
+            }
         }
 
         foreach ($this->manager->mountPaths() as $mountPath) {
@@ -80,8 +94,10 @@ class FolioRoutes
 
                 if ($name = $matchedView->name()) {
                     $this->routes[$name] = [
-                        Project::relativePathOf($matchedView->mountPath),
-                        Project::relativePathOf($matchedView->path),
+                        'mountPath' => Project::relativePathOf($matchedView->mountPath),
+                        'path' => Project::relativePathOf($matchedView->path),
+                        'baseUri' => $mountPath->baseUri,
+                        'domain' => $mountPath->domain,
                     ];
                 }
             }
@@ -102,6 +118,8 @@ class FolioRoutes
 
     /**
      * Get the route URL for the given route name and arguments.
+     *
+     * @thows  \Laravel\Folio\Exceptions\UrlGenerationException
      */
     public function get(string $name, array $arguments, bool $absolute): string
     {
@@ -111,42 +129,64 @@ class FolioRoutes
             throw new RouteNotFoundException("Route [{$name}] not found.");
         }
 
-        [$mountPath, $path] = $this->routes[$name];
+        [
+            'mountPath' => $mountPath,
+            'path' => $path,
+            'baseUri' => $baseUri,
+            'domain' => $domain,
+        ] = $this->routes[$name];
 
-        return with($this->path($mountPath, $path, $arguments), function (string $path) use ($absolute) {
-            return $absolute ? url($path) : $path;
-        });
+        [$path, $remainingArguments] = $this->path($mountPath, $path, $arguments);
+
+        $route = new Route(['GET'], '{__folio_path}', fn () => null);
+
+        $route->name($name)->domain($domain);
+
+        $uri = $baseUri === '/' ? $path : $baseUri.$path;
+
+        try {
+            return url()->toRoute($route, [...$remainingArguments, '__folio_path' => $uri], $absolute);
+        } catch (\Illuminate\Routing\Exceptions\UrlGenerationException $e) {
+            throw new UrlGenerationException(str_replace('{__folio_path}', $uri, $e->getMessage()), $e->getCode(), $e);
+        }
     }
 
     /**
      * Get the relative route URL for the given route name and arguments.
      *
      * @param  array<string, mixed>  $parameters
+     * @return  array{string, array<string, mixed>}
      */
-    protected function path(string $mountPath, string $path, array $parameters): string
+    protected function path(string $mountPath, string $path, array $parameters): array
     {
         $uri = str_replace('.blade.php', '', $path);
 
+        [$parameters, $usedParameters] = [collect($parameters), collect()];
+
         $uri = collect(explode('/', $uri))
-            ->map(function (string $segment) use ($parameters, $uri) {
+            ->map(function (string $segment) use ($parameters, $uri, $usedParameters) {
                 if (! Str::startsWith($segment, '[')) {
                     return $segment;
                 }
 
                 $segment = new PotentiallyBindablePathSegment($segment);
 
-                $parameters = collect($parameters)->mapWithKeys(function (mixed $value, string $key) {
-                    return [Str::camel($key) => $value];
-                })->all();
+                $name = $segment->variable();
 
-                if (! isset($parameters[$name = $segment->variable()]) || $parameters[$name] === null) {
+                $key = $parameters->search(function (mixed $value, string $key) use ($name) {
+                    return Str::camel($key) === $name && $value !== null;
+                });
+
+                if ($key === false) {
                     throw UrlGenerationException::forMissingParameter($uri, $name);
                 }
 
+                $usedParameters->add($key);
+
                 return $this->formatParameter(
                     $uri,
-                    $name,
-                    $parameters[$name],
+                    Str::camel($key),
+                    $parameters->get($key),
                     $segment->field(),
                     $segment->capturesMultipleSegments()
                 );
@@ -154,7 +194,10 @@ class FolioRoutes
 
         $uri = str_replace(['/index', '/index/'], ['', '/'], $uri);
 
-        return '/'.ltrim(substr($uri, strlen($mountPath)), '/');
+        return [
+            '/'.ltrim(substr($uri, strlen($mountPath)), '/'),
+            $parameters->except($usedParameters->all())->all(),
+        ];
     }
 
     /**

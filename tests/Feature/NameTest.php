@@ -115,3 +115,23 @@ test('model route binding wrong column', function () {
 test('routes may not have a name', function () {
     route('users.index');
 })->throws(RouteNotFoundException::class, 'Route [users.index] not defined.');
+
+test('custom uri', function () {
+    Folio::uri('/user')->path(__DIR__.'/resources/views/even-more-pages');
+
+    $absoluteRoute = route('profile');
+    $route = route('profile', [], false);
+
+    expect($absoluteRoute)->toBe('http://localhost/user/profile')
+        ->and($route)->toBe('/user/profile');
+});
+
+test('custom domain', function () {
+    Folio::domain('example.com')->uri('/user')->path(__DIR__.'/resources/views/even-more-pages');
+
+    $absoluteRoute = route('profile');
+    $route = route('profile', [], false);
+
+    expect($absoluteRoute)->toBe('http://example.com/user/profile')
+        ->and($route)->toBe('/user/profile');
+});

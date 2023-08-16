@@ -106,6 +106,34 @@ it('may have absolute routes', function (string $name, array $scenario) {
     return [$mountPath, $mountPath.'/'.$viewRelativePath, $domain, $arguments, $expectedRoute];
 })->mapWithKeys(fn (array $value, string $key) => [$key => [$key, $value]])->toArray());
 
+it('may have routes with custom base uri', function (string $name, array $scenario) {
+    [$mountPath, $viewPath, $baseUri, $arguments, $expectedRoute] = $scenario;
+
+    $arguments = collect($arguments)->map(fn ($argument) => value($argument))->all();
+
+    $names = new FolioRoutes(Mockery::mock(FolioManager::class), '', [
+        $name => [
+            'mountPath' => $mountPath,
+            'path' => $viewPath,
+            'baseUri' => $baseUri,
+            'domain' => null,
+        ],
+    ], true);
+
+    expect($names->has($name))->toBeTrue()
+        ->and($names->get($name, $arguments, true))->toBe($expectedRoute);
+})->with(fn () => collect([
+    'podcasts.index' => ['podcasts/index.blade.php', '/a', [], 'http://localhost/a/podcasts'],
+    'podcasts.show' => ['podcasts/[id].blade.php', '/a/b', ['id' => 1], 'http://localhost/a/b/podcasts/1'],
+    'podcasts.show-by-account-and-name' => ['podcasts/[name].blade.php', '/a/b/c', ['name' => 'Taylor'], 'http://localhost/a/b/c/podcasts/Taylor'],
+])->map(function (array $value) {
+    $mountPath = 'resources/views/pages';
+
+    [$viewRelativePath, $domain, $arguments, $expectedRoute] = $value;
+
+    return [$mountPath, $mountPath.'/'.$viewRelativePath, $domain, $arguments, $expectedRoute];
+})->mapWithKeys(fn (array $value, string $key) => [$key => [$key, $value]])->toArray());
+
 test('missing parameters', function (string $name, array $scenario) {
     [$mountPath, $viewPath, $domain, $arguments, $expectedExpectationMessage] = $scenario;
 

@@ -1,6 +1,11 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/folio/compare/v1.0.0-beta.5...master)
+## [Unreleased](https://github.com/laravel/folio/compare/v1.0.0-beta.6...master)
+
+## [v1.0.0-beta.6](https://github.com/laravel/folio/compare/v1.0.0-beta.5...v1.0.0-beta.6) - 2023-08-16
+
+- Adds route names to `folio:list` command ([#86](https://github.com/laravel/folio/pull/86))
+- Fixes `route()` base uri, domain, and query parameters ([#88](https://github.com/laravel/folio/pull/88))
 
 ## [v1.0.0-beta.5](https://github.com/laravel/folio/compare/v1.0.0-beta.4...v1.0.0-beta.5) - 2023-08-15
 

@@ -161,8 +161,7 @@ class FolioRoutes
     {
         $uri = str_replace('.blade.php', '', $path);
 
-        $parameters = collect($parameters);
-        $usedParameters = collect();
+        [$parameters, $usedParameters] = [collect($parameters), collect()];
 
         $uri = collect(explode('/', $uri))
             ->map(function (string $segment) use ($parameters, $uri, $usedParameters) {

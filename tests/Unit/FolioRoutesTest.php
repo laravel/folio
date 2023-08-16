@@ -129,6 +129,8 @@ test('missing parameters', function (string $name, array $scenario) {
     'podcasts.show' => ['podcasts/[id].blade.php', 'domain.com', [], 'Missing required parameter [id] for path [resources/views/pages/podcasts/[id]].'],
     'podcasts.show-by-account-and-name' => ['podcasts/[name].blade.php', '{account}.domain.com', ['name' => 'Taylor'], 'Missing required parameter for [Route: podcasts.show-by-account-and-name] [URI: /podcasts/Taylor] [Missing parameter: account].'],
     'podcasts.show-by-account-and-name-and-pagination' => ['podcasts/[name].blade.php', '{account}.domain.com', ['account' => 'taylor', 'page' => 1], 'Missing required parameter [name] for path [resources/views/pages/podcasts/[name]].'],
+    'podcasts.show-by-account-and-account' => ['podcasts/[account].blade.php', '{account}.domain.com', ['account' => 'taylor'], 'Missing required parameter for [Route: podcasts.show-by-account-and-account] [URI: /podcasts/taylor] [Missing parameter: account].'],
+    'podcasts.show-by-account-and-{name}' => ['podcasts/name.blade.php', '{account}.domain.com', ['account' => '{name}', 'name' => 'nuno'], 'Missing required parameter for [Route: podcasts.show-by-account-and-{name}] [URI: /podcasts/name] [Missing parameter: name].'],
 ])->map(function (array $value) {
     $mountPath = 'resources/views/pages';
 

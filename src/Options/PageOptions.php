@@ -3,7 +3,6 @@
 namespace Laravel\Folio\Options;
 
 use Closure;
-
 use function Laravel\Folio\middleware;
 use function Laravel\Folio\name;
 use function Laravel\Folio\withTrashed;

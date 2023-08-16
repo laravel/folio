@@ -152,7 +152,7 @@ class ListCommand extends RouteListCommand
     protected function routeName(string $mountPath, string $viewPath): ?string
     {
         return collect($this->laravel->make(FolioRoutes::class)->routes())->search(function (array $route) use ($mountPath, $viewPath) {
-            [$routeRelativeMountPath, $routeRelativeViewPath] = $route;
+            ['mountPath' => $routeRelativeMountPath, 'path' => $routeRelativeViewPath] = $route;
 
             return $routeRelativeMountPath === Project::relativePathOf($mountPath)
                 && $routeRelativeViewPath === Project::relativePathOf($viewPath);

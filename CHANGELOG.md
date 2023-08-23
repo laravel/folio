@@ -2,6 +2,10 @@
 
 ## [Unreleased](https://github.com/laravel/folio/compare/v1.0.0-beta.7...master)
 
+## [v1.0.0](https://github.com/laravel/folio/compare/v1.0.0-beta.7...v1.0.0) - 2023-08-23
+
+- Stable release of Folio. For more information, please consult the [Folio documentation](https://laravel.com/docs/folio).
+
 ## [v1.0.0-beta.7](https://github.com/laravel/folio/compare/v1.0.0-beta.6...v1.0.0-beta.7) - 2023-08-23
 
 - Adds `request()->routeIs(...)` support ([#93](https://github.com/laravel/folio/pull/93))

@@ -42,6 +42,10 @@ class RequestHandler
 
         abort_unless($matchedView ?? null, 404);
 
+        if ($name = $matchedView->name()) {
+            $request->route()->action['as'] = $name;
+        }
+
         app(Dispatcher::class)->dispatch(new Events\ViewMatched($matchedView, $mountPath));
 
         $middleware = collect($this->middleware($mountPath, $matchedView));
@@ -60,11 +64,13 @@ class RequestHandler
 
                 $app = app();
 
-                $app->make(FolioManager::class)->terminateUsing(
-                    fn () => $middleware->filter(fn ($middleware) => is_string($middleware) && class_exists($middleware) && method_exists($middleware, 'terminate'))
-                        ->map(fn (string $middleware) => $app->make($middleware))
-                        ->each(fn (object $middleware) => $app->call([$middleware, 'terminate'], ['request' => $request, 'response' => $response])),
-                );
+                $app->make(FolioManager::class)->terminateUsing(function () use ($middleware, $app, $request, $response) {
+                    $middleware->filter(fn ($m) => is_string($m) && class_exists($m) && method_exists($m, 'terminate'))
+                        ->map(fn (string $m) => $app->make($m))
+                        ->each(fn (object $m) => $app->call([$m, 'terminate'], ['request' => $request, 'response' => $response]));
+
+                    $request->route()->action['as'] = 'laravel-folio';
+                });
 
                 return $response;
             });

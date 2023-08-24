@@ -1,6 +1,6 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/folio/compare/v1.0.0-beta.7...master)
+## [Unreleased](https://github.com/laravel/folio/compare/v1.0.0...master)
 
 ## [v1.0.0](https://github.com/laravel/folio/compare/v1.0.0-beta.7...v1.0.0) - 2023-08-23
 

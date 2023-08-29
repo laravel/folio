@@ -8,6 +8,18 @@ use Illuminate\Support\Arr;
 use Laravel\Folio\Options\PageOptions;
 
 /**
+ * Specify the callback that should be used to render matched views.
+ */
+function get(callable $callback): PageOptions
+{
+    Container::getInstance()->make(InlineMetadataInterceptor::class)->whenListening(
+        fn () => Metadata::instance()->callback = $callback,
+    );
+
+    return new PageOptions;
+}
+
+/**
  * Specify the name of the current page.
  */
 function name(string $name): PageOptions

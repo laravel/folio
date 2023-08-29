@@ -5,11 +5,11 @@ namespace Laravel\Folio;
 use Closure;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Routing\Pipeline;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use Laravel\Folio\Pipeline\MatchedView;
+use Symfony\Component\HttpFoundation\Response;
 
 class RequestHandler
 {
@@ -60,7 +60,7 @@ class RequestHandler
 
                 $response = $this->renderUsing
                     ? ($this->renderUsing)($request, $matchedView)
-                    : $this->toResponse($matchedView);
+                    : $this->toResponse($request, $matchedView);
 
                 $app = app();
 
@@ -96,12 +96,14 @@ class RequestHandler
     /**
      * Create a response instance for the given matched view.
      */
-    protected function toResponse(MatchedView $matchedView): Response
+    protected function toResponse(Request $request, MatchedView $matchedView): Response
     {
-        return new Response(
-            View::file($matchedView->path, $matchedView->data),
-            200,
-            ['Content-Type' => 'text/html'],
-        );
+        $view = View::file($matchedView->path, $matchedView->data);
+
+        if ($callback = $matchedView->callback()) {
+            $view = app()->call($callback, ['view' => $view, ...$view->getData()]);
+        }
+
+        return Route::toResponse($request, $view);
     }
 }

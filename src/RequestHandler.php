@@ -101,7 +101,11 @@ class RequestHandler
         $view = View::file($matchedView->path, $matchedView->data);
 
         if ($callback = $matchedView->callback()) {
-            $view = app()->call($callback, ['view' => $view, ...$view->getData()]);
+            $potentialView = app()->call($callback, ['view' => $view, ...$view->getData()]);
+
+            if (! is_null($potentialView)) {
+                $view = $potentialView;
+            }
         }
 
         return Route::toResponse($request, $view);

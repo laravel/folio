@@ -1,8 +1,8 @@
 <?php
 
-use function Laravel\Folio\get;
+use function Laravel\Folio\render;
 
-get(function () {
+render(function () {
     return to_route('users.show', ['user' => 1]);
 }); ?>
 

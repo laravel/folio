@@ -2,9 +2,9 @@
 
 use Illuminate\Contracts\View\View;
 use Tests\Feature\Fixtures\User;
-use function Laravel\Folio\get;
+use function Laravel\Folio\render;
 
-get(function (View $view, User $user) {
+render(function (View $view, User $user) {
     return $view->with('modelRouteBinding', $user);
 })->name('users.show') ?>
 

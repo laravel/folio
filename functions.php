@@ -10,7 +10,7 @@ use Laravel\Folio\Options\PageOptions;
 /**
  * Specify the callback that should be used to render matched views.
  */
-function get(callable $callback): PageOptions
+function render(callable $callback): PageOptions
 {
     Container::getInstance()->make(InlineMetadataInterceptor::class)->whenListening(
         fn () => Metadata::instance()->callback = $callback,

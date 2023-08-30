@@ -1,6 +1,10 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/folio/compare/v1.0.0...master)
+## [Unreleased](https://github.com/laravel/folio/compare/v1.1.0...master)
+
+## [v1.1.0](https://github.com/laravel/folio/compare/v1.0.0...v1.1.0) - 2023-08-30
+
+- [1.x] Adds `render` function ([#100](https://github.com/laravel/folio/pull/100))
 
 ## [v1.0.0](https://github.com/laravel/folio/compare/v1.0.0-beta.7...v1.0.0) - 2023-08-23
 

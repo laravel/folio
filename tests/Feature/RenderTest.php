@@ -52,3 +52,13 @@ test('may have dependencies', function () {
 test('middleware precedence', function () {
     $this->get('/middleware')->assertSee('Content: middleware 1 middleware 2 view 3.');
 });
+
+test('fragments', function () {
+    $this->get('/fragments')
+        ->assertSee('This is the title.')
+        ->assertSee('This is a fragment.');
+
+    $this->get('/fragments', ['HX-Request' => 'fragment-name'])
+        ->assertDontSee('This is the title.')
+        ->assertSee('This is a fragment.');
+});

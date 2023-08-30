@@ -51,11 +51,11 @@ class MatchedView
     }
 
     /**
-     * Get the matched view's callback, if any.
+     * Get the matched view's render callback.
      */
-    public function callback(): ?callable
+    public function renderUsing(): callable
     {
-        return app(InlineMetadataInterceptor::class)->intercept($this)->callback;
+        return app(InlineMetadataInterceptor::class)->intercept($this)->renderUsing ?? fn ($view) => $view;
     }
 
     /**

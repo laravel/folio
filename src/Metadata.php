@@ -19,7 +19,7 @@ class Metadata
         public ?string $name = null,
         public Collection $middleware = new Collection,
         public bool $withTrashed = false,
-        public ?Closure $callback = null,
+        public ?Closure $renderUsing = null,
     ) {
         //
     }

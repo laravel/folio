@@ -13,7 +13,7 @@ use Laravel\Folio\Options\PageOptions;
 function render(callable $callback): PageOptions
 {
     Container::getInstance()->make(InlineMetadataInterceptor::class)->whenListening(
-        fn () => Metadata::instance()->callback = $callback,
+        fn () => Metadata::instance()->renderUsing = $callback,
     );
 
     return new PageOptions;

@@ -51,6 +51,14 @@ class MatchedView
     }
 
     /**
+     * Get the matched view's render callback.
+     */
+    public function renderUsing(): callable
+    {
+        return app(InlineMetadataInterceptor::class)->intercept($this)->renderUsing ?? fn ($view) => $view;
+    }
+
+    /**
      * Get the path to the matched view relative to the mount path.
      */
     public function relativePath(): string

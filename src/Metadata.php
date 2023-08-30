@@ -2,6 +2,7 @@
 
 namespace Laravel\Folio;
 
+use Closure;
 use Illuminate\Support\Collection;
 
 class Metadata
@@ -17,7 +18,8 @@ class Metadata
     protected function __construct(
         public ?string $name = null,
         public Collection $middleware = new Collection,
-        public bool $withTrashed = false
+        public bool $withTrashed = false,
+        public ?Closure $renderUsing = null,
     ) {
         //
     }

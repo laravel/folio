@@ -20,6 +20,30 @@ function render(callable $callback): PageOptions
 }
 
 /**
+ * Specify the callback that should be used to render matched views if the given condition is true.
+ */
+function renderWhen(bool $condition, callable $callback): PageOptions
+{
+    if($condition) {
+        return render($callback);
+    }
+
+    return new PageOptions;
+}
+
+/**
+ * Specify the callback that should be used to render matched views unless the given condition is true.
+ */
+function renderUnless(bool $condition, callable $callback): PageOptions
+{
+    if(! $condition) {
+        return render($callback);
+    }
+
+    return new PageOptions;
+}
+
+/**
  * Specify the name of the current page.
  */
 function name(string $name): PageOptions

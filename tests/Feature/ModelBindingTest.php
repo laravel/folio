@@ -5,8 +5,23 @@ use Laravel\Folio\Folio;
 use Laravel\Folio\Pipeline\PotentiallyBindablePathSegment;
 use Tests\Feature\Fixtures\Event;
 use Tests\Feature\Fixtures\Podcast;
+use Tests\Feature\Fixtures\User;
 
 beforeEach(function () {
+    Schema::create('users', function ($table) {
+        $table->id();
+        $table->string('name');
+        $table->string('email')->unique();
+        $table->timestamps();
+    });
+
+    Schema::create('movies', function ($table) {
+        $table->id();
+        $table->foreignId('user_id');
+        $table->string('name');
+        $table->timestamps();
+    });
+
     Schema::create('podcasts', function ($table) {
         $table->id();
         $table->string('name');
@@ -77,6 +92,21 @@ test('not found error is thrown if implicit binding can not be resolved', functi
     ]);
 
     $this->get('/podcasts/missing-id')->assertNotFound();
+});
+
+test('child implicit bindings are resolved', function () {
+    $user = User::create([
+        'name' => 'test-name',
+        'email' => 'test-email@gmail.com',
+    ]);
+
+    $movie = $user->movies()->create([
+        'name' => 'test-movie-name',
+    ]);
+
+    $this->get('/users/movies/'.$user->id.'/'.$movie->id)->assertSee(
+        'test-name: test-movie-name.',
+    );
 });
 
 test('child implicit bindings are scoped to the parent if field is present', function () {

@@ -41,10 +41,11 @@ it('may have routes', function () {
           GET       /podcasts/{podcast}/comments/{comment:id} podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/[.Tests.Feature.Fixtures.Comment-id].blad…
           GET       /posts/{lowerCase}/{upperCase}/{podcast}/{user:email}/show posts.show › posts/[lowerCase]/[UpperCase]/[Podcast]/[User-email]/show.bla…
           GET       /users/articles/{user:wrongColumn} ........................................ user.articles › users/articles/[User-wrong_column].blade.php
+          GET       /users/movies/{user}/{movie} ............... users/movies/[.Tests.Feature.Fixtures.User]/[.Tests.Feature.Fixtures.Movie]/index.blade.php
           GET       /users/nuno .......................................................................................... users.nuno › users/nuno.blade.php
           GET       /users/{id} .......................................................................................... users.show › users/[id].blade.php
 
-                                                                                                                                         Showing [17] routes
+                                                                                                                                         Showing [18] routes
 
 
         EOF);
@@ -128,10 +129,11 @@ it('has the `--except-path` option', function () {
           GET       /non-routables/{nonRoutable} ............................................. non-routables/[.Tests.Feature.Fixtures.NonRoutable].blade.php
           GET       /posts/{lowerCase}/{upperCase}/{podcast}/{user:email}/show posts.show › posts/[lowerCase]/[UpperCase]/[Podcast]/[User-email]/show.bla…
           GET       /users/articles/{user:wrongColumn} ........................................ user.articles › users/articles/[User-wrong_column].blade.php
+          GET       /users/movies/{user}/{movie} ............... users/movies/[.Tests.Feature.Fixtures.User]/[.Tests.Feature.Fixtures.Movie]/index.blade.php
           GET       /users/nuno .......................................................................................... users.nuno › users/nuno.blade.php
           GET       /users/{id} .......................................................................................... users.show › users/[id].blade.php
 
-                                                                                                                                         Showing [12] routes
+                                                                                                                                         Showing [13] routes
 
 
         EOF);
@@ -230,12 +232,13 @@ test('multiple mounted directories', function () {
           GET       /podcasts/{podcast}/comments/{comment:id} tests/Feature/resources/views/pages/podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/[.Tes…
           GET       /posts/{lowerCase}/{upperCase}/{podcast}/{user:email}/show posts.show › tests/Feature/resources/views/pages/posts/[lowerCase]/[UpperC…
           GET       /users/articles/{user:wrongColumn} .... user.articles › tests/Feature/resources/views/pages/users/articles/[User-wrong_column].blade.php
+          GET       /users/movies/{user}/{movie} tests/Feature/resources/views/pages/users/movies/[.Tests.Feature.Fixtures.User]/[.Tests.Feature.Fixtures.M…
           GET       /users/nuno ...................................................... users.nuno › tests/Feature/resources/views/pages/users/nuno.blade.php
           GET       /users/{id} ...................................................... users.show › tests/Feature/resources/views/pages/users/[id].blade.php
           GET       /{...user} ................................................................ tests/Feature/resources/views/more-pages/[...User].blade.php
           GET       /{...user}/detail ......................... more-pages.user.detail › tests/Feature/resources/views/more-pages/[...User]/detail.blade.php
 
-                                                                                                                                         Showing [20] routes
+                                                                                                                                         Showing [21] routes
 
 
         EOF);

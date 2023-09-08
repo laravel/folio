@@ -100,12 +100,16 @@ test('child implicit bindings are resolved', function () {
         'email' => 'test-email@gmail.com',
     ]);
 
-    $movie = $user->movies()->create([
+    $user->movies()->create([
         'name' => 'test-movie-name',
     ]);
 
+    $movie = $user->movies()->create([
+        'name' => 'test-movie-name-2',
+    ]);
+
     $this->get('/users/movies/'.$user->id.'/'.$movie->id)->assertSee(
-        'test-name: test-movie-name.',
+        'test-name: test-movie-name-2.',
     );
 });
 

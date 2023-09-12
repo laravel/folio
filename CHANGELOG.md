@@ -1,6 +1,10 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/folio/compare/v1.1.0...master)
+## [Unreleased](https://github.com/laravel/folio/compare/v1.1.1...master)
+
+## [v1.1.1](https://github.com/laravel/folio/compare/v1.1.0...v1.1.1) - 2023-09-08
+
+- Fixes index views on nested model route bindings by [@nunomaduro](https://github.com/nunomaduro) in https://github.com/laravel/folio/pull/108
 
 ## [v1.1.0](https://github.com/laravel/folio/compare/v1.0.0...v1.1.0) - 2023-08-30
 

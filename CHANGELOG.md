@@ -1,6 +1,10 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/folio/compare/v1.1.1...master)
+## [Unreleased](https://github.com/laravel/folio/compare/v1.1.2...master)
+
+## [v1.1.2](https://github.com/laravel/folio/compare/v1.1.1...v1.1.2) - 2023-09-25
+
+- Adds BelongTo and HasMany as the function return types by [@stewartmuhanuzi](https://github.com/stewartmuhanuzi) in https://github.com/laravel/folio/pull/109
 
 ## [v1.1.1](https://github.com/laravel/folio/compare/v1.1.0...v1.1.1) - 2023-09-08
 

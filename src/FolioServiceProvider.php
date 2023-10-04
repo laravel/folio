@@ -18,7 +18,6 @@ class FolioServiceProvider extends ServiceProvider
         $this->app->singleton(FolioManager::class);
         $this->app->singleton(InlineMetadataInterceptor::class);
         $this->app->singleton(FolioRoutes::class);
-        $this->app->bind(Router::class);
 
         $this->app->when(FolioRoutes::class)
             ->needs('$cachedFolioRoutesPath')

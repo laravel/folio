@@ -35,7 +35,7 @@ class RequestHandler
 
             $uri = '/'.ltrim(substr($requestPath, strlen($mountPath->baseUri)), '/');
 
-            if ($matchedView = (new Router($mountPath))->match($request, $uri)) {
+            if ($matchedView = app()->make(Router::class, ['mountPath' =>  $mountPath])->match($request, $uri)) {
                 break;
             }
         }

@@ -38,6 +38,7 @@ it('may have routes', function () {
           GET       /podcasts/list ................................................................................................. podcasts/list.blade.php
           GET       /podcasts/{podcast} ............................................................... podcasts/[.Tests.Feature.Fixtures.Podcast].blade.php
           GET       /podcasts/{podcast}/comments ....................................... podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/index.blade.php
+          GET       /podcasts/{podcast}/comments/3 ......................................... podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/3.blade.php
           GET       /podcasts/{podcast}/comments/{comment:id} podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/[.Tests.Feature.Fixtures.Comment-id].blad…
           GET       /posts/{lowerCase}/{upperCase}/{podcast}/{user:email}/show posts.show › posts/[lowerCase]/[UpperCase]/[Podcast]/[User-email]/show.bla…
           GET       /users/articles/{user:wrongColumn} ........................................ user.articles › users/articles/[User-wrong_column].blade.php
@@ -45,7 +46,7 @@ it('may have routes', function () {
           GET       /users/nuno .......................................................................................... users.nuno › users/nuno.blade.php
           GET       /users/{id} .......................................................................................... users.show › users/[id].blade.php
 
-                                                                                                                                         Showing [18] routes
+                                                                                                                                         Showing [19] routes
 
 
         EOF);
@@ -80,9 +81,10 @@ it('has the `--path` option', function () {
           GET       /podcasts/list ................................................................................................. podcasts/list.blade.php
           GET       /podcasts/{podcast} ............................................................... podcasts/[.Tests.Feature.Fixtures.Podcast].blade.php
           GET       /podcasts/{podcast}/comments ....................................... podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/index.blade.php
+          GET       /podcasts/{podcast}/comments/3 ......................................... podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/3.blade.php
           GET       /podcasts/{podcast}/comments/{comment:id} podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/[.Tests.Feature.Fixtures.Comment-id].blad…
 
-                                                                                                                                          Showing [5] routes
+                                                                                                                                          Showing [6] routes
 
 
         EOF);
@@ -171,11 +173,12 @@ it('has the `--sort` option', function () {
 
           GET       /deleted-podcasts/{podcast} ............................................... deleted-podcasts/[.Tests.Feature.Fixtures.Podcast].blade.php
           GET       /podcasts/{podcast} ............................................................... podcasts/[.Tests.Feature.Fixtures.Podcast].blade.php
+          GET       /podcasts/{podcast}/comments/3 ......................................... podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/3.blade.php
           GET       /podcasts/{podcast}/comments/{comment:id} podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/[.Tests.Feature.Fixtures.Comment-id].blad…
           GET       /podcasts/{podcast}/comments ....................................... podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/index.blade.php
           GET       /podcasts/list ................................................................................................. podcasts/list.blade.php
 
-                                                                                                                                          Showing [5] routes
+                                                                                                                                          Showing [6] routes
 
 
         EOF);
@@ -194,12 +197,13 @@ it('has the `--reverse` option', function () {
         ->and($output->fetch())->toOutput(<<<'EOF'
 
           GET       /podcasts/{podcast}/comments/{comment:id} podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/[.Tests.Feature.Fixtures.Comment-id].blad…
+          GET       /podcasts/{podcast}/comments/3 ......................................... podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/3.blade.php
           GET       /podcasts/{podcast}/comments ....................................... podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/index.blade.php
           GET       /podcasts/{podcast} ............................................................... podcasts/[.Tests.Feature.Fixtures.Podcast].blade.php
           GET       /podcasts/list ................................................................................................. podcasts/list.blade.php
           GET       /deleted-podcasts/{podcast} ............................................... deleted-podcasts/[.Tests.Feature.Fixtures.Podcast].blade.php
 
-                                                                                                                                          Showing [5] routes
+                                                                                                                                          Showing [6] routes
 
 
         EOF);
@@ -229,6 +233,7 @@ test('multiple mounted directories', function () {
           GET       /podcasts/list ............................................................. tests/Feature/resources/views/pages/podcasts/list.blade.php
           GET       /podcasts/{podcast} ........................... tests/Feature/resources/views/pages/podcasts/[.Tests.Feature.Fixtures.Podcast].blade.php
           GET       /podcasts/{podcast}/comments ... tests/Feature/resources/views/pages/podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/index.blade.php
+          GET       /podcasts/{podcast}/comments/3 ..... tests/Feature/resources/views/pages/podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/3.blade.php
           GET       /podcasts/{podcast}/comments/{comment:id} tests/Feature/resources/views/pages/podcasts/[.Tests.Feature.Fixtures.Podcast]/comments/[.Tes…
           GET       /posts/{lowerCase}/{upperCase}/{podcast}/{user:email}/show posts.show › tests/Feature/resources/views/pages/posts/[lowerCase]/[UpperC…
           GET       /users/articles/{user:wrongColumn} .... user.articles › tests/Feature/resources/views/pages/users/articles/[User-wrong_column].blade.php
@@ -238,7 +243,7 @@ test('multiple mounted directories', function () {
           GET       /{...user} ................................................................ tests/Feature/resources/views/more-pages/[...User].blade.php
           GET       /{...user}/detail ......................... more-pages.user.detail › tests/Feature/resources/views/more-pages/[...User]/detail.blade.php
 
-                                                                                                                                         Showing [21] routes
+                                                                                                                                         Showing [22] routes
 
 
         EOF);

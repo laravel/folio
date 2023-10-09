@@ -14,7 +14,7 @@ class MatchWildcardDirectories
     public function __invoke(State $state, Closure $next): mixed
     {
         if ($directory = $this->findWildcardDirectory($state->currentDirectory())) {
-            $state = $state->withData(
+            $currentState = $state->withData(
                 Str::of($directory)
                     ->basename()
                     ->match('/\[(.*)\]/')->value(),
@@ -23,12 +23,12 @@ class MatchWildcardDirectories
                 Str::of($directory)->basename()
             );
 
-            if (! $state->onLastUriSegment()) {
-                return new ContinueIterating($state);
+            if (! $currentState->onLastUriSegment()) {
+                return new ContinueIterating($currentState);
             }
 
-            if (file_exists($path = $state->currentUriSegmentDirectory().'/index.blade.php')) {
-                return new MatchedView($path, $state->data);
+            if (file_exists($path = $currentState->currentUriSegmentDirectory().'/index.blade.php')) {
+                return new MatchedView($path, $currentState->data);
             }
         }
 

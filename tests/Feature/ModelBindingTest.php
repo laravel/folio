@@ -134,7 +134,7 @@ test('regular routes may be used if implicit binding can not be resolved', funct
         'content' => 'test-comment-content-3',
     ])->fresh();
 
-    $this->get('/podcasts/' . $podcast->id . '/comments/3')
+    $this->get('/podcasts/'.$podcast->id.'/comments/3')
         ->assertStatus(200)
         ->assertSee('literal-comment');
 });

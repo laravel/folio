@@ -103,14 +103,14 @@ test('regular routes may be used if implicit binding can not be resolved', funct
         'name' => 'test-podcast-name',
     ]);
 
-    $this->get('/podcasts/' . $podcast->id . '/comments/1')
+    $this->get('/podcasts/'.$podcast->id.'/comments/1')
         ->assertNotFound();
 
     $podcast->comments()->create([
         'content' => 'test-comment-content-1',
     ])->fresh();
 
-    $this->get('/podcasts/' . $podcast->id . '/comments/1')
+    $this->get('/podcasts/'.$podcast->id.'/comments/1')
         ->assertStatus(200)
         ->assertSee('test-comment-content-1');
 
@@ -118,11 +118,15 @@ test('regular routes may be used if implicit binding can not be resolved', funct
         'content' => 'test-comment-content-2',
     ])->fresh();
 
-    $this->get('/podcasts/' . $podcast->id . '/comments/2')
+    $podcast->comments()->create([
+        'content' => 'test-comment-content-3',
+    ])->fresh();
+
+    $this->get('/podcasts/'.$podcast->id.'/comments/2')
         ->assertStatus(200)
         ->assertSee('test-comment-content-2');
 
-    $this->get('/podcasts/' . $podcast->id . '/comments/3')
+    $this->get('/podcasts/'.$podcast->id.'/comments/3')
         ->assertStatus(200)
         ->assertSee('literal-comment');
 

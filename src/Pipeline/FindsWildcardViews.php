@@ -28,7 +28,11 @@ trait FindsWildcardViews
      */
     protected function findViewWith(string $directory, $startsWith, $endsWith): ?string
     {
-        $files = (new Filesystem)->files($directory);
+        if (!($filesystem = (new Filesystem))->exists($directory)) {
+            return null;
+        }
+
+        $files = $filesystem->files($directory);
 
         return collect($files)->first(function ($file) use ($startsWith, $endsWith) {
             $filename = Str::of($file->getFilename());

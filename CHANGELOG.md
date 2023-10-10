@@ -1,6 +1,11 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/folio/compare/v1.1.2...master)
+## [Unreleased](https://github.com/laravel/folio/compare/v1.1.3...master)
+
+## [v1.1.3](https://github.com/laravel/folio/compare/v1.1.2...v1.1.3) - 2023-10-09
+
+- Allows access to Pipeline via service container by [@inmanturbo](https://github.com/inmanturbo) in https://github.com/laravel/folio/pull/113
+- Fixes Wildcard Directories Modifying State for Literal Views in the Base Folder by [@nunomaduro](https://github.com/nunomaduro) in https://github.com/laravel/folio/pull/115
 
 ## [v1.1.2](https://github.com/laravel/folio/compare/v1.1.1...v1.1.2) - 2023-09-25
 

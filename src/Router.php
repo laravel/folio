@@ -11,6 +11,7 @@ use Laravel\Folio\Pipeline\MatchDirectoryIndexViews;
 use Laravel\Folio\Pipeline\MatchedView;
 use Laravel\Folio\Pipeline\MatchLiteralDirectories;
 use Laravel\Folio\Pipeline\MatchLiteralViews;
+use Laravel\Folio\Pipeline\MatchMultiSegmentWildcardDirectoryIndexViews;
 use Laravel\Folio\Pipeline\MatchRootIndex;
 use Laravel\Folio\Pipeline\MatchWildcardDirectories;
 use Laravel\Folio\Pipeline\MatchWildcardViews;
@@ -64,6 +65,7 @@ class Router
                     new SetMountPathOnMatchedView,
                     new MatchRootIndex,
                     new MatchDirectoryIndexViews,
+                    new MatchMultiSegmentWildcardDirectoryIndexViews,
                     new MatchWildcardViewsThatCaptureMultipleSegments,
                     new MatchLiteralDirectories,
                     new MatchWildcardDirectories,

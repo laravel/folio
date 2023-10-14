@@ -14,7 +14,7 @@ class MatchRootIndex
         if (trim($state->uri) === '/') {
             return file_exists($path = $state->mountPath.'/index.blade.php')
                     ? new MatchedView($path, $state->data)
-                    : new StopIterating;
+                    : $next($state);
         }
 
         return $next($state);

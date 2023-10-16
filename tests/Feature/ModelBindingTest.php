@@ -99,9 +99,13 @@ test('regular routes may be used if implicit binding can not be resolved', funct
         ->assertStatus(200)
         ->assertSee('podcast');
 
+    $this->get('/podcasts/1')->assertNotFound();
+
     $podcast = Podcast::create([
         'name' => 'test-podcast-name',
     ]);
+
+    $this->get('/podcasts/'.$podcast->id)->assertSee('test-podcast-name');
 
     $this->get('/podcasts/'.$podcast->id.'/comments/1')
         ->assertNotFound();

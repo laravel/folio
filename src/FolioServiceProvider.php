@@ -67,7 +67,7 @@ class FolioServiceProvider extends ServiceProvider
      */
     protected function registerUrlGenerator(): void
     {
-        $this->app->afterResolving(UrlGenerator::class, function ($url) {
+        $this->callAfterResolving(UrlGenerator::class, function ($url) {
             $url->resolveMissingNamedRoutesUsing(function ($name, $parameters, $absolute) {
                 $routes = app(FolioRoutes::class);
 

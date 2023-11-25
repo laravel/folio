@@ -17,6 +17,10 @@ class FolioServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/folio.php', 'folio'
+        );
+
         $this->app->singleton(FolioManager::class);
         $this->app->singleton(InlineMetadataInterceptor::class);
         $this->app->singleton(FolioRoutes::class);
@@ -62,6 +66,10 @@ class FolioServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__.'/../stubs/FolioServiceProvider.stub' => app_path('Providers/FolioServiceProvider.php'),
             ], 'folio-provider');
+
+            $this->publishes([
+                __DIR__.'/../config/folio.php' => config_path('folio.php'),
+            ]);
         }
     }
 

@@ -11,14 +11,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class InertiaDriver implements FolioDriverContract
 {
-    public function extension(): string
-    {
-        return '.tsx';
-    }
-
     public function requirePath($path): string
     {
-        return str($path)->replaceEnd($this->extension(), ".php")->toString();
+        return str($path)->replaceEnd(config('folio.extension'), ".php")->toString();
     }
 
     /**
@@ -26,7 +21,7 @@ class InertiaDriver implements FolioDriverContract
      */
     public function toResponse(Request $request, MatchedView $matchedView): Response
     {
-        $inertiaPath = str($matchedView->path)->replaceStart($matchedView->mountPath, '')->replaceStart('/', '')->replaceEnd($this->extension(), '')->__toString();
+        $inertiaPath = str($matchedView->path)->replaceStart($matchedView->mountPath, '')->replaceStart('/', '')->replaceEnd(config('folio.extension'), '')->__toString();
 
         $view = Inertia::render($inertiaPath, $matchedView->data);
 

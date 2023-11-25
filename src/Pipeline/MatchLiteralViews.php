@@ -3,7 +3,6 @@
 namespace Laravel\Folio\Pipeline;
 
 use Closure;
-use Laravel\Folio\Drivers\FolioDriverContract;
 
 class MatchLiteralViews
 {
@@ -13,7 +12,7 @@ class MatchLiteralViews
     public function __invoke(State $state, Closure $next): mixed
     {
         return $state->onLastUriSegment() &&
-            file_exists($path = $state->currentDirectory().'/'.$state->currentUriSegment().app(FolioDriverContract::class)->extension())
+            file_exists($path = $state->currentDirectory().'/'.$state->currentUriSegment().config('folio.extension'))
                 ? new MatchedView($path, $state->data)
                 : $next($state);
     }

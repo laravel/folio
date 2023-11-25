@@ -10,11 +10,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class BladeDriver
 {
-    public function extension(): string
-    {
-        return '.blade.php';
-    }
-
     public function requirePath($path): string
     {
         return $path;

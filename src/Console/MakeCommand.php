@@ -5,7 +5,6 @@ namespace Laravel\Folio\Console;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Str;
-use Laravel\Folio\Drivers\FolioDriverContract;
 use Laravel\Folio\Folio;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
@@ -46,7 +45,7 @@ class MakeCommand extends GeneratorCommand
         return $mountPath.'/'.preg_replace_callback(
             '/(?:\[.*?\])|(\w+)/',
             fn (array $matches) => empty($matches[1]) ? $matches[0] : Str::lower($matches[1]),
-            Str::finish($this->argument('name'), app(FolioDriverContract::class)->extension())
+            Str::finish($this->argument('name'), config('folio.extension'))
         );
     }
 

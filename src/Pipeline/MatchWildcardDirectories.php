@@ -28,11 +28,7 @@ class MatchWildcardDirectories
                 return new ContinueIterating($currentState);
             }
 
-            $driver = app(FolioDriverContract::class);
-            $extension = $driver->extension();
-            $path = $currentState->currentUriSegmentDirectory().'/index'.$extension;
-
-            if (file_exists($path)) {
+            if (file_exists($path = $currentState->currentUriSegmentDirectory().'/index'.config('folio.extension'))) {
                 return new MatchedView($path, $currentState->data);
             }
         }

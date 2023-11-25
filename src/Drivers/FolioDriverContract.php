@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 interface FolioDriverContract
 {
-    public function extension(): string;
     public function toResponse(Request $request, MatchedView $matchedView): Response;
     public function requirePath($path): string;
 }

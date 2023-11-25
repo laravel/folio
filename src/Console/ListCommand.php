@@ -6,7 +6,6 @@ use Illuminate\Foundation\Console\RouteListCommand;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Stringable;
-use Laravel\Folio\Drivers\FolioDriverContract;
 use Laravel\Folio\FolioManager;
 use Laravel\Folio\FolioRoutes;
 use Laravel\Folio\MountPath;
@@ -75,7 +74,7 @@ class ListCommand extends RouteListCommand
     protected function routesFromMountPaths(array $mountPaths): Collection
     {
         return collect($mountPaths)->map(function (MountPath $mountPath) {
-            $views = Finder::create()->in($mountPath->path)->name('*' . app(FolioDriverContract::class)->extension())->files()->getIterator();
+            $views = Finder::create()->in($mountPath->path)->name('*' . config('folio.extension'))->files()->getIterator();
 
             $domain = $mountPath->domain;
             $mountPath = str_replace(DIRECTORY_SEPARATOR, '/', $mountPath->path);
@@ -99,7 +98,7 @@ class ListCommand extends RouteListCommand
                         $action = str_replace($basePath, '', $viewPath);
                     }
 
-                    $uri = str_replace(app(FolioDriverContract::class)->extension(), '', $uri);
+                    $uri = str_replace(config('folio.extension'), '', $uri);
 
                     $uri = collect(explode('/', $uri))
                         ->map(function (string $currentSegment) {

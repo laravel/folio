@@ -4,6 +4,7 @@ namespace Laravel\Folio\Pipeline;
 
 use Closure;
 use Illuminate\Support\Str;
+use Laravel\Folio\Drivers\FolioDriverContract;
 
 class MatchWildcardViewsThatCaptureMultipleSegments
 {
@@ -17,7 +18,7 @@ class MatchWildcardViewsThatCaptureMultipleSegments
         if ($path = $this->findWildcardMultiSegmentView($state->currentDirectory())) {
             return new MatchedView($state->currentDirectory().'/'.$path, $state->withData(
                 Str::of($path)
-                    ->before('.blade.php')
+                    ->before(app(FolioDriverContract::class)->extension())
                     ->match('/\[\.\.\.(.*)\]/')->value(),
                 array_slice(
                     $state->segments,

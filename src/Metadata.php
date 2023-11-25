@@ -20,6 +20,7 @@ class Metadata
         public Collection $middleware = new Collection,
         public bool $withTrashed = false,
         public ?Closure $renderUsing = null,
+        public ?array $props = [],
     ) {
         //
     }

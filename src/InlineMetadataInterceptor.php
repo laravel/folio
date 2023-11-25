@@ -2,6 +2,7 @@
 
 namespace Laravel\Folio;
 
+use Laravel\Folio\Drivers\FolioDriverContract;
 use Laravel\Folio\Pipeline\MatchedView;
 
 class InlineMetadataInterceptor
@@ -30,14 +31,16 @@ class InlineMetadataInterceptor
                 ob_start();
 
                 [$__path, $__variables] = [
-                    $matchedView->path,
+                    app(FolioDriverContract::class)->requirePath($matchedView->path),
                     $matchedView->data,
                 ];
 
                 (static function () use ($__path, $__variables) {
                     extract($__variables);
 
-                    require $__path;
+                    if (file_exists($__path)) {
+                        require $__path;
+                    }
                 })();
             });
         } finally {

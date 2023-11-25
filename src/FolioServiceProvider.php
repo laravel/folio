@@ -7,6 +7,8 @@ use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Folio\Drivers\BladeDriver;
+use Laravel\Folio\Drivers\FolioDriverContract;
 
 class FolioServiceProvider extends ServiceProvider
 {
@@ -18,6 +20,7 @@ class FolioServiceProvider extends ServiceProvider
         $this->app->singleton(FolioManager::class);
         $this->app->singleton(InlineMetadataInterceptor::class);
         $this->app->singleton(FolioRoutes::class);
+        $this->app->bind(FolioDriverContract::class, config('folio.driver', BladeDriver::class));
 
         $this->app->when(FolioRoutes::class)
             ->needs('$cachedFolioRoutesPath')

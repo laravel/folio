@@ -7,6 +7,7 @@ use Closure;
 use function Laravel\Folio\middleware;
 use function Laravel\Folio\name;
 use function Laravel\Folio\withTrashed;
+use function Laravel\Folio\props;
 
 class PageOptions
 {
@@ -32,5 +33,10 @@ class PageOptions
     public function withTrashed(bool $withTrashed = true): static
     {
         return withTrashed($withTrashed);
+    }
+
+    public function props(array $props = []): static
+    {
+        return props($props);
     }
 }

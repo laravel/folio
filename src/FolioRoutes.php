@@ -7,6 +7,7 @@ use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Laravel\Folio\Drivers\FolioDriverContract;
 use Laravel\Folio\Exceptions\UrlGenerationException;
 use Laravel\Folio\Pipeline\MatchedView;
 use Laravel\Folio\Pipeline\PotentiallyBindablePathSegment;
@@ -86,8 +87,10 @@ class FolioRoutes
             }
         }
 
+        $driver = app(FolioDriverContract::class);
+
         foreach ($this->manager->mountPaths() as $mountPath) {
-            $views = Finder::create()->in($mountPath->path)->name('*.blade.php')->files()->getIterator();
+            $views = Finder::create()->in($mountPath->path)->name('*' . $driver->extension())->files()->getIterator();
 
             foreach ($views as $view) {
                 $matchedView = new MatchedView($view->getRealPath(), [], $mountPath->path);
@@ -159,7 +162,8 @@ class FolioRoutes
      */
     protected function path(string $mountPath, string $path, array $parameters): array
     {
-        $uri = str_replace('.blade.php', '', $path);
+        $driver = app(FolioDriverContract::class);
+        $uri = str_replace($driver->extension(), '', $path);
 
         [$parameters, $usedParameters] = [collect($parameters), collect()];
 

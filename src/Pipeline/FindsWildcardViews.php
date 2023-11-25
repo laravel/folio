@@ -4,6 +4,7 @@ namespace Laravel\Folio\Pipeline;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
+use Laravel\Folio\Drivers\FolioDriverContract;
 
 trait FindsWildcardViews
 {
@@ -30,14 +31,17 @@ trait FindsWildcardViews
     {
         $files = (new Filesystem)->files($directory);
 
-        return collect($files)->first(function ($file) use ($startsWith, $endsWith) {
+        $driver = app(FolioDriverContract::class);
+        $extension = $driver->extension();
+
+        return collect($files)->first(function ($file) use ($startsWith, $endsWith, $extension) {
             $filename = Str::of($file->getFilename());
 
-            if (! $filename->endsWith('.blade.php')) {
+            if (! $filename->endsWith($extension)) {
                 return;
             }
 
-            $filename = $filename->before('.blade.php');
+            $filename = $filename->before($extension);
 
             return $filename->startsWith($startsWith) &&
                    $filename->endsWith($endsWith);

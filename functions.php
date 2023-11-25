@@ -54,3 +54,12 @@ function withTrashed(bool $withTrashed = true): PageOptions
 
     return new PageOptions;
 }
+
+function props(array $props = []): PageOptions
+{
+    Container::getInstance()->make(InlineMetadataInterceptor::class)->whenListening(
+        fn () => Metadata::instance()->props = $props,
+    );
+
+    return new PageOptions;
+}

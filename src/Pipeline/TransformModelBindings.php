@@ -5,6 +5,7 @@ namespace Laravel\Folio\Pipeline;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Laravel\Folio\Drivers\FolioDriverContract;
 
 class TransformModelBindings
 {
@@ -81,7 +82,7 @@ class TransformModelBindings
     {
         return explode(DIRECTORY_SEPARATOR, (string) Str::of($view->path)
             ->replace($view->mountPath, '')
-            ->beforeLast('.blade.php')
+            ->beforeLast(app(FolioDriverContract::class)->extension())
             ->trim(DIRECTORY_SEPARATOR));
     }
 

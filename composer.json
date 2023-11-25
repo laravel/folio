@@ -16,14 +16,15 @@
     ],
     "require": {
         "php": "^8.1",
-        "illuminate/container": "^10.19|^11.0",
         "illuminate/console": "^10.19|^11.0",
+        "illuminate/container": "^10.19|^11.0",
         "illuminate/contracts": "^10.19|^11.0",
         "illuminate/filesystem": "^10.19|^11.0",
         "illuminate/pipeline": "^10.19|^11.0",
         "illuminate/routing": "^10.19|^11.0",
         "illuminate/support": "^10.19|^11.0",
         "illuminate/view": "^10.19|^11.0",
+        "inertiajs/inertia-laravel": "^0.6.11",
         "spatie/once": "^3.1"
     },
     "require-dev": {

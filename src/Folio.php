@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Laravel\Folio\PendingRoute uri(string $uri)
  * @method static \Laravel\Folio\PendingRoute domain(string $domain)
  * @method static \Laravel\Folio\PendingRoute middleware(array $middleware)
+ * @method static void form(\Closure $callback)
  *
  * @see \Laravel\Folio\FolioManager
  */

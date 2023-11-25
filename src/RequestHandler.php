@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Pipeline;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
+use Laravel\Folio\Drivers\FolioDriverContract;
 use Laravel\Folio\Pipeline\MatchedView;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -60,7 +61,7 @@ class RequestHandler
 
                 $response = $this->renderUsing
                     ? ($this->renderUsing)($request, $matchedView)
-                    : $this->toResponse($request, $matchedView);
+                    : app(FolioDriverContract::class)->toResponse($request, $matchedView);
 
                 $app = app();
 

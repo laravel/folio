@@ -5,6 +5,7 @@ namespace Laravel\Folio\Pipeline;
 use Closure;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
+use Laravel\Folio\Drivers\FolioDriverContract;
 
 class MatchWildcardDirectories
 {
@@ -27,7 +28,11 @@ class MatchWildcardDirectories
                 return new ContinueIterating($currentState);
             }
 
-            if (file_exists($path = $currentState->currentUriSegmentDirectory().'/index.blade.php')) {
+            $driver = app(FolioDriverContract::class);
+            $extension = $driver->extension();
+            $path = $currentState->currentUriSegmentDirectory().'/index'.$extension;
+
+            if (file_exists($path)) {
                 return new MatchedView($path, $currentState->data);
             }
         }

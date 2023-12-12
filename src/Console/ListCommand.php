@@ -76,15 +76,16 @@ class ListCommand extends RouteListCommand
         return collect($mountPaths)->map(function (MountPath $mountPath) {
             $views = Finder::create()->in($mountPath->path)->name('*.blade.php')->files()->getIterator();
 
+            $baseUri = rtrim($mountPath->baseUri, '/');
             $domain = $mountPath->domain;
             $mountPath = str_replace(DIRECTORY_SEPARATOR, '/', $mountPath->path);
 
             $path = '/'.ltrim($mountPath, '/');
 
             return collect($views)
-                ->map(function (SplFileInfo $view) use ($domain, $mountPath) {
+                ->map(function (SplFileInfo $view) use ($baseUri, $domain, $mountPath) {
                     $viewPath = str_replace(DIRECTORY_SEPARATOR, '/', $view->getRealPath());
-                    $uri = str_replace($mountPath, '', $viewPath);
+                    $uri = $baseUri.str_replace($mountPath, '', $viewPath);
 
                     if (count($this->laravel->make(FolioManager::class)->mountPaths()) === 1) {
                         $action = str_replace($mountPath.'/', '', $viewPath);

@@ -248,3 +248,28 @@ test('multiple mounted directories', function () {
 
         EOF);
 });
+
+it('prefixes URIs', function (string $uri) {
+    $output = new BufferedOutput();
+
+    Folio::path(__DIR__.'/../resources/views/more-pages')->uri($uri);
+
+    $exitCode = Artisan::call('folio:list', [], $output);
+
+    expect($exitCode)->toBe(0)
+        ->and($output->fetch())->toOutput(<<<'EOF'
+
+          GET       /api ................................................................................................ more-pages.index › index.blade.php
+          GET       /api/{...user} ..................................................................................................... [...User].blade.php
+          GET       /api/{...user}/detail .............................................................. more-pages.user.detail › [...User]/detail.blade.php
+
+                                                                                                                                          Showing [3] routes
+
+
+        EOF);
+})->with([
+    'api',
+    '/api',
+    'api/',
+    '/api/',
+]);

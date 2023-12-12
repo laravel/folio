@@ -40,7 +40,7 @@ class FolioManager
      *
      * @throws \InvalidArgumentException
      */
-    public function route(string $path = null, ?string $uri = '/', array $middleware = []): PendingRoute
+    public function route(?string $path = null, ?string $uri = '/', array $middleware = []): PendingRoute
     {
         return new PendingRoute(
             $this,
@@ -117,7 +117,7 @@ class FolioManager
     /**
      * Get a piece of data from the route / view that was last matched by Folio.
      */
-    public function data(string $key = null, mixed $default = null): mixed
+    public function data(?string $key = null, mixed $default = null): mixed
     {
         return Arr::get($this->lastMatchedView?->data ?: [], $key, $default);
     }
@@ -125,7 +125,7 @@ class FolioManager
     /**
      * Specify the callback that should be used to render matched views.
      */
-    public function renderUsing(Closure $callback = null): static
+    public function renderUsing(?Closure $callback = null): static
     {
         $this->renderUsing = $callback;
 
@@ -149,7 +149,7 @@ class FolioManager
     /**
      * Specify the callback that should be used when terminating the application.
      */
-    public function terminateUsing(Closure $callback = null): static
+    public function terminateUsing(?Closure $callback = null): static
     {
         $this->terminateUsing = $callback;
 

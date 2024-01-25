@@ -155,7 +155,7 @@ class FolioRoutes
      * Get the relative route URL for the given route name and arguments.
      *
      * @param  array<string, mixed>  $parameters
-     * @return  array{string, array<string, mixed>}
+     * @return array{string, array<string, mixed>}
      */
     protected function path(string $mountPath, string $path, array $parameters): array
     {

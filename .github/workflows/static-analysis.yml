@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  update:
+  tests:
     permissions:
       contents: write
     uses: Jubeki/laravel-github/.github/workflows/static-analysis.yml@static-analysis-workflow

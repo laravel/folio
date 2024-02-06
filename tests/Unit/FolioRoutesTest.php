@@ -47,6 +47,7 @@ it('may have routes', function (string $name, array $scenario) {
     'podcasts.show-by-id' => ['podcasts/[id].blade.php', ['id' => 1], '/podcasts/1'],
     'podcasts.show-by-name' => ['podcasts/[name].blade.php', ['Name' => 'Taylor'], '/podcasts/Taylor'],
     'podcasts.show-by-slug' => ['podcasts/[slug].blade.php', ['slug' => 'nuno'], '/podcasts/nuno'],
+    'podcasts.show-by-slug-that-starts-with-word-index' => ['podcasts/[slug].blade.php', ['slug' => 'index-word-is-the-first'], '/podcasts/index-word-is-the-first'],
     'podcasts.show-by-slug-and-id' => ['podcasts/[slug]/[id].blade.php', ['slug' => 'nuno', 'id' => 1], '/podcasts/nuno/1'],
     'podcasts.show-by-model' => ['podcasts/[Podcast].blade.php', ['podcast' => fn () => Podcast::first()], '/podcasts/1'],
     'podcasts.show-by-model-fqn' => ['podcasts/[.Tests.Feature.Fixtures.Podcast].blade.php', ['podcast' => fn () => Podcast::first()], '/podcasts/1'],

@@ -192,7 +192,7 @@ class FolioRoutes
                 );
             })->implode('/');
 
-        $uri = str_replace(['/index', '/index/'], ['', '/'], $uri);
+        $uri = preg_replace('#/index/?$#', '/', $uri);
 
         return [
             '/'.ltrim(substr($uri, strlen($mountPath)), '/'),

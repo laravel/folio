@@ -192,7 +192,7 @@ class FolioRoutes
                 );
             })->implode('/');
 
-        $uri = match(true) {
+        $uri = match (true) {
             str_ends_with($uri, '/index') => substr($uri, 0, -6),
             str_ends_with($uri, '/index/') => substr($uri, 0, -7),
             default => $uri,

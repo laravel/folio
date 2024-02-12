@@ -42,6 +42,9 @@ it('may have routes', function (string $name, array $scenario) {
     expect($names->has($name))->toBeTrue()
         ->and($names->get($name, $arguments, false))->toBe($expectedRoute);
 })->with(fn () => collect([
+    'index' => ['index.blade.php', [], '/'],
+    'index.index.index' => ['index/index/index.blade.php', [], '/index/index'],
+    'index.show-by-slug' => ['index/[slug].blade.php', ['slug' => 'index-directory'], '/index/index-directory'],
     'podcasts.index' => ['podcasts/index.blade.php', [], '/podcasts'],
     'podcasts.index-with-query-parameters' => ['podcasts/index.blade.php', ['page' => 1], '/podcasts?page=1'],
     'podcasts.show-by-id' => ['podcasts/[id].blade.php', ['id' => 1], '/podcasts/1'],

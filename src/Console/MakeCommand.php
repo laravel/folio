@@ -9,7 +9,7 @@ use Laravel\Folio\Folio;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
 
-#[AsCommand(name: 'make:folio')]
+#[AsCommand(name: 'folio:page')]
 class MakeCommand extends GeneratorCommand
 {
     /**
@@ -17,7 +17,7 @@ class MakeCommand extends GeneratorCommand
      *
      * @var string
      */
-    protected $name = 'make:folio';
+    protected $name = 'folio:page';
 
     /**
      * The console command description.
@@ -32,6 +32,13 @@ class MakeCommand extends GeneratorCommand
      * @var string
      */
     protected $type = 'Page';
+
+    /**
+     * The console command name aliases.
+     *
+     * @var array<int, string>
+     */
+    protected $aliases = ['make:folio'];
 
     /**
      * Get the destination view path.

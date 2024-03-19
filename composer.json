@@ -24,7 +24,8 @@
         "illuminate/routing": "^10.19|^11.0",
         "illuminate/support": "^10.19|^11.0",
         "illuminate/view": "^10.19|^11.0",
-        "spatie/once": "^3.1"
+        "spatie/once": "^3.1",
+        "symfony/console": "^6.0|^7.0"
     },
     "require-dev": {
         "orchestra/testbench": "^8.6.0|^9.0",

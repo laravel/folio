@@ -66,6 +66,7 @@ class MakeCommand extends GeneratorCommand
     {
         return [
             ['force', 'f', InputOption::VALUE_NONE, 'Create the Folio page even if the page already exists'],
+            ['stub', 's', InputOption::VALUE_OPTIONAL, 'The stub file to use'],
         ];
     }
 

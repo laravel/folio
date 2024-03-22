@@ -2,7 +2,7 @@
 
 namespace Laravel\Folio\Console;
 
-use Illuminate\Console\Concerns\GetStubOption
+use Illuminate\Console\Concerns\GetStubOption;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Str;

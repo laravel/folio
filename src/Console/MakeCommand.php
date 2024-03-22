@@ -13,6 +13,8 @@ use Symfony\Component\Console\Input\InputOption;
 #[AsCommand(name: 'make:folio')]
 class MakeCommand extends GeneratorCommand
 {
+    use GetStubOption;
+    
     /**
      * The name and signature of the console command.
      *

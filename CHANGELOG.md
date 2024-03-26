@@ -1,6 +1,10 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/folio/compare/v1.1.6...master)
+## [Unreleased](https://github.com/laravel/folio/compare/v1.1.7...master)
+
+## [v1.1.7](https://github.com/laravel/folio/compare/v1.1.6...v1.1.7) - 2024-03-19
+
+* [1.x] Make commands lazy by [@timacdonald](https://github.com/timacdonald) in https://github.com/laravel/folio/pull/135
 
 ## [v1.1.6](https://github.com/laravel/folio/compare/v1.1.5...v1.1.6) - 2024-02-12
 

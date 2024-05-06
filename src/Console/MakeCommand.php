@@ -9,7 +9,7 @@ use Laravel\Folio\Folio;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
 
-#[AsCommand(name: 'folio:page')]
+#[AsCommand(name: 'folio:page', aliases: ['make:folio'])]
 class MakeCommand extends GeneratorCommand
 {
     /**

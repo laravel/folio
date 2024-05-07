@@ -1,6 +1,10 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/folio/compare/v1.1.7...master)
+## [Unreleased](https://github.com/laravel/folio/compare/v1.1.8...master)
+
+## [v1.1.8](https://github.com/laravel/folio/compare/v1.1.7...v1.1.8) - 2024-05-07
+
+* [1.x] Namespace make command by [@timacdonald](https://github.com/timacdonald) in https://github.com/laravel/folio/pull/134
 
 ## [v1.1.7](https://github.com/laravel/folio/compare/v1.1.6...v1.1.7) - 2024-03-19
 

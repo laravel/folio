@@ -83,12 +83,12 @@ class ListCommand extends RouteListCommand
             $path = '/'.ltrim($mountPath, '/');
 
             return collect($views)
-                ->map(function (SplFileInfo $view) use ($baseUri, $domain, $mountPath) {
+                ->map(function (SplFileInfo $view) use ($baseUri, $domain, $path) {
                     $viewPath = str_replace(DIRECTORY_SEPARATOR, '/', $view->getRealPath());
-                    $uri = $baseUri.str_replace($mountPath, '', $viewPath);
+                    $uri = $baseUri.str_replace($path, '', $viewPath);
 
                     if (count($this->laravel->make(FolioManager::class)->mountPaths()) === 1) {
-                        $action = str_replace($mountPath.'/', '', $viewPath);
+                        $action = str_replace($path.'/', '', $viewPath);
                     } else {
                         $basePath = str_replace(DIRECTORY_SEPARATOR, '/', base_path(DIRECTORY_SEPARATOR));
 
@@ -137,7 +137,7 @@ class ListCommand extends RouteListCommand
                         'method' => 'GET',
                         'domain' => $domain,
                         'uri' => $uri === '' ? '/' : $uri,
-                        'name' => $this->routeName($mountPath, $viewPath),
+                        'name' => $this->routeName($path, $viewPath),
                         'action' => $action,
                         'view' => $action,
                     ];

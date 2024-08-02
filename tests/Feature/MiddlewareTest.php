@@ -106,7 +106,7 @@ test('terminate middleware is invoked after response is sent', function () {
 });
 
 test('terminate method is invoked using application container', function () {
-    $this->app->bind(Dependency::class, fn () => new Dependency());
+    $this->app->bind(Dependency::class, fn () => new Dependency);
 
     $this->get('/users/Taylor');
 

@@ -25,9 +25,7 @@ class Router
     /**
      * Create a new router instance.
      */
-    public function __construct(protected MountPath $mountPath)
-    {
-    }
+    public function __construct(protected MountPath $mountPath) {}
 
     /**
      * Match the given URI to a view via page based routing.

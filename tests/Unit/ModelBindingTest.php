@@ -357,9 +357,7 @@ class FolioModelBindingTestClass implements UrlRoutable
 {
     public $trashed = false;
 
-    public function __construct(public mixed $value = null, public mixed $field = null, public mixed $childType = null)
-    {
-    }
+    public function __construct(public mixed $value = null, public mixed $field = null, public mixed $childType = null) {}
 
     public function getRouteKey()
     {

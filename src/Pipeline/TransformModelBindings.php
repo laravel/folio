@@ -11,9 +11,7 @@ class TransformModelBindings
     /**
      * Create a new pipeline step instance.
      */
-    public function __construct(protected Request $request)
-    {
-    }
+    public function __construct(protected Request $request) {}
 
     /**
      * Invoke the routing pipeline handler.

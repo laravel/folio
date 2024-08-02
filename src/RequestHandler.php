@@ -22,8 +22,7 @@ class RequestHandler
         protected array $mountPaths,
         protected ?Closure $renderUsing = null,
         protected ?Closure $onViewMatch = null,
-    ) {
-    }
+    ) {}
 
     /**
      * Handle the incoming request using Folio.

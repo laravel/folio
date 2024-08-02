@@ -13,9 +13,7 @@ class EnsureMatchesDomain
     /**
      * Create a new pipeline step instance.
      */
-    public function __construct(protected Request $request, protected MountPath $mountPath)
-    {
-    }
+    public function __construct(protected Request $request, protected MountPath $mountPath) {}
 
     /**
      * Invoke the routing pipeline handler.
@@ -29,7 +27,7 @@ class EnsureMatchesDomain
         $route = $this->route();
 
         if ($this->matchesDomain($route) === false) {
-            return new StopIterating();
+            return new StopIterating;
         }
 
         $state->data = array_merge($route->parameters(), $state->data);

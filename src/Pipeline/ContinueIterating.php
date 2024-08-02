@@ -7,7 +7,5 @@ class ContinueIterating
     /**
      * Create a new continue iterating instance.
      */
-    public function __construct(public State $state)
-    {
-    }
+    public function __construct(public State $state) {}
 }

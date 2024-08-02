@@ -12,9 +12,7 @@ class PathBasedMiddlewareList
     /**
      * Create a new path based middleware list instance.
      */
-    public function __construct(public array $middleware)
-    {
-    }
+    public function __construct(public array $middleware) {}
 
     /**
      * Find the middleware that match the given matched view's path.

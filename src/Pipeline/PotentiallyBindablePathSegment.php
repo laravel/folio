@@ -29,9 +29,7 @@ class PotentiallyBindablePathSegment
     /**
      * Create a new potentially bindable path segment instance.
      */
-    public function __construct(public string $value)
-    {
-    }
+    public function __construct(public string $value) {}
 
     /**
      * Determine if the segment is bindable.

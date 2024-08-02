@@ -15,8 +15,7 @@ class PendingRoute
         protected string $uri,
         protected array $middleware,
         protected ?string $domain = null,
-    ) {
-    }
+    ) {}
 
     /**
      * Set the domain for the route.

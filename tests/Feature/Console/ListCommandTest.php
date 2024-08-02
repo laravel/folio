@@ -18,7 +18,7 @@ it('may not have routes', function () {
 });
 
 it('may have routes', function () {
-    $output = new BufferedOutput();
+    $output = new BufferedOutput;
 
     Folio::route(__DIR__.'/../resources/views/pages');
     $exitCode = Artisan::call('folio:list', [], $output);
@@ -53,7 +53,7 @@ it('may have routes', function () {
 });
 
 it('has the `--json` option', function () {
-    $output = new BufferedOutput();
+    $output = new BufferedOutput;
 
     Folio::route(__DIR__.'/../resources/views/pages');
     $exitCode = Artisan::call('folio:list', [
@@ -67,7 +67,7 @@ it('has the `--json` option', function () {
 });
 
 it('has the `--path` option', function () {
-    $output = new BufferedOutput();
+    $output = new BufferedOutput;
 
     Folio::route(__DIR__.'/../resources/views/pages');
     $exitCode = Artisan::call('folio:list', [
@@ -91,7 +91,7 @@ it('has the `--path` option', function () {
 });
 
 it('has the `--name` option', function () {
-    $output = new BufferedOutput();
+    $output = new BufferedOutput;
 
     Folio::route(__DIR__.'/../resources/views/pages');
     $exitCode = Artisan::call('folio:list', [
@@ -111,7 +111,7 @@ it('has the `--name` option', function () {
 });
 
 it('has the `--except-path` option', function () {
-    $output = new BufferedOutput();
+    $output = new BufferedOutput;
 
     Folio::route(__DIR__.'/../resources/views/pages');
     $exitCode = Artisan::call('folio:list', [
@@ -142,7 +142,7 @@ it('has the `--except-path` option', function () {
 });
 
 it('may not find routes with `--path` or `--except-path`', function () {
-    $output = new BufferedOutput();
+    $output = new BufferedOutput;
 
     Folio::route(__DIR__.'/../resources/views/pages');
     $exitCode = Artisan::call('folio:list', [
@@ -160,7 +160,7 @@ it('may not find routes with `--path` or `--except-path`', function () {
 });
 
 it('has the `--sort` option', function () {
-    $output = new BufferedOutput();
+    $output = new BufferedOutput;
 
     Folio::route(__DIR__.'/../resources/views/pages');
     $exitCode = Artisan::call('folio:list', [
@@ -185,7 +185,7 @@ it('has the `--sort` option', function () {
 });
 
 it('has the `--reverse` option', function () {
-    $output = new BufferedOutput();
+    $output = new BufferedOutput;
 
     Folio::route(__DIR__.'/../resources/views/pages');
     $exitCode = Artisan::call('folio:list', [
@@ -210,7 +210,7 @@ it('has the `--reverse` option', function () {
 });
 
 test('multiple mounted directories', function () {
-    $output = new BufferedOutput();
+    $output = new BufferedOutput;
 
     Folio::path(__DIR__.'/../resources/views/pages');
     Folio::path(__DIR__.'/../resources/views/more-pages');
@@ -250,7 +250,7 @@ test('multiple mounted directories', function () {
 });
 
 it('prefixes URIs', function (string $uri) {
-    $output = new BufferedOutput();
+    $output = new BufferedOutput;
 
     Folio::path(__DIR__.'/../resources/views/more-pages')->uri($uri);
 

@@ -1,6 +1,12 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/folio/compare/v1.1.8...master)
+## [Unreleased](https://github.com/laravel/folio/compare/v1.1.9...master)
+
+## [v1.1.9](https://github.com/laravel/folio/compare/v1.1.8...v1.1.9) - 2024-11-12
+
+* Replace dead link in Security Policy by [@Jubeki](https://github.com/Jubeki) in https://github.com/laravel/folio/pull/140
+* Update logo to support dark/light theme by [@milewski](https://github.com/milewski) in https://github.com/laravel/folio/pull/141
+* [1.x] Supports PHP 8.4 by [@crynobone](https://github.com/crynobone) in https://github.com/laravel/folio/pull/143
 
 ## [v1.1.8](https://github.com/laravel/folio/compare/v1.1.7...v1.1.8) - 2024-05-07
 

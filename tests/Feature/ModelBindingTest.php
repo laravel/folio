@@ -175,11 +175,11 @@ test('child implicit bindings are scoped to the parent if field is present', fun
         'content' => 'another-comment-content',
     ])->fresh();
 
-    //Doesn't belong to parent...
+    // Doesn't belong to parent...
     $this->get('/podcasts/'.$podcast->id.'/comments/'.$secondComment->id)
         ->assertNotFound();
 
-    //Belongs to parent...
+    // Belongs to parent...
     $this->get('/podcasts/'.$podcast->id.'/comments/'.$comment->id)
         ->assertSee('test-comment-content');
 });

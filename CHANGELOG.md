@@ -1,6 +1,10 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/folio/compare/v1.1.9...master)
+## [Unreleased](https://github.com/laravel/folio/compare/v1.1.10...master)
+
+## [v1.1.10](https://github.com/laravel/folio/compare/v1.1.9...v1.1.10) - 2025-01-26
+
+* Supports Laravel 12 by [@crynobone](https://github.com/crynobone) in https://github.com/laravel/folio/pull/144
 
 ## [v1.1.9](https://github.com/laravel/folio/compare/v1.1.8...v1.1.9) - 2024-11-12
 

@@ -64,8 +64,8 @@ class Router
                     new MatchDirectoryIndexViews,
                     new MatchWildcardViewsThatCaptureMultipleSegments,
                     new MatchLiteralDirectories,
-                    new MatchWildcardDirectories,
                     new MatchLiteralViews,
+                    new MatchWildcardDirectories,
                     new MatchWildcardViews,
                 ])->then(fn () => new StopIterating);
 

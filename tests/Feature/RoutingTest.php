@@ -192,3 +192,39 @@ it('ensures directory traversal is not possible', function () {
 
     $router->match(new Request, '/../');
 })->throws(PossibleDirectoryTraversal::class);
+
+test('literal views take precedence over wildcard directories', function () {
+    $this->views([
+        '/user' => [
+            '/create.blade.php',
+            '/[id]' => [
+                '/index.blade.php',
+            ],
+        ],
+    ]);
+
+    $router = $this->router();
+
+    $resolved = $router->match(new Request, '/user/create');
+
+    expect(realpath(__DIR__.'/../tmp/views/user/create.blade.php'))->toEqual($resolved->path)
+        ->and($resolved->data)->toEqual([]);
+});
+
+test('wildcard directories work when no literal view matches', function () {
+    $this->views([
+        '/user' => [
+            '/create.blade.php',
+            '/[id]' => [
+                '/index.blade.php',
+            ],
+        ],
+    ]);
+
+    $router = $this->router();
+
+    $resolved = $router->match(new Request, '/user/123');
+
+    expect(realpath(__DIR__.'/../tmp/views/user/[id]/index.blade.php'))->toEqual($resolved->path)
+        ->and($resolved->data)->toEqual(['id' => 123]);
+});

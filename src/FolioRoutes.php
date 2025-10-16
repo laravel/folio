@@ -121,12 +121,17 @@ class FolioRoutes
      *
      * @thows  \Laravel\Folio\Exceptions\UrlGenerationException
      */
-    public function get(string $name, array $arguments, bool $absolute): string
+    public function get(string $name, mixed $arguments, bool $absolute): string
     {
         $this->ensureLoaded();
 
         if (! isset($this->routes[$name])) {
             throw new RouteNotFoundException("Route [{$name}] not found.");
+        }
+
+        // Normalize arguments to always be an array
+        if (! is_array($arguments)) {
+            $arguments = [$arguments];
         }
 
         [
@@ -162,6 +167,9 @@ class FolioRoutes
         $uri = str_replace('.blade.php', '', $path);
 
         [$parameters, $usedParameters] = [collect($parameters), collect()];
+
+        // Normalize positional parameters to match Laravel's route() helper behavior
+        $parameters = $this->normalizeParameters($parameters, $uri);
 
         $uri = collect(explode('/', $uri))
             ->map(function (string $segment) use ($parameters, $uri, $usedParameters) {
@@ -249,5 +257,99 @@ class FolioRoutes
         File::delete($this->cachedFolioRoutesPath);
 
         $this->loaded = false;
+    }
+
+    /**
+     * Normalize positional parameters to match Laravel's route() helper behavior.
+     *
+     * This method handles cases where parameters are passed with numeric keys
+     * (like route('name', $model) or route('name', [$model1, $model2]))
+     * and assigns them to the appropriate route segments based on type matching.
+     *
+     * @param  \Illuminate\Support\Collection  $parameters
+     * @param  string  $uri
+     * @return \Illuminate\Support\Collection
+     */
+    protected function normalizeParameters($parameters, string $uri): \Illuminate\Support\Collection
+    {
+        // Extract all segments from the URI path
+        $allSegments = collect(explode('/', $uri))
+            ->filter(fn (string $segment) => Str::startsWith($segment, '['))
+            ->values();
+
+        // If no segments, return parameters as-is
+        if ($allSegments->isEmpty()) {
+            return $parameters;
+        }
+
+        // Find parameters with numeric keys (positional parameters)
+        $positionalParameters = $parameters->filter(function ($value, $key) {
+            return is_numeric($key);
+        });
+
+        // If no positional parameters, return parameters as-is
+        if ($positionalParameters->isEmpty()) {
+            return $parameters;
+        }
+
+        $normalizedParameters = $parameters->except($positionalParameters->keys());
+        $unusedSegments = $allSegments->filter(function ($segment) use ($parameters) {
+            $segmentObj = new PotentiallyBindablePathSegment($segment);
+            $name = $segmentObj->variable();
+            return ! $parameters->has($name);
+        });
+
+        // Assign positional parameters to unused segments
+        $positionalParameters->each(function ($value, $key) use ($normalizedParameters, $unusedSegments) {
+            if ($unusedSegments->isNotEmpty()) {
+                $segment = $unusedSegments->first();
+                $segmentObj = new PotentiallyBindablePathSegment($segment);
+
+                // If the segment is bindable and the value is a model, use the model directly
+                // Otherwise, convert the value to its route key
+                if ($segmentObj->bindable() && is_object($value) && method_exists($value, 'getRouteKey')) {
+                    $normalizedParameters->put($segmentObj->variable(), $value);
+                } else {
+                    // For non-bindable segments or scalar values, convert to route key
+                    $routeKey = is_object($value) && method_exists($value, 'getRouteKey')
+                        ? $value->getRouteKey()
+                        : $value;
+                    $normalizedParameters->put($segmentObj->variable(), $routeKey);
+                }
+
+                $unusedSegments->shift();
+            }
+        });
+
+        return $normalizedParameters;
+    }
+
+    /**
+     * Check if a parameter matches a bindable segment by type.
+     *
+     * @param  mixed  $parameter
+     * @param  \Laravel\Folio\Pipeline\PotentiallyBindablePathSegment  $segment
+     * @return bool
+     */
+    protected function parameterMatchesSegment($parameter, $segment): bool
+    {
+        if (! $segment->bindable()) {
+            return false;
+        }
+
+        $expectedClass = $segment->class();
+
+        // Check if parameter is an instance of the expected class
+        if (is_object($parameter) && $parameter instanceof $expectedClass) {
+            return true;
+        }
+
+        // Check if parameter is an array of the expected class
+        if (is_array($parameter) && ! empty($parameter)) {
+            $firstItem = reset($parameter);
+            return is_object($firstItem) && $firstItem instanceof $expectedClass;
+        }
+
+        return false;
     }
 }

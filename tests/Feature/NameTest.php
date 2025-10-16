@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Laravel\Folio\Exceptions\UrlGenerationException;
 use Laravel\Folio\Folio;
@@ -134,4 +135,61 @@ test('custom domain', function () {
 
     expect($absoluteRoute)->toBe('http://example.com/user/profile')
         ->and($route)->toBe('/user/profile');
+});
+
+test('route helper accepts single scalar parameter', function () {
+    $route = route('users.show', 'Taylor', false);
+
+    expect($route)->toBe('/users/Taylor');
+});
+
+test('route helper accepts single model parameter', function () {
+    $user = User::first();
+
+    // Test with single model - this should work for routes with only one model parameter
+    $route = route('users.show', $user, false);
+    expect($route)->toBe('/users/1'); // User ID is 1
+});
+
+test('route helper accepts positional parameters with multiple models', function () {
+    $user = User::first();
+    $podcast = Podcast::first();
+
+    // Test with array of models
+    $route = route('test.route', [$user, $podcast], false);
+    expect($route)->toContain('/test-route/');
+
+    // Test with associative array (should still work)
+    $route = route('test.route', ['user' => $user, 'podcast' => $podcast], false);
+    expect($route)->toContain('/test-route/');
+});
+
+test('route helper works with single model parameter', function () {
+    $user = User::first();
+
+    // Test that route() accepts a single model parameter
+    $route = route('users.show', $user, false);
+    expect($route)->toBe('/users/1');
+
+    // Test that it works with scalar values too
+    $route = route('users.show', 'Taylor', false);
+    expect($route)->toBe('/users/Taylor');
+});
+
+test('route helper works with fully qualified model class names', function () {
+    $podcast = Podcast::first();
+
+    // Test with fully qualified class name in segment [.Tests.Feature.Fixtures.Podcast]
+    $route = route('podcasts.show', $podcast, false);
+    expect($route)->toContain('/podcasts/');
+});
+
+test('podcast view renders correctly with model parameter', function () {
+    $podcast = Podcast::first();
+
+    // Test the actual view content by making a request
+    $response = $this->get(route('podcasts.show', $podcast, false));
+
+    $response->assertStatus(200);
+    $response->assertSee($podcast->name);
 });

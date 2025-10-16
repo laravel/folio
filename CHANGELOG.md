@@ -2,6 +2,8 @@
 
 ## [Unreleased](https://github.com/laravel/folio/compare/v1.1.10...master)
 
+* Fix route() helper to accept positional parameters like Laravel routes by [@ju-gow](https://github.com/ju-gow) in https://github.com/laravel/folio/pull/XXX
+
 ## [v1.1.10](https://github.com/laravel/folio/compare/v1.1.9...v1.1.10) - 2025-01-26
 
 * Supports Laravel 12 by [@crynobone](https://github.com/crynobone) in https://github.com/laravel/folio/pull/144

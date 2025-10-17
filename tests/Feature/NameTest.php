@@ -135,3 +135,25 @@ test('custom domain', function () {
     expect($absoluteRoute)->toBe('http://example.com/user/profile')
         ->and($route)->toBe('/user/profile');
 });
+
+test('can write routes with a model as argument', function() {
+
+    // check single model as parameter
+    $user = User::first();
+    $user->wrong_column = 'wrong_column_value';
+    $generatedUrl = route('user.articles', $user, false);
+    $expectedUrl = "/users/articles/wrong_column_value";
+
+    expect( $generatedUrl )->toBe($expectedUrl);
+});
+
+test('can write routes with multiple models as arguments', function() {
+    $user = User::first();
+    $podcast = Podcast::first();
+
+    // check multiple models as parameters
+    $generatedUrl = route('posts.show', [ $podcast, $user, 'lowerCase' => 'lowerCaseValue', 'upperCase' => 'UpperCaseValue' ], false);
+    $expectedUrl = "/posts/lowerCaseValue/UpperCaseValue/{$podcast->id}/{$user->email}/show";
+
+    expect($generatedUrl)->toBe($expectedUrl);
+});

@@ -121,7 +121,7 @@ class FolioRoutes
      *
      * @thows  \Laravel\Folio\Exceptions\UrlGenerationException
      */
-    public function get(string $name, array $arguments, bool $absolute): string
+    public function get(string $name, array|UrlRoutable $arguments, bool $absolute): string
     {
         $this->ensureLoaded();
 
@@ -135,6 +135,8 @@ class FolioRoutes
             'baseUri' => $baseUri,
             'domain' => $domain,
         ] = $this->routes[$name];
+
+        $arguments = $this->normalizeRouteArguments( $arguments );
 
         [$path, $remainingArguments] = $this->path($mountPath, $path, $arguments);
 
@@ -202,6 +204,29 @@ class FolioRoutes
             '/'.ltrim(substr($uri, strlen($mountPath)), '/'),
             $parameters->except($usedParameters->all())->all(),
         ];
+    }
+
+    /**
+     * Normalize the route arguments to be able to write routes the laravel way : route( 'users.show', $user )
+     * @param  array|UrlRoutable  $arguments
+     * @return array<string, mixed>
+     */
+    protected function normalizeRouteArguments( array|UrlRoutable $arguments ): array
+    {
+        if( $arguments instanceof UrlRoutable ) {
+            return [ class_basename( $arguments::class ) => $arguments ];
+        }
+
+        foreach( $arguments as $key => $value ) {
+            if( is_int( $key ) and $value instanceof UrlRoutable ) {
+                $normalizedKey = class_basename( $value::class );
+                if( !isset( $arguments[ $normalizedKey ] ) ) {
+                    $arguments[ $normalizedKey ] = $value;
+                    unset( $arguments[ $key ] );
+                }
+            }
+        }
+        return $arguments;
     }
 
     /**

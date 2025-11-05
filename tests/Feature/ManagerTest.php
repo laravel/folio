@@ -273,7 +273,7 @@ test('multiple domains with overlapping paths', function () {
     // Also verify cross-domain isolation
     $wrongDomainOne = $this->get('https://two.example.com/')->getContent();
     $wrongDomainTwo = $this->get('https://one.example.com/')->getContent();
-    
+
     expect($wrongDomainOne)->not->toContain('Domain One');
     expect($wrongDomainTwo)->not->toContain('Domain Two');
 });

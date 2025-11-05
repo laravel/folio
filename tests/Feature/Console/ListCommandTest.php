@@ -283,7 +283,7 @@ test('multiple domains with overlapping paths', function () {
     $exitCode = Artisan::call('folio:list', [], $output);
 
     $content = $output->fetch();
-    
+
     expect($exitCode)->toBe(0)
         ->and($content)->toContain('one.example.com')
         ->and($content)->toContain('two.example.com')

@@ -255,3 +255,25 @@ test('sub domain matching does not get effected by root domain matching', functi
 
     $response->assertStatus(200);
 });
+
+test('multiple domains with overlapping paths', function () {
+    Folio::domain('one.example.com')->path(__DIR__.'/resources/views/domain-one');
+    Folio::domain('two.example.com')->path(__DIR__.'/resources/views/domain-two');
+
+    $responseOne = $this->get('https://one.example.com/');
+    $responseTwo = $this->get('https://two.example.com/');
+    $responseOneAbout = $this->get('https://one.example.com/about');
+    $responseTwoAbout = $this->get('https://two.example.com/about');
+
+    $responseOne->assertStatus(200)->assertSee('Domain One - Home');
+    $responseTwo->assertStatus(200)->assertSee('Domain Two - Home');
+    $responseOneAbout->assertStatus(200)->assertSee('Domain One - About');
+    $responseTwoAbout->assertStatus(200)->assertSee('Domain Two - About');
+
+    // Also verify cross-domain isolation
+    $wrongDomainOne = $this->get('https://two.example.com/')->getContent();
+    $wrongDomainTwo = $this->get('https://one.example.com/')->getContent();
+    
+    expect($wrongDomainOne)->not->toContain('Domain One');
+    expect($wrongDomainTwo)->not->toContain('Domain Two');
+});

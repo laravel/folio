@@ -143,7 +143,7 @@ class ListCommand extends RouteListCommand
                     ];
                 });
         })->flatten(1)
-            ->unique(fn (array $route) => $route['uri'])
+            ->unique(fn (array $route) => ($route['domain'] ?? '').'|'.$route['uri'])
             ->values();
     }
 

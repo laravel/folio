@@ -273,3 +273,23 @@ it('prefixes URIs', function (string $uri) {
     'api/',
     '/api/',
 ]);
+
+test('multiple domains with overlapping paths', function () {
+    $output = new BufferedOutput;
+
+    Folio::path(__DIR__.'/../resources/views/domain-one')->domain('one.example.com');
+    Folio::path(__DIR__.'/../resources/views/domain-two')->domain('two.example.com');
+
+    $exitCode = Artisan::call('folio:list', [], $output);
+
+    $content = $output->fetch();
+    
+    expect($exitCode)->toBe(0)
+        ->and($content)->toContain('one.example.com')
+        ->and($content)->toContain('two.example.com')
+        ->and($content)->toContain('domain-one/index.blade.php')
+        ->and($content)->toContain('domain-two/index.blade.php')
+        ->and($content)->toContain('domain-one/about.blade.php')
+        ->and($content)->toContain('domain-two/about.blade.php')
+        ->and($content)->toContain('Showing [4] routes');
+});

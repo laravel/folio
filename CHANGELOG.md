@@ -1,6 +1,10 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/folio/compare/v1.1.11...master)
+## [Unreleased](https://github.com/laravel/folio/compare/v1.1.12...master)
+
+## [v1.1.12](https://github.com/laravel/folio/compare/v1.1.11...v1.1.12) - 2025-11-25
+
+* [1.x] PHP 8.5 Compatibility by [@crynobone](https://github.com/crynobone) in https://github.com/laravel/folio/pull/154
 
 ## [v1.1.11](https://github.com/laravel/folio/compare/v1.1.10...v1.1.11) - 2025-11-05
 

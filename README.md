@@ -1,4 +1,7 @@
-<p align="center"><img width="468" height="96" src="/art/logo.svg" alt="Laravel Folio Package Logo"></p>
+<p align="center">
+    <img alt="Folio Logo Dark Mode" src="/art/folio-light.svg#gh-light-mode-only"/>
+    <img alt="Folio Logo Dark Mode" src="/art/folio-dark.svg#gh-dark-mode-only"/>
+</p>
 
 <p align="center">
     <a href="https://github.com/laravel/folio/actions"><img src="https://github.com/laravel/folio/workflows/tests/badge.svg" alt="Build Status"></a>

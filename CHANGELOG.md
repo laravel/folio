@@ -1,6 +1,10 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/folio/compare/v1.1.12...master)
+## [Unreleased](https://github.com/laravel/folio/compare/v1.1.13...master)
+
+## [v1.1.13](https://github.com/laravel/folio/compare/v1.1.12...v1.1.13) - 2026-02-20
+
+* Add Boost Guidelines & Skills by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/laravel/folio/pull/155
 
 ## [v1.1.12](https://github.com/laravel/folio/compare/v1.1.11...v1.1.12) - 2025-11-25
 

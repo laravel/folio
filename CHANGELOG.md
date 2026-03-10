@@ -1,6 +1,10 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/folio/compare/v1.1.13...master)
+## [Unreleased](https://github.com/laravel/folio/compare/v1.1.14...master)
+
+## [v1.1.14](https://github.com/laravel/folio/compare/v1.1.13...v1.1.14) - 2026-03-05
+
+* Laravel 13.x Compatibility by [@laravel-shift](https://github.com/laravel-shift) in https://github.com/laravel/folio/pull/156
 
 ## [v1.1.13](https://github.com/laravel/folio/compare/v1.1.12...v1.1.13) - 2026-02-20
 

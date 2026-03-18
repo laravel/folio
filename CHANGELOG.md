@@ -1,6 +1,10 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/folio/compare/v1.1.14...master)
+## [Unreleased](https://github.com/laravel/folio/compare/v1.1.15...master)
+
+## [v1.1.15](https://github.com/laravel/folio/compare/v1.1.14...v1.1.15) - 2026-03-18
+
+* Remove redundant "When to Apply" section from skill body by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/laravel/folio/pull/157
 
 ## [v1.1.14](https://github.com/laravel/folio/compare/v1.1.13...v1.1.14) - 2026-03-05
 

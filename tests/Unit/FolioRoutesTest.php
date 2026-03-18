@@ -170,6 +170,34 @@ test('missing parameters', function (string $name, array $scenario) {
     return [$mountPath, $mountPath.'/'.$viewRelativePath, $domain, $arguments, $expectedExpectationMessage];
 })->mapWithKeys(fn (array $value, string $key) => [$key => [$key, $value]])->toArray());
 
+it('may resolve positional parameters to named parameters', function (string $name, array $scenario) {
+    [$mountPath, $viewPath, $arguments, $expectedRoute] = $scenario;
+
+    $arguments = collect($arguments)->map(fn ($argument) => value($argument))->all();
+
+    $names = new FolioRoutes(Mockery::mock(FolioManager::class), '', [
+        $name => [
+            'mountPath' => $mountPath,
+            'path' => $viewPath,
+            'baseUri' => '/',
+            'domain' => null,
+        ],
+    ], true);
+
+    expect($names->has($name))->toBeTrue()
+        ->and($names->get($name, $arguments, false))->toBe($expectedRoute);
+})->with(fn () => collect([
+    'podcasts.show-by-id' => ['podcasts/[id].blade.php', [1], '/podcasts/1'],
+    'podcasts.show-by-model' => ['podcasts/[Podcast].blade.php', [fn () => Podcast::first()], '/podcasts/1'],
+    'podcasts.show-by-slug-and-id' => ['podcasts/[slug]/[id].blade.php', ['nuno', 1], '/podcasts/nuno/1'],
+])->map(function (array $value) {
+    $mountPath = 'resources/views/pages';
+
+    [$viewRelativePath, $arguments, $expectedRoute] = $value;
+
+    return [$mountPath, $mountPath.'/'.$viewRelativePath, $arguments, $expectedRoute];
+})->mapWithKeys(fn (array $value, string $key) => [$key => [$key, $value]])->toArray());
+
 it('may not have routes', function () {
     $names = new FolioRoutes(Mockery::mock(FolioManager::class), '', [
         'podcasts.index' => [

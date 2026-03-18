@@ -22,7 +22,7 @@ class PotentiallyBindablePathSegment
     /**
      * The closure to use to resolve url routable namespaces.
      *
-     * @var (\Closure(): array<int, string>)|null
+     * @var (Closure(): array<int, string>)|null
      */
     protected static ?Closure $resolveUrlRoutableNamespacesUsing = null;
 
@@ -133,7 +133,7 @@ class PotentiallyBindablePathSegment
     /**
      * Get the class name contained by the bindable segment.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function class(): string
     {
@@ -220,7 +220,7 @@ class PotentiallyBindablePathSegment
     /**
      * Set the callback to be used to resolve URL routable namespaces.
      *
-     * @param  (\Closure(): array<int, string>)|null  $callback
+     * @param  (Closure(): array<int, string>)|null  $callback
      */
     public static function resolveUrlRoutableNamespacesUsing(?Closure $callback): void
     {

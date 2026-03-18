@@ -16,7 +16,7 @@ class RequestHandler
     /**
      * Create a new request handler instance.
      *
-     * @param  array<int, \Laravel\Folio\MountPath>  $mountPaths
+     * @param  array<int, MountPath>  $mountPaths
      */
     public function __construct(
         protected array $mountPaths,

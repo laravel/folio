@@ -207,7 +207,7 @@ class FolioRoutes
     /**
      * Format the given parameter for placement in the route URL.
      *
-     * @throws \Laravel\Folio\Exceptions\UrlGenerationException
+     * @throws UrlGenerationException
      */
     protected function formatParameter(string $uri, string $name, mixed $parameter, string|bool $field, bool $variadic): mixed
     {

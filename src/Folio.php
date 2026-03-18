@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Laravel\Folio\PendingRoute domain(string $domain)
  * @method static \Laravel\Folio\PendingRoute middleware(array $middleware)
  *
- * @see \Laravel\Folio\FolioManager
+ * @see FolioManager
  */
 class Folio extends Facade
 {

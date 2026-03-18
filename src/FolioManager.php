@@ -14,7 +14,7 @@ class FolioManager
     /**
      * The mounted paths that have been registered.
      *
-     * @var array<int, \Laravel\Folio\MountPath>
+     * @var array<int, MountPath>
      */
     protected array $mountPaths = [];
 
@@ -38,7 +38,7 @@ class FolioManager
      *
      * @param  array<string, array<int, string>>  $middleware
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function route(?string $path = null, ?string $uri = '/', array $middleware = []): PendingRoute
     {
@@ -159,7 +159,7 @@ class FolioManager
     /**
      * Get the array of mounted paths that have been registered.
      *
-     * @return array<int, \Laravel\Folio\MountPath>
+     * @return array<int, MountPath>
      */
     public function mountPaths(): array
     {

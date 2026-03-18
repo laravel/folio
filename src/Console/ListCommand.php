@@ -69,7 +69,7 @@ class ListCommand extends RouteListCommand
     /**
      * Compute the routes from the given mounted paths.
      *
-     * @return \Illuminate\Support\Collection<string, string>
+     * @return Collection<string, string>
      */
     protected function routesFromMountPaths(array $mountPaths): Collection
     {
@@ -163,7 +163,7 @@ class ListCommand extends RouteListCommand
     /**
      * Convert the given routes to JSON.
      *
-     * @param  \Illuminate\Support\Collection<string, string>  $routes
+     * @param  Collection<string, string>  $routes
      */
     protected function asJson($routes): string
     {
@@ -173,7 +173,7 @@ class ListCommand extends RouteListCommand
     /**
      * Convert the given routes to regular CLI output.
      *
-     * @param  \Illuminate\Support\Collection<string, string>  $routes
+     * @param  Collection<string, string>  $routes
      * @return array<string, string>
      */
     protected function forCli($routes): array

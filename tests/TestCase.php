@@ -3,6 +3,7 @@
 namespace Tests;
 
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\View;
 use Laravel\Folio\FolioServiceProvider;
 use Laravel\Folio\MountPath;
@@ -24,7 +25,7 @@ abstract class TestCase extends OrchestraTestCase
     /**
      * Get the package providers.
      *
-     * @param  \Illuminate\Foundation\Application  $app
+     * @param  Application  $app
      */
     protected function getPackageProviders($app): array
     {

@@ -161,6 +161,8 @@ class FolioRoutes
     {
         $uri = str_replace('.blade.php', '', $path);
 
+        $parameters = $this->resolveImplicitParameters($uri, $parameters);
+
         [$parameters, $usedParameters] = [collect($parameters), collect()];
 
         $uri = collect(explode('/', $uri))
@@ -202,6 +204,37 @@ class FolioRoutes
             '/'.ltrim(substr($uri, strlen($mountPath)), '/'),
             $parameters->except($usedParameters->all())->all(),
         ];
+    }
+
+    /**
+     * Resolve numerically-indexed parameters to named parameters
+     * based on the path segments' variable names.
+     *
+     * @param  array<int|string, mixed>  $parameters
+     * @return array<string, mixed>
+     */
+    protected function resolveImplicitParameters(string $uri, array $parameters): array
+    {
+        if (empty($parameters) || ! array_is_list($parameters)) {
+            return $parameters;
+        }
+
+        $segmentNames = collect(explode('/', $uri))
+            ->filter(fn (string $segment) => Str::startsWith($segment, '['))
+            ->map(fn (string $segment) => (new PotentiallyBindablePathSegment($segment))->variable())
+            ->values();
+
+        $resolved = [];
+
+        foreach ($parameters as $index => $value) {
+            if ($segmentNames->has($index)) {
+                $resolved[$segmentNames->get($index)] = $value;
+            } else {
+                $resolved[$index] = $value;
+            }
+        }
+
+        return $resolved;
     }
 
     /**

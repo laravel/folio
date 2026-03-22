@@ -28,7 +28,7 @@
         "illuminate/support": "^10.19|^11.0|^12.0|^13.0",
         "illuminate/view": "^10.19|^11.0|^12.0|^13.0",
         "spatie/once": "^3.1",
-        "symfony/console": "^6.0|^7.0"
+        "symfony/console": "^6.0|^7.0|^8.0"
     },
     "require-dev": {
         "orchestra/testbench": "^8.36|^9.15|^10.8|^11.0",

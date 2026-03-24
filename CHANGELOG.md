@@ -1,6 +1,10 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/folio/compare/v1.1.15...master)
+## [Unreleased](https://github.com/laravel/folio/compare/v1.1.16...master)
+
+## [v1.1.16](https://github.com/laravel/folio/compare/v1.1.15...v1.1.16) - 2026-03-23
+
+* Update Symfony deps versions to support v8 by [@HichemTab-tech](https://github.com/HichemTab-tech) in https://github.com/laravel/folio/pull/159
 
 ## [v1.1.15](https://github.com/laravel/folio/compare/v1.1.14...v1.1.15) - 2026-03-18
 

@@ -44,6 +44,29 @@ Always create new `folio` pages and routes using `{{ $assist->artisanCommand('fo
 {{ $assist->artisanCommand('folio:page "users/[User]"') }}
 ```
 
+## Page File Structure
+
+A Folio page has up to two distinct code blocks above the Blade template:
+
+1. Metadata block (required for `name`/`middleware`/`render`/`withTrashed`) — a raw `<?php ... ?>` block at the very top. Folio parses this with a PHP AST parser at boot to discover the route, so it must be literal PHP. `@php ... @endphp` will NOT work here — it is a Blade directive and is invisible to Folio's scanner, which means the named route is never registered, middleware is never applied, and the render hook never runs.
+2. View-data block (optional) — a `@php ... @endphp` Blade directive below the metadata block, for per-request data loading (queries, view-model prep). This runs at render time.
+
+@boostsnippet("Folio Page Skeleton", "blade")
+<?php
+use function Laravel\Folio\{name, middleware};
+
+name('posts.show');
+middleware(['auth']);
+?>
+
+@php
+    use App\Models\Post;
+    $related = Post::latest()->take(3)->get();
+@endphp
+
+<h1>{{ $post->title }}</h1>
+@endboostsnippet
+
 ## Route Parameters vs. Model Binding
 
 Use the correct filename token based on intent:
@@ -67,25 +90,48 @@ Model binding is case-sensitive in the filename. Avoid `[user]` when you expect 
 Add a `name` at the top of each new Folio page to create a named route that other parts of the codebase can reference.
 
 @boostsnippet("Named Routes Example", "php")
+<?php
 use function Laravel\Folio\name;
 
 name('products.index');
+?>
 @endboostsnippet
+
+### Generating URLs to Folio Routes
+
+Folio's URL generator requires route parameters as a keyed array. It does not auto-coerce a single Eloquent model the way Laravel's default route helper does — passing a model directly throws `TypeError: Laravel\Folio\FolioRoutes::get(): Argument #2 ($arguments) must be of type array`.
+
+The array key must match the filename token: for `pages/posts/[Post].blade.php` the key is `post`; for `pages/posts/[Post:slug].blade.php` the key is still `post` (the `:slug` part only changes which column Folio resolves by).
+
+@boostsnippet("Linking to a Folio Route with Model Binding", "blade")
+{{-- Correct: keyed array --}}
+<a href="{{ route('posts.show', ['post' => $post]) }}">{{ $post->title }}</a>
+
+{{-- Also correct: primitive key --}}
+<a href="{{ route('posts.show', ['post' => $post->id]) }}">{{ $post->title }}</a>
+
+{{-- Wrong: throws TypeError at render time --}}
+<a href="{{ route('posts.show', $post) }}">{{ $post->title }}</a>
+@endboostsnippet
+
+For routes without parameters, the helper works as usual: `{{ route('posts.index') }}`.
 
 ## Middleware
 
 @boostsnippet("Middleware Example", "php")
+<?php
 use function Laravel\Folio\{name, middleware};
 
 name('admin.products');
 middleware(['auth', 'verified']);
+?>
 @endboostsnippet
 
 ## Page Content Patterns
 
 Folio pages are normal Blade files. Include practical data-loading code when creating or editing pages.
 
-@boostsnippet("Inline Query Example in a Folio Page", "blade")
+@boostsnippet("Per-Request View Data (Blade @php block, below the metadata block)", "blade")
 @php
 use App\Models\Post;
 
@@ -125,6 +171,8 @@ render(function (View $view, Post $post) {
 - Using `[id]` or `[user]` when model binding requires `[User]`
 - Not following existing naming conventions when creating pages
 - Creating routes manually in `routes/web.php` instead of using Folio's file-based routing
+- Wrapping `name()`, `middleware()`, `render()`, or `withTrashed()` in a `@php ... @endphp` Blade directive. Folio's scanner only reads raw `<?php ... ?>` blocks, so those calls are silently ignored — the named route is never registered, middleware is never applied, and `folio:list` will not show the expected route attributes.
+- Calling `route('page.name', $model)` with a single model instance. Folio's URL generator requires a keyed array: `route('page.name', ['model' => $model])`. Passing a model directly throws `TypeError` at render time.
 
 ### Folio 404 Debug Checklist
 

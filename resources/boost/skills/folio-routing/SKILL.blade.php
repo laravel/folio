@@ -48,8 +48,8 @@ Always create new `folio` pages and routes using `{{ $assist->artisanCommand('fo
 
 A Folio page has up to two distinct code blocks above the Blade template:
 
-1. Metadata block (required for `name`/`middleware`/`render`/`withTrashed`) — a raw `<?php ... ?>` block at the very top. Folio parses this with a PHP AST parser at boot to discover the route, so it must be literal PHP. `@php ... @endphp` will NOT work here — it is a Blade directive and is invisible to Folio's scanner, which means the named route is never registered, middleware is never applied, and the render hook never runs.
-2. View-data block (optional) — a `@php ... @endphp` Blade directive below the metadata block, for per-request data loading (queries, view-model prep). This runs at render time.
+1. Metadata block (required for `name`/`middleware`/`render`/`withTrashed`) — a raw `<?php ... ?>` block at the very top.
+2. View-data block (optional) — a `@php ... @endphp` Blade directive below the metadata block, for per-request data loading.
 
 @boostsnippet("Folio Page Skeleton", "blade")
 <?php

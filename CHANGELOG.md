@@ -1,6 +1,10 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/folio/compare/v1.1.16...master)
+## [Unreleased](https://github.com/laravel/folio/compare/v1.1.17...master)
+
+## [v1.1.17](https://github.com/laravel/folio/compare/v1.1.16...v1.1.17) - 2026-04-17
+
+* Expand Folio skill with page structure and URL generation by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/laravel/folio/pull/160
 
 ## [v1.1.16](https://github.com/laravel/folio/compare/v1.1.15...v1.1.16) - 2026-03-23
 

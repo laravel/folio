@@ -48,8 +48,8 @@ Always create new `folio` pages and routes using `{{ $assist->artisanCommand('fo
 
 A Folio page has up to two distinct code blocks above the Blade template:
 
-1. Metadata block (required for `name`/`middleware`/`render`/`withTrashed`) — a raw `<?php ... ?>` block at the very top.
-2. View-data block (optional) — a `@php ... @endphp` Blade directive below the metadata block, for per-request data loading.
+1. Metadata block (required for `name`/`middleware`/`render`/`withTrashed`) — a raw `<?php ?>` block at the very top.
+2. View-data block (optional) — a `@php @endphp` Blade directive below the metadata block, for per-request data loading.
 
 @boostsnippet("Folio Page Skeleton", "blade")
 <?php
@@ -114,7 +114,7 @@ The array key must match the filename token: for `pages/posts/[Post].blade.php` 
 <a href="{{ route('posts.show', $post) }}">{{ $post->title }}</a>
 @endboostsnippet
 
-For routes without parameters, the helper works as usual: `{{ route('posts.index') }}`.
+For routes without parameters, the helper works as usual: `@{{ route('posts.index') }}`.
 
 ## Middleware
 
@@ -171,7 +171,7 @@ render(function (View $view, Post $post) {
 - Using `[id]` or `[user]` when model binding requires `[User]`
 - Not following existing naming conventions when creating pages
 - Creating routes manually in `routes/web.php` instead of using Folio's file-based routing
-- Wrapping `name()`, `middleware()`, `render()`, or `withTrashed()` in a `@php ... @endphp` Blade directive. Folio's scanner only reads raw `<?php ... ?>` blocks, so those calls are silently ignored — the named route is never registered, middleware is never applied, and `folio:list` will not show the expected route attributes.
+- Wrapping `name()`, `middleware()`, `render()`, or `withTrashed()` in a `@php @endphp` Blade directive. Folio's scanner only reads raw `<?php ?>` blocks, so those calls are silently ignored — the named route is never registered, middleware is never applied, and `folio:list` will not show the expected route attributes.
 - Calling `route('page.name', $model)` with a single model instance. Folio's URL generator requires a keyed array: `route('page.name', ['model' => $model])`. Passing a model directly throws `TypeError` at render time.
 
 ### Folio 404 Debug Checklist

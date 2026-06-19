@@ -71,27 +71,25 @@ class FolioManager
             $domain,
         );
 
-        Route::fallback($this->handler())->name('laravel-folio');
+        Route::fallback([self::class, 'handle'])->name('laravel-folio');
     }
 
     /**
-     * Get the Folio request handler function.
+     * Handle the Folio request.
      */
-    protected function handler(): Closure
+    public function handle(Request $request): mixed
     {
-        return function (Request $request) {
-            $this->terminateUsing = null;
+        $this->terminateUsing = null;
 
-            $mountPaths = collect($this->mountPaths)->filter(
-                fn (MountPath $mountPath) => str_starts_with(mb_strtolower('/'.$request->path()), $mountPath->baseUri)
-            )->all();
+        $mountPaths = collect($this->mountPaths)->filter(
+            fn (MountPath $mountPath) => str_starts_with(mb_strtolower('/'.$request->path()), $mountPath->baseUri)
+        )->all();
 
-            return (new RequestHandler(
-                $mountPaths,
-                $this->renderUsing,
-                fn (MatchedView $matchedView) => $this->lastMatchedView = $matchedView,
-            ))($request);
-        };
+        return (new RequestHandler(
+            $mountPaths,
+            $this->renderUsing,
+            fn (MatchedView $matchedView) => $this->lastMatchedView = $matchedView,
+        ))($request);
     }
 
     /**

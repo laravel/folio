@@ -1,6 +1,17 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/folio/compare/v1.1.18...master)
+## [Unreleased](https://github.com/laravel/folio/compare/v1.1.19...master)
+
+## [v1.1.19](https://github.com/laravel/folio/compare/v1.1.18...v1.1.19) - 2026-06-23
+
+* GitHub Actions hardening by [@nunomaduro](https://github.com/nunomaduro) in https://github.com/laravel/folio/pull/164
+* Bump actions/checkout from 3.6.0 to 6.0.3 in the github-actions group by [@dependabot](https://github.com/dependabot)[bot] in https://github.com/laravel/folio/pull/165
+* Add Dependabot cooldown of 5 days by [@nunomaduro](https://github.com/nunomaduro) in https://github.com/laravel/folio/pull/166
+* Enable Dependabot auto-merge by [@nunomaduro](https://github.com/nunomaduro) in https://github.com/laravel/folio/pull/167
+* Fix reusable workflow pin to match granted permissions by [@nunomaduro](https://github.com/nunomaduro) in https://github.com/laravel/folio/pull/168
+* Bump shivammathur/setup-php from 2.37.1 to 2.37.2 in the github-actions group by [@dependabot](https://github.com/dependabot)[bot] in https://github.com/laravel/folio/pull/170
+* Fixed route caching breaking Folio by [@syntheticminds](https://github.com/syntheticminds) in https://github.com/laravel/folio/pull/171
+* Bump actions/checkout from 6.0.3 to 7.0.0 in the github-actions group by [@dependabot](https://github.com/dependabot)[bot] in https://github.com/laravel/folio/pull/172
 
 ## [v1.1.18](https://github.com/laravel/folio/compare/v1.1.17...v1.1.18) - 2026-04-27
 

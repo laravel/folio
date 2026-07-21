@@ -9,6 +9,7 @@ use Illuminate\Support\Stringable;
 use Laravel\Folio\FolioManager;
 use Laravel\Folio\FolioRoutes;
 use Laravel\Folio\MountPath;
+use Laravel\Folio\Support\LivewireComponents;
 use Laravel\Folio\Support\Project;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
@@ -100,6 +101,10 @@ class ListCommand extends RouteListCommand
                     }
 
                     $uri = str_replace('.blade.php', '', $uri);
+
+                    if (LivewireComponents::name($viewPath)) {
+                        $uri = LivewireComponents::stripEmojiPrefix($uri);
+                    }
 
                     $uri = collect(explode('/', $uri))
                         ->map(function (string $currentSegment) {

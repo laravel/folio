@@ -9,6 +9,7 @@ use Illuminate\Routing\Pipeline;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use Laravel\Folio\Pipeline\MatchedView;
+use Laravel\Folio\Support\LivewireComponents;
 use Symfony\Component\HttpFoundation\Response;
 
 class RequestHandler
@@ -97,6 +98,14 @@ class RequestHandler
      */
     protected function toResponse(Request $request, MatchedView $matchedView): Response
     {
+        if ($component = LivewireComponents::name($matchedView->path)) {
+            $request->route()->action['livewire_component'] = $component;
+
+            return Route::toResponse($request, app()->call([
+                app('livewire')->new($component), '__invoke',
+            ]));
+        }
+
         $view = View::file($matchedView->path, $matchedView->data);
 
         return Route::toResponse($request, app()->call(

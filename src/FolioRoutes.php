@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Laravel\Folio\Exceptions\UrlGenerationException;
 use Laravel\Folio\Pipeline\MatchedView;
 use Laravel\Folio\Pipeline\PotentiallyBindablePathSegment;
+use Laravel\Folio\Support\LivewireComponents;
 use Laravel\Folio\Support\Project;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -160,6 +161,10 @@ class FolioRoutes
     protected function path(string $mountPath, string $path, array $parameters): array
     {
         $uri = str_replace('.blade.php', '', $path);
+
+        if (LivewireComponents::name(rtrim(Project::basePath(), '/').'/'.ltrim($path, '/'))) {
+            $uri = LivewireComponents::stripEmojiPrefix($uri);
+        }
 
         [$parameters, $usedParameters] = [collect($parameters), collect()];
 

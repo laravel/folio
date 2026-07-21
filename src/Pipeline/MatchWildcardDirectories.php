@@ -5,6 +5,7 @@ namespace Laravel\Folio\Pipeline;
 use Closure;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
+use Laravel\Folio\Support\LivewireComponents;
 
 class MatchWildcardDirectories
 {
@@ -27,7 +28,7 @@ class MatchWildcardDirectories
                 return new ContinueIterating($currentState);
             }
 
-            if (file_exists($path = $currentState->currentUriSegmentDirectory().'/index.blade.php')) {
+            if ($path = LivewireComponents::findView($currentState->currentUriSegmentDirectory().'/index.blade.php')) {
                 return new MatchedView($path, $currentState->data);
             }
         }

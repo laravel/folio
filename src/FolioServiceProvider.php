@@ -7,6 +7,7 @@ use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Folio\Support\LivewireComponents;
 
 class FolioServiceProvider extends ServiceProvider
 {
@@ -32,8 +33,19 @@ class FolioServiceProvider extends ServiceProvider
         $this->registerCommands();
         $this->registerPublishing();
         $this->registerUrlGenerator();
+        $this->registerLivewireComponentResolver();
         $this->registerTerminationCallback();
         $this->cacheFolioRoutesOnRouteCache();
+    }
+
+    /**
+     * Register the resolver for Folio-specific Livewire component names.
+     */
+    protected function registerLivewireComponentResolver(): void
+    {
+        $this->callAfterResolving('livewire', function ($livewire) {
+            LivewireComponents::registerMissingComponentResolver($livewire);
+        });
     }
 
     /**

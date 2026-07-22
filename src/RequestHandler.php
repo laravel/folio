@@ -99,7 +99,9 @@ class RequestHandler
     protected function toResponse(Request $request, MatchedView $matchedView): Response
     {
         if ($component = LivewireComponents::name($matchedView->path)) {
-            $request->route()->action['livewire_component'] = $component;
+            foreach ($matchedView->data as $key => $value) {
+                $request->route()->setParameter($key, $value);
+            }
 
             return Route::toResponse($request, app()->call([
                 app('livewire')->new($component), '__invoke',

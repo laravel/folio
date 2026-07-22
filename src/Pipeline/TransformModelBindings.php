@@ -5,6 +5,7 @@ namespace Laravel\Folio\Pipeline;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Laravel\Folio\Support\LivewireComponents;
 
 class TransformModelBindings
 {
@@ -77,10 +78,10 @@ class TransformModelBindings
      */
     protected function bindablePathSegments(MatchedView $view): array
     {
-        return explode(DIRECTORY_SEPARATOR, (string) Str::of($view->path)
+        return explode(DIRECTORY_SEPARATOR, LivewireComponents::stripEmojiPrefix((string) Str::of($view->path)
             ->replace($view->mountPath, '')
             ->beforeLast('.blade.php')
-            ->trim(DIRECTORY_SEPARATOR));
+            ->trim(DIRECTORY_SEPARATOR)));
     }
 
     /**

@@ -19,6 +19,20 @@ use Symfony\Component\Finder\SplFileInfo;
 class ListCommand extends RouteListCommand
 {
     /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'folio:list
+                    {--json : Output the route list as JSON}
+                    {--name= : Filter the routes by name}
+                    {--domain= : Filter the routes by domain}
+                    {--path= : Only show routes matching the given path pattern}
+                    {--except-path= : Do not display the routes matching the given path pattern}
+                    {--r|reverse : Reverse the ordering of the routes}
+                    {--sort=uri : The column (domain, name, uri, view) to sort by}';
+
+    /**
      * The console command name.
      *
      * @var string

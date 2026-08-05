@@ -1,6 +1,11 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/folio/compare/v1.1.19...master)
+## [Unreleased](https://github.com/laravel/folio/compare/v1.1.20...master)
+
+## [v1.1.20](https://github.com/laravel/folio/compare/v1.1.19...v1.1.20) - 2026-08-05
+
+* Bump actions/checkout from 7.0.0 to 7.0.1 in the github-actions group by [@dependabot](https://github.com/dependabot)[bot] in https://github.com/laravel/folio/pull/175
+* Fix 'folio:list' command on Laravel 13 by [@HelgeSverre](https://github.com/HelgeSverre) in https://github.com/laravel/folio/pull/177
 
 ## [v1.1.19](https://github.com/laravel/folio/compare/v1.1.18...v1.1.19) - 2026-06-23
 

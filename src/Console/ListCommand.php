@@ -11,7 +11,6 @@ use Laravel\Folio\FolioRoutes;
 use Laravel\Folio\MountPath;
 use Laravel\Folio\Support\Project;
 use Symfony\Component\Console\Attribute\AsCommand;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 

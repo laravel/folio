@@ -283,22 +283,4 @@ class ListCommand extends RouteListCommand
 
         return $routes;
     }
-
-    /**
-     * Get the console command options.
-     *
-     * @return array<int, array<int, int|string|null>>
-     */
-    protected function getOptions(): array
-    {
-        return [
-            ['json', null, InputOption::VALUE_NONE, 'Output the route list as JSON'],
-            ['name', null, InputOption::VALUE_OPTIONAL, 'Filter the routes by name'],
-            ['domain', null, InputOption::VALUE_OPTIONAL, 'Filter the routes by domain'],
-            ['path', null, InputOption::VALUE_OPTIONAL, 'Only show routes matching the given path pattern'],
-            ['except-path', null, InputOption::VALUE_OPTIONAL, 'Do not display the routes matching the given path pattern'],
-            ['reverse', 'r', InputOption::VALUE_NONE, 'Reverse the ordering of the routes'],
-            ['sort', null, InputOption::VALUE_OPTIONAL, 'The column (domain, name, uri, view) to sort by', 'uri'],
-        ];
-    }
 }

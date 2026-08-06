@@ -4,6 +4,7 @@ namespace Laravel\Folio\Pipeline;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
+use Laravel\Folio\Support\LivewireComponents;
 
 trait FindsWildcardViews
 {
@@ -38,9 +39,14 @@ trait FindsWildcardViews
             }
 
             $filename = $filename->before('.blade.php');
+            $normalizedFilename = LivewireComponents::stripEmojiPrefix((string) $filename);
 
-            return $filename->startsWith($startsWith) &&
-                   $filename->endsWith($endsWith);
+            if ($normalizedFilename !== (string) $filename && LivewireComponents::name($file->getPathname()) === null) {
+                return false;
+            }
+
+            return Str::startsWith($normalizedFilename, $startsWith) &&
+                   Str::endsWith($normalizedFilename, $endsWith);
         })?->getFilename();
     }
 }

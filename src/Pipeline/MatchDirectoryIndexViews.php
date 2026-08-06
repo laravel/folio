@@ -3,6 +3,7 @@
 namespace Laravel\Folio\Pipeline;
 
 use Closure;
+use Laravel\Folio\Support\LivewireComponents;
 
 class MatchDirectoryIndexViews
 {
@@ -13,7 +14,7 @@ class MatchDirectoryIndexViews
     {
         return $state->onLastUriSegment() &&
             $state->currentUriSegmentIsDirectory() &&
-            file_exists($path = $state->currentUriSegmentDirectory().'/index.blade.php')
+            ($path = LivewireComponents::findView($state->currentUriSegmentDirectory().'/index.blade.php'))
                 ? new MatchedView($path, $state->data)
                 : $next($state);
     }

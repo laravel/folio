@@ -18,6 +18,13 @@ use Symfony\Component\Finder\SplFileInfo;
 class ListCommand extends RouteListCommand
 {
     /**
+     * The routes shadowed by an earlier mounted route.
+     *
+     * @var Collection<int, array{winner: array<string, string|null>, shadowed: array<string, string|null>}>
+     */
+    protected Collection $collisions;
+
+    /**
      * The name and signature of the console command.
      *
      * @var string
@@ -60,6 +67,8 @@ class ListCommand extends RouteListCommand
             $this->displayRoutes(
                 $this->toDisplayableFormat($routes->all()),
             );
+
+            $this->displayCollisionWarnings();
         }
     }
 
@@ -86,7 +95,7 @@ class ListCommand extends RouteListCommand
      */
     protected function routesFromMountPaths(array $mountPaths): Collection
     {
-        return collect($mountPaths)->map(function (MountPath $mountPath) {
+        $routes = collect($mountPaths)->map(function (MountPath $mountPath) {
             $views = Finder::create()->in($mountPath->path)->name('*.blade.php')->files()->getIterator();
 
             $baseUri = rtrim($mountPath->baseUri, '/');
@@ -155,9 +164,54 @@ class ListCommand extends RouteListCommand
                         'view' => $action,
                     ];
                 });
-        })->flatten(1)
-            ->unique(fn (array $route) => ($route['domain'] ?? '').'|'.$route['uri'])
+        })->flatten(1);
+
+        $this->collisions = $routes
+            ->groupBy(fn (array $route) => $this->collisionKey($route))
+            ->filter(fn (Collection $routes) => $routes->count() > 1)
+            ->flatMap(fn (Collection $routes) => $routes->skip(1)->map(fn (array $shadowed) => [
+                'winner' => $routes->first(),
+                'shadowed' => $shadowed,
+            ]))
             ->values();
+
+        return $routes
+            ->unique(fn (array $route) => $this->collisionKey($route))
+            ->values();
+    }
+
+    /**
+     * Get the key used to identify exact route collisions.
+     *
+     * @param  array<string, string|null>  $route
+     */
+    protected function collisionKey(array $route): string
+    {
+        return ($route['domain'] ?? '').'|'.$route['uri'];
+    }
+
+    /**
+     * Display warnings for routes shadowed by an earlier mount.
+     */
+    protected function displayCollisionWarnings(): void
+    {
+        if ($this->option('json')) {
+            return;
+        }
+
+        $this->collisions
+            ->filter(fn (array $collision) => $this->filterRoute($collision['winner']))
+            ->each(function (array $collision) {
+                $route = $collision['winner'];
+                $location = $route['domain'] ? $route['domain'].$route['uri'] : $route['uri'];
+
+                $this->components->warn(sprintf(
+                    'Folio route [%s] from [%s] shadows [%s].',
+                    $location,
+                    $collision['winner']['view'],
+                    $collision['shadowed']['view'],
+                ));
+            });
     }
 
     /**

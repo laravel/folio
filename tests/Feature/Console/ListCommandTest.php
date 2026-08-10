@@ -291,5 +291,95 @@ test('multiple domains with overlapping paths', function () {
         ->and($content)->toContain('domain-two/index.blade.php')
         ->and($content)->toContain('domain-one/about.blade.php')
         ->and($content)->toContain('domain-two/about.blade.php')
-        ->and($content)->toContain('Showing [4] routes');
+        ->and($content)->toContain('Showing [4] routes')
+        ->and($content)->not->toContain('shadows');
+});
+
+test('routes shadowed by an earlier mount are reported', function () {
+    $output = new BufferedOutput;
+
+    Folio::path(__DIR__.'/../resources/views/domain-one')->domain('example.com');
+    Folio::path(__DIR__.'/../resources/views/domain-two')->domain('example.com');
+
+    $exitCode = Artisan::call('folio:list', [], $output);
+    $content = $output->fetch();
+
+    expect($exitCode)->toBe(0)
+        ->and($content)->toContain('Showing [2] routes')
+        ->and($content)->toContain('Folio route [example.com/]')
+        ->and($content)->toContain('domain-one/index.blade.php] shadows [tests/Feature/resources/views/domain-two/index.blade.php]')
+        ->and($content)->toContain('Folio route [example.com/about]')
+        ->and($content)->toContain('domain-one/about.blade.php] shadows [tests/Feature/resources/views/domain-two/about.blade.php]');
+});
+
+test('collision warnings do not corrupt JSON output', function () {
+    $output = new BufferedOutput;
+
+    Folio::path(__DIR__.'/../resources/views/domain-one')->domain('example.com');
+    Folio::path(__DIR__.'/../resources/views/domain-two')->domain('example.com');
+
+    $exitCode = Artisan::call('folio:list', ['--json' => true], $output);
+    $content = $output->fetch();
+
+    expect($exitCode)->toBe(0)
+        ->and(json_decode($content, true, flags: JSON_THROW_ON_ERROR))->toHaveCount(2)
+        ->and($content)->not->toContain('shadows');
+});
+
+test('routes without a domain report collisions', function () {
+    $output = new BufferedOutput;
+
+    Folio::path(__DIR__.'/../resources/views/domain-one');
+    Folio::path(__DIR__.'/../resources/views/domain-two');
+
+    $exitCode = Artisan::call('folio:list', [], $output);
+    $content = $output->fetch();
+
+    expect($exitCode)->toBe(0)
+        ->and($content)->toContain('Folio route [/]')
+        ->and($content)->toContain('Folio route [/about]')
+        ->and($content)->toContain('Showing [2] routes');
+});
+
+test('collision warnings respect route filters', function () {
+    $output = new BufferedOutput;
+
+    Folio::path(__DIR__.'/../resources/views/domain-one')->domain('example.com');
+    Folio::path(__DIR__.'/../resources/views/domain-two')->domain('example.com');
+
+    $exitCode = Artisan::call('folio:list', ['--path' => 'missing'], $output);
+    $content = $output->fetch();
+
+    expect($exitCode)->toBe(0)
+        ->and($content)->toContain('Showing [0] routes')
+        ->and($content)->not->toContain('shadows');
+});
+
+test('except-path only reports collisions that remain visible', function () {
+    $output = new BufferedOutput;
+
+    Folio::path(__DIR__.'/../resources/views/domain-one')->domain('example.com');
+    Folio::path(__DIR__.'/../resources/views/domain-two')->domain('example.com');
+
+    $exitCode = Artisan::call('folio:list', ['--except-path' => 'about'], $output);
+    $content = $output->fetch();
+
+    expect($exitCode)->toBe(0)
+        ->and($content)->toContain('Folio route [example.com/]')
+        ->and($content)->not->toContain('Folio route [example.com/about]');
+});
+
+test('every route shadowed by the winner is reported', function () {
+    $output = new BufferedOutput;
+
+    Folio::path(__DIR__.'/../resources/views/domain-one')->domain('example.com');
+    Folio::path(__DIR__.'/../resources/views/domain-one')->domain('example.com');
+    Folio::path(__DIR__.'/../resources/views/domain-one')->domain('example.com');
+
+    $exitCode = Artisan::call('folio:list', [], $output);
+    $content = $output->fetch();
+
+    expect($exitCode)->toBe(0)
+        ->and($content)->toContain('Showing [2] routes')
+        ->and(substr_count($content, 'shadows'))->toBe(4);
 });

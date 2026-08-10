@@ -5,6 +5,7 @@ namespace Laravel\Folio;
 use BackedEnum;
 use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Routing\Route;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Laravel\Folio\Exceptions\UrlGenerationException;
@@ -121,7 +122,7 @@ class FolioRoutes
      *
      * @thows  \Laravel\Folio\Exceptions\UrlGenerationException
      */
-    public function get(string $name, array $arguments, bool $absolute): string
+    public function get(string $name, mixed $arguments, bool $absolute): string
     {
         $this->ensureLoaded();
 
@@ -136,6 +137,8 @@ class FolioRoutes
             'domain' => $domain,
         ] = $this->routes[$name];
 
+        $arguments = $this->resolvePositionalParameters($path, $domain, Arr::wrap($arguments));
+
         [$path, $remainingArguments] = $this->path($mountPath, $path, $arguments);
 
         $route = new Route(['GET'], '{__folio_path}', fn () => null);
@@ -149,6 +152,42 @@ class FolioRoutes
         } catch (\Illuminate\Routing\Exceptions\UrlGenerationException $e) {
             throw new UrlGenerationException(str_replace('{__folio_path}', $uri, $e->getMessage()), $e->getCode(), $e);
         }
+    }
+
+    /**
+     * Resolve numerically indexed parameters using the route's parameter order.
+     *
+     * @param  array<array-key, mixed>  $parameters
+     * @return array<array-key, mixed>
+     */
+    protected function resolvePositionalParameters(string $path, ?string $domain, array $parameters): array
+    {
+        $positional = collect($parameters)->filter(fn (mixed $value, mixed $key) => is_int($key))->values();
+
+        if ($positional->isEmpty()) {
+            return $parameters;
+        }
+
+        preg_match_all('/\{([^}:]+)(?::[^}]+)?\}/', (string) $domain, $domainParameters);
+
+        $pathParameters = collect(explode('/', str_replace('.blade.php', '', $path)))
+            ->filter(fn (string $segment) => Str::startsWith($segment, '['))
+            ->map(fn (string $segment) => (new PotentiallyBindablePathSegment($segment))->variable());
+
+        $parameterNames = collect($domainParameters[1])->merge($pathParameters)->unique();
+        $parameters = collect($parameters)->reject(fn (mixed $value, mixed $key) => is_int($key));
+
+        foreach ($parameterNames as $name) {
+            $hasNamedParameter = $parameters->contains(
+                fn (mixed $value, mixed $key) => Str::camel($key) === $name && $value !== null
+            );
+
+            if (! $hasNamedParameter && $positional->isNotEmpty()) {
+                $parameters->put($name, $positional->shift());
+            }
+        }
+
+        return $parameters->merge($positional)->all();
     }
 
     /**

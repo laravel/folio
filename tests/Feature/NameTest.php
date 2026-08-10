@@ -69,6 +69,31 @@ test('may be or not absolute', function () {
     expect($absoluteRoute)->toBe('http://localhost/users/Taylor');
 });
 
+test('routes accept a positional parameter', function () {
+    expect(route('users.show', 'Taylor', false))->toBe('/users/Taylor')
+        ->and(route('users.show', User::first(), false))->toBe('/users/1');
+});
+
+test('routes accept positional parameters using cache', function () {
+    app(FolioRoutes::class)->persist();
+
+    app()->forgetInstance(FolioRoutes::class);
+
+    expect(route('users.show', User::first(), false))->toBe('/users/1')
+        ->and(route('posts.show', [
+            'lowerCaseValue',
+            'UpperCaseValue',
+            Podcast::first(),
+            User::first(),
+        ], false))->toBe('/posts/lowerCaseValue/UpperCaseValue/1/test-email-1@laravel.com/show');
+});
+
+test('routes accept a collection as a positional catch-all parameter', function () {
+    $users = User::query()->get();
+
+    expect(route('more-pages.user.detail', $users, false))->toBe('/1/detail');
+});
+
 test('feature parity', function () {
     Route::get('/posts/{lowerCase}/{UpperCase}/{podcast}/{user:email}/show', function (
         string $id,
@@ -99,6 +124,28 @@ test('feature parity', function () {
     $route = route('posts.show', $parameters, false);
 
     expect($route)->toBe($expectedRoute);
+
+    $positionalParameters = [
+        'lowerCaseValue',
+        'UpperCaseValue',
+        Podcast::first(),
+        User::first(),
+    ];
+
+    expect(route('posts.show', $positionalParameters, false))
+        ->toBe(route('users.regular', $positionalParameters, false))
+        ->toBe($expectedRoute);
+
+    $mixedParameters = [
+        'lowerCase' => 'lowerCaseValue',
+        'UpperCaseValue',
+        Podcast::first(),
+        User::first(),
+    ];
+
+    expect(route('posts.show', $mixedParameters, false))
+        ->toBe(route('users.regular', $mixedParameters, false))
+        ->toBe($expectedRoute);
 });
 
 test('model route binding wrong column', function () {

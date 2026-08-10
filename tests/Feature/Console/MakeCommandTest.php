@@ -57,10 +57,10 @@ it('makes a page in a selected mounted path', function () {
     $this->artisan('folio:page', ['name' => 'dashboard', '--force' => true])
         ->expectsChoice(
             'Which Folio path should the page be created in?',
-            resource_path('views/site-pages'),
+            Project::relativePathOf(resource_path('views/site-pages')).' (URI: /site, Domain: example.com)',
             [
-                resource_path('views/admin-pages') => Project::relativePathOf(resource_path('views/admin-pages')).' (URI: /admin)',
-                resource_path('views/site-pages') => Project::relativePathOf(resource_path('views/site-pages')).' (URI: /site, Domain: example.com)',
+                Project::relativePathOf(resource_path('views/admin-pages')).' (URI: /admin)',
+                Project::relativePathOf(resource_path('views/site-pages')).' (URI: /site, Domain: example.com)',
             ],
         )
         ->assertOk();

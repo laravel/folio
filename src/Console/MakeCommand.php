@@ -102,13 +102,15 @@ class MakeCommand extends GeneratorCommand
             return $mountPaths->first()->path;
         }
 
-        return select(
+        $selectedMountPath = select(
             label: 'Which Folio path should the page be created in?',
-            options: $mountPaths->mapWithKeys(fn (MountPath $mountPath) => [
-                $mountPath->path => $this->mountPathLabel($mountPath),
-            ]),
-            default: $mountPaths->first()->path,
+            options: $mountPaths->map(fn (MountPath $mountPath) => $this->mountPathLabel($mountPath)),
+            default: $this->mountPathLabel($mountPaths->first()),
         );
+
+        return $mountPaths->first(
+            fn (MountPath $mountPath) => $this->mountPathLabel($mountPath) === $selectedMountPath
+        )->path;
     }
 
     /**

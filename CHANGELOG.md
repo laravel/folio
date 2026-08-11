@@ -1,6 +1,10 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/folio/compare/v1.1.20...master)
+## [Unreleased](https://github.com/laravel/folio/compare/v1.1.21...master)
+
+## [v1.1.21](https://github.com/laravel/folio/compare/v1.1.20...v1.1.21) - 2026-08-06
+
+* Remove `getOptions()` method from `folio:list` command by [@crynobone](https://github.com/crynobone) in https://github.com/laravel/folio/pull/178
 
 ## [v1.1.20](https://github.com/laravel/folio/compare/v1.1.19...v1.1.20) - 2026-08-05
 

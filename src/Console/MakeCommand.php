@@ -18,6 +18,11 @@ use function Laravel\Prompts\select;
 class MakeCommand extends GeneratorCommand
 {
     /**
+     * The resolved mounted path.
+     */
+    protected ?string $resolvedMountPath = null;
+
+    /**
      * The name and signature of the console command.
      *
      * @var string
@@ -46,13 +51,23 @@ class MakeCommand extends GeneratorCommand
     protected $aliases = ['make:folio'];
 
     /**
+     * Execute the console command.
+     */
+    public function handle()
+    {
+        $this->resolvedMountPath = null;
+
+        return parent::handle();
+    }
+
+    /**
      * Get the destination view path.
      *
      * @param  string  $name
      */
     protected function getPath($name): string
     {
-        $mountPath = $this->mountPath();
+        $mountPath = $this->resolvedMountPath ??= $this->mountPath();
 
         return $mountPath.'/'.preg_replace_callback(
             '/(?:\[.*?\])|(\w+)/',
@@ -72,30 +87,20 @@ class MakeCommand extends GeneratorCommand
 
         $mount = $this->option('mount');
 
-        if ($mountPaths->isEmpty()) {
-            if ($mount !== null) {
-                throw new InvalidArgumentException('The mount option may only be used when a Folio path is configured.');
-            }
-
-            return resource_path('views/pages');
-        }
-
         if ($mount !== null) {
-            $matches = $mountPaths->filter(fn (MountPath $mountPath) => in_array(
+            return $mountPaths->first(fn (MountPath $mountPath) => in_array(
                 $this->normalizePath($mount),
                 [$this->normalizePath($mountPath->path), $this->normalizePath(Project::relativePathOf($mountPath->path))],
                 true,
+            ))?->path ?? throw new InvalidArgumentException(sprintf(
+                'The mount [%s] is not one of the configured Folio paths: %s.',
+                $mount,
+                $mountPaths->map(fn (MountPath $mountPath) => Project::relativePathOf($mountPath->path))->join(', '),
             ));
+        }
 
-            if ($matches->count() !== 1) {
-                throw new InvalidArgumentException(sprintf(
-                    'The mount [%s] is not one of the configured Folio paths: %s.',
-                    $mount,
-                    $mountPaths->map(fn (MountPath $mountPath) => Project::relativePathOf($mountPath->path))->join(', '),
-                ));
-            }
-
-            return $matches->first()->path;
+        if ($mountPaths->isEmpty()) {
+            return resource_path('views/pages');
         }
 
         if ($mountPaths->count() === 1 || ! $this->input->isInteractive()) {
@@ -151,8 +156,8 @@ class MakeCommand extends GeneratorCommand
     protected function getOptions(): array
     {
         return [
-            ['force', 'f', InputOption::VALUE_NONE, 'Create the Folio page even if the page already exists'],
             ['mount', null, InputOption::VALUE_REQUIRED, 'The configured Folio path where the page should be created'],
+            ['force', 'f', InputOption::VALUE_NONE, 'Create the Folio page even if the page already exists'],
         ];
     }
 

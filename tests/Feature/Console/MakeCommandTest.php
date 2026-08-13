@@ -54,7 +54,7 @@ it('makes a page in a selected mounted path', function () {
     Folio::path(resource_path('views/admin-pages'))->uri('/admin');
     Folio::path(resource_path('views/site-pages'))->uri('/site')->domain('example.com');
 
-    $this->artisan('folio:page', ['name' => 'dashboard', '--force' => true])
+    $this->artisan('folio:page', ['name' => 'dashboard'])
         ->expectsChoice(
             'Which Folio path should the page be created in?',
             Project::relativePathOf(resource_path('views/site-pages')).' (URI: /site, Domain: example.com)',
@@ -184,7 +184,7 @@ it('rejects a mount option when no Folio paths are configured', function () {
         'name' => 'dashboard',
         '--mount' => resource_path('views/pages'),
     ]);
-})->throws(InvalidArgumentException::class, 'may only be used when a Folio path is configured');
+})->throws(InvalidArgumentException::class, 'is not one of the configured Folio paths');
 
 it('rejects an empty mount option', function () {
     File::makeDirectory(resource_path('views/admin-pages'), recursive: true, force: true);

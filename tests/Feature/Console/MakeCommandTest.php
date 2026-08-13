@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\File;
 use Laravel\Folio\Folio;
 use Laravel\Folio\Support\Project;
 use Symfony\Component\Console\Output\BufferedOutput;

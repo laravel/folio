@@ -1,6 +1,10 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/folio/compare/v1.1.21...master)
+## [Unreleased](https://github.com/laravel/folio/compare/v1.2.0...master)
+
+## [v1.2.0](https://github.com/laravel/folio/compare/v1.1.21...v1.2.0) - 2026-08-13
+
+* Support selecting Folio page mounts by [@HelgeSverre](https://github.com/HelgeSverre) in https://github.com/laravel/folio/pull/180
 
 ## [v1.1.21](https://github.com/laravel/folio/compare/v1.1.20...v1.1.21) - 2026-08-06
 

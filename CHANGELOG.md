@@ -1,6 +1,15 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/folio/compare/v1.2.0...master)
+## [Unreleased](https://github.com/laravel/folio/compare/v1.3.0...master)
+
+## [v1.3.0](https://github.com/laravel/folio/compare/v1.2.0...v1.3.0) - 2026-10-14
+
+### What's Changed
+
+* Remove security policy in favor of the org-wide default by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/laravel/folio/pull/182
+* Bump shivammathur/setup-php from 2.37.2 to 2.40.0 in the github-actions group by [@dependabot](https://github.com/dependabot)[bot] in https://github.com/laravel/folio/pull/183
+
+**Full Changelog**: https://github.com/laravel/folio/compare/v1.2.0...v1.3.0
 
 ## [v1.2.0](https://github.com/laravel/folio/compare/v1.1.21...v1.2.0) - 2026-08-13
 

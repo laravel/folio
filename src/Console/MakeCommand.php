@@ -3,7 +3,6 @@
 namespace Laravel\Folio\Console;
 
 use Illuminate\Console\GeneratorCommand;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Laravel\Folio\Folio;
@@ -169,9 +168,7 @@ class MakeCommand extends GeneratorCommand
     protected function promptForMissingArgumentsUsing()
     {
         return [
-            'name' => class_exists(Application::class) && version_compare(Application::VERSION, '10.17.0', '>=')
-                ? ['What should the page be named?', 'E.g. users/index, users/[User]']
-                : 'What should the page be named?',
+            'name' => ['What should the page be named?', 'E.g. users/index, users/[User]'],
         ];
     }
 }

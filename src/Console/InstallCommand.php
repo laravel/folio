@@ -59,8 +59,7 @@ class InstallCommand extends Command
      */
     protected function registerFolioServiceProvider(): void
     {
-        if (method_exists(ServiceProvider::class, 'addProviderToBootstrapFile') &&
-            ServiceProvider::addProviderToBootstrapFile(FolioServiceProvider::class)) { // @phpstan-ignore-line
+        if (ServiceProvider::addProviderToBootstrapFile(FolioServiceProvider::class)) { // @phpstan-ignore-line
             return;
         }
 

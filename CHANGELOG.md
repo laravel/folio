@@ -1,6 +1,14 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/folio/compare/v1.3.0...master)
+## [Unreleased](https://github.com/laravel/folio/compare/v1.4.0...master)
+
+## [v1.4.0](https://github.com/laravel/folio/compare/v1.3.0...v1.4.0) - 2026-11-11
+
+### What's Changed
+
+* Dependency floor bump by [@pushpak1300](https://github.com/pushpak1300) in https://github.com/laravel/folio/pull/184
+
+**Full Changelog**: https://github.com/laravel/folio/compare/v1.3.0...v1.4.0
 
 ## [v1.3.0](https://github.com/laravel/folio/compare/v1.2.0...v1.3.0) - 2026-10-14
 
